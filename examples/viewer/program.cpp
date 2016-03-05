@@ -1,9 +1,10 @@
 #include "program.h"
 #include "filesystem.h"
-#include <hl1bspinstance.h>
-#include <hl2bspinstance.h>
-#include <hl1mdlinstance.h>
-#include <hl1mapinstance.h>
+#include <hl1bspasset.h>
+#include <hl2bspasset.h>
+#include <hl1mdlasset.h>
+#include <hl1mapasset.h>
+#include <hl1sprasset.h>
 #include <GL/glextl.h>
 #include <SDL.h>
 #include <iostream>
@@ -45,6 +46,8 @@ bool AssetViewer::InitializeGraphics()
             this->_asset = new Hl1MdlAsset(FileSystem::LoadFileData);
         else if (ext == ".map")
             this->_asset = new Hl1MapAsset(FileSystem::LoadFileData);
+        else if (ext == ".spr")
+            this->_asset = new Hl1SprAsset(FileSystem::LoadFileData);
 
         if (this->_asset != nullptr
                 && this->_asset->Load(filename))
