@@ -1,8 +1,7 @@
 // worldsize.h  -- extent of world and resolution/size of coordinate messages used in engine
 
-#ifndef WORLDSIZE_H
-#define WORLDSIZE_H
-#pragma once
+#ifndef _WORLDSIZE_H
+#define _WORLDSIZE_H
 
 
 // These definitions must match the coordinate message sizes in coordsize.h
@@ -25,4 +24,4 @@
 #define MAX_COORD_RANGE				(MAX_COORD_INTEGER)
 
 
-#endif // WORLDSIZE_H
+#endif // _WORLDSIZE_H

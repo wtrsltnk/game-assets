@@ -5,8 +5,8 @@
  * Created on August 6, 2010, 3:37 PM
  */
 
-#ifndef TOKENIZER_H
-#define	TOKENIZER_H
+#ifndef _TOKENIZER_H
+#define _TOKENIZER_H
 
 class Tokenizer
 {
@@ -32,5 +32,5 @@ private:
 
 };
 
-#endif	/* TOKENIZER_H */
+#endif /* _TOKENIZER_H */
 

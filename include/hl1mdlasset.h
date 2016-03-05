@@ -1,5 +1,5 @@
-#ifndef HL1MDLASSET_H
-#define HL1MDLASSET_H
+#ifndef _HL1MDLASSET_H
+#define _HL1MDLASSET_H
 
 #include "hl1mdltypes.h"
 #include "hl1mdlshader.h"
@@ -82,4 +82,4 @@ private:
 
 };
 
-#endif // HL1MDLASSET_H
+#endif // _HL1MDLASSET_H

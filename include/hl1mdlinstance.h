@@ -1,5 +1,5 @@
-#ifndef HL1MDLINSTANCE_H
-#define HL1MDLINSTANCE_H
+#ifndef _HL1MDLINSTANCE_H
+#define _HL1MDLINSTANCE_H
 
 #include "hl1mdlasset.h"
 #include "hl1mdlshader.h"
@@ -59,4 +59,4 @@ private:
     Hl1MdlShader* _shader;
 };
 
-#endif // HL1MDLINSTANCE_H
+#endif // _HL1MDLINSTANCE_H

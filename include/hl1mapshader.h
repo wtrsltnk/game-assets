@@ -1,5 +1,5 @@
-#ifndef HL1MAPSHADER_H
-#define HL1MAPSHADER_H
+#ifndef _HL1MAPSHADER_H
+#define _HL1MAPSHADER_H
 
 #include "hl1shader.h"
 
@@ -23,4 +23,4 @@ public:
 
 };
 
-#endif // HL1MAPSHADER_H
+#endif // _HL1MAPSHADER_H

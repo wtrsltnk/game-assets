@@ -1,5 +1,5 @@
-#ifndef HL2BSPASSET_H
-#define	HL2BSPASSET_H
+#ifndef _HL2BSPASSET_H
+#define _HL2BSPASSET_H
 
 #include "hl2bsptypes.h"
 #include "hl1wadasset.h"
@@ -102,5 +102,5 @@ private:
 
 };
 
-#endif	/* _BSPDATA_H */
+#endif /* _BSPDATA_H */
 
