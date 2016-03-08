@@ -15,6 +15,7 @@ public:
     virtual void Render(const glm::mat4& proj, const glm::mat4& view);
     void Unload();
 
+    const Hl1SprAsset* Asset() const { return this->_asset; }
 private:
     Hl1SprAsset* _asset;
     Hl1SprShader* _shader;

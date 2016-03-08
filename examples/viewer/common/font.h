@@ -10,7 +10,7 @@
 
 #include "stb_truetype.h"
 
-#include <GL/glew.h>
+#include <GL/glextl.h>
 #include <glm/glm.hpp>
 
 class FontShader

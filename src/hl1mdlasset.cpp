@@ -11,7 +11,7 @@
 #include <GL/glextl.h>
 
 Hl1MdlAsset::Hl1MdlAsset(DataFileLoader& loader)
-    : Hl1Asset(loader), _pstudiohdr(0), _vao(0), _vbo(0)
+    : Hl1Asset(loader), _header(0), _vao(0), _vbo(0)
 { }
 
 
@@ -25,21 +25,21 @@ Hl1MdlAsset::~Hl1MdlAsset()
 bool Hl1MdlAsset::Load(const std::string &filename)
 {
     Array<byte> file = this->_loader(filename);
-    this->_pstudiohdr = (HL1::tMDLHeader*)file.data;
+    this->_header = (HL1::tMDLHeader*)file.data;
 
     // preload textures
-    if (this->_pstudiohdr->numtextures == 0)
+    if (this->_header->numtextures == 0)
     {
         Array<byte> textureFile = this->_loader(filename.substr(0, filename.size()-4) + "T.mdl");
-        this->_ptexturehdr = (HL1::tMDLHeader*)textureFile.data;
+        this->_textureHeader = (HL1::tMDLHeader*)textureFile.data;
     }
     else
-        this->_ptexturehdr = this->_pstudiohdr;
+        this->_textureHeader = this->_header;
 
     // preload animations
-    if (this->_pstudiohdr->numseqgroups > 1)
+    if (this->_header->numseqgroups > 1)
     {
-        for (int i = 1; i < this->_pstudiohdr->numseqgroups; i++)
+        for (int i = 1; i < this->_header->numseqgroups; i++)
         {
             std::stringstream seqgroupname;
             seqgroupname
@@ -49,18 +49,18 @@ bool Hl1MdlAsset::Load(const std::string &filename)
 
             Array<unsigned char> buffer = this->_loader(seqgroupname.str());
             if (buffer.data != nullptr)
-                this->_panimhdr[i] = (HL1::tMDLSequenceHeader*)buffer.data;
+                this->_animationHeaders[i] = (HL1::tMDLSequenceHeader*)buffer.data;
         }
     }
 
-    this->_textureData.Map(this->_ptexturehdr->numtextures, (HL1::tMDLTexture*)(file.data + this->_ptexturehdr->textureindex));
-    this->_skinRefData.Map(this->_ptexturehdr->numskinref, (short*)((byte*)this->_ptexturehdr + this->_ptexturehdr->skinindex));
-    this->_skinFamilyData.Map(this->_ptexturehdr->numskinref, (short*)((byte*)this->_ptexturehdr + this->_ptexturehdr->skinindex));
-    this->_bodyPartData.Map(this->_pstudiohdr->numbodyparts, (HL1::tMDLBodyParts*)(file.data + this->_pstudiohdr->bodypartindex));
-    this->_sequenceGroupData.Map(this->_pstudiohdr->numseqgroups, (HL1::tMDLSequenceGroup*)(file.data + this->_pstudiohdr->seqgroupindex));
-    this->_sequenceData.Map(this->_pstudiohdr->numseq, (HL1::tMDLSequenceDescription*)(file.data + this->_pstudiohdr->seqindex));
-    this->_boneControllerData.Map(this->_pstudiohdr->numbonecontrollers, (HL1::tMDLBoneController*)(file.data + this->_pstudiohdr->bonecontrollerindex));
-    this->_boneData.Map(this->_pstudiohdr->numbones, (HL1::tMDLBone*)(file.data + this->_pstudiohdr->boneindex));
+    this->_textureData.Map(this->_textureHeader->numtextures, (HL1::tMDLTexture*)(file.data + this->_textureHeader->textureindex));
+    this->_skinRefData.Map(this->_textureHeader->numskinref, (short*)((byte*)this->_textureHeader + this->_textureHeader->skinindex));
+    this->_skinFamilyData.Map(this->_textureHeader->numskinref, (short*)((byte*)this->_textureHeader + this->_textureHeader->skinindex));
+    this->_bodyPartData.Map(this->_header->numbodyparts, (HL1::tMDLBodyParts*)(file.data + this->_header->bodypartindex));
+    this->_sequenceGroupData.Map(this->_header->numseqgroups, (HL1::tMDLSequenceGroup*)(file.data + this->_header->seqgroupindex));
+    this->_sequenceData.Map(this->_header->numseq, (HL1::tMDLSequenceDescription*)(file.data + this->_header->seqindex));
+    this->_boneControllerData.Map(this->_header->numbonecontrollers, (HL1::tMDLBoneController*)(file.data + this->_header->bonecontrollerindex));
+    this->_boneData.Map(this->_header->numbones, (HL1::tMDLBone*)(file.data + this->_header->boneindex));
 
     this->LoadTextures();
     this->LoadBodyParts();
@@ -122,26 +122,36 @@ void Hl1MdlAsset::RenderModels(int visibleModels[])
     glBindVertexArray(0);
 }
 
+int Hl1MdlAsset::SequenceCount() const
+{
+    return this->_header->numseq;
+}
+
+int Hl1MdlAsset::BodypartCount() const
+{
+    return this->_header->numbodyparts;
+}
+
 HL1::tMDLAnimation* Hl1MdlAsset::GetAnimation(HL1::tMDLSequenceDescription *pseqdesc)
 {
     HL1::tMDLSequenceGroup& pseqgroup = this->_sequenceGroupData[pseqdesc->seqgroup];
 
     if (pseqdesc->seqgroup == 0)
-        return (HL1::tMDLAnimation*)((byte*)this->_pstudiohdr + pseqgroup.unused2 + pseqdesc->animindex);
+        return (HL1::tMDLAnimation*)((byte*)this->_header + pseqgroup.unused2 + pseqdesc->animindex);
 
-    return (HL1::tMDLAnimation*)((byte*)this->_panimhdr[pseqdesc->seqgroup] + pseqdesc->animindex);
+    return (HL1::tMDLAnimation*)((byte*)this->_animationHeaders[pseqdesc->seqgroup] + pseqdesc->animindex);
 }
 
 void Hl1MdlAsset::LoadTextures()
 {
-    this->_textures.Allocate(this->_ptexturehdr->numtextures);
-    for (int i = 0; i < this->_ptexturehdr->numtextures; i++)
+    this->_textures.Allocate(this->_textureHeader->numtextures);
+    for (int i = 0; i < this->_textureHeader->numtextures; i++)
     {
         Texture& t = this->_textures[i];
         HL1::tMDLTexture *ptexture= &this->_textureData[i];
 
-        byte* data = ((byte*)this->_ptexturehdr) + ptexture->index;
-        byte* pal = ((byte*)this->_ptexturehdr) + ptexture->width * ptexture->height + ptexture->index;
+        byte* data = ((byte*)this->_textureHeader) + ptexture->index;
+        byte* pal = ((byte*)this->_textureHeader) + ptexture->width * ptexture->height + ptexture->index;
 
         std::stringstream ss;
         ss << ptexture->name << long(*(long*)ptexture);
@@ -209,26 +219,26 @@ void Hl1MdlAsset::LoadBodyParts()
     float s, t;
     int vertnum;
 
-    this->_bodyparts.Allocate(this->_pstudiohdr->numbodyparts);
-    for (int i = 0; i < this->_pstudiohdr->numbodyparts; i++)
+    this->_bodyparts.Allocate(this->_header->numbodyparts);
+    for (int i = 0; i < this->_header->numbodyparts; i++)
     {
         HL1::tMDLBodyParts& part = this->_bodyPartData[i];
         tBodypart& b = this->_bodyparts[i];
         b.models.Allocate(part.nummodels);
 
-        Array<HL1::tMDLModel> models(part.nummodels, (HL1::tMDLModel*)((byte*)this->_pstudiohdr + part.modelindex));
+        Array<HL1::tMDLModel> models(part.nummodels, (HL1::tMDLModel*)((byte*)this->_header + part.modelindex));
         for (int j = 0; j < models.count; j++)
         {
             HL1::tMDLModel& model = models[j];
             tModel& m = b.models[j];
             m.meshes.Allocate(model.nummesh);
 
-            Array<glm::vec3> vertices(model.numverts, (glm::vec3*)((byte*)this->_pstudiohdr + model.vertindex));
-            Array<byte> vertexBones(model.numverts, (byte*)this->_pstudiohdr + model.vertinfoindex);
-            Array<glm::vec3> normals(model.numnorms, (glm::vec3*)((byte*)this->_pstudiohdr + model.normindex));
+            Array<glm::vec3> vertices(model.numverts, (glm::vec3*)((byte*)this->_header + model.vertindex));
+            Array<byte> vertexBones(model.numverts, (byte*)this->_header + model.vertinfoindex);
+            Array<glm::vec3> normals(model.numnorms, (glm::vec3*)((byte*)this->_header + model.normindex));
 //            Array<byte> normalBones(model.numnorms, (byte*)this->_pstudiohdr + model.norminfoindex);
 
-            Array<HL1::tMDLMesh> meshes(model.nummesh, (HL1::tMDLMesh*)((byte*)this->_pstudiohdr + model.meshindex));
+            Array<HL1::tMDLMesh> meshes(model.nummesh, (HL1::tMDLMesh*)((byte*)this->_header + model.meshindex));
             for (int k = 0; k < meshes.count; k++)
             {
                 HL1::tMDLMesh& mesh = meshes[k];
@@ -237,7 +247,7 @@ void Hl1MdlAsset::LoadBodyParts()
                 e.start = this->_vertices.Count();
                 e.skin = this->_textureData[this->_skinRefData[mesh.skinref]].index;
 
-                short* ptricmds = (short *)((byte*)this->_pstudiohdr + mesh.triindex);
+                short* ptricmds = (short *)((byte*)this->_header + mesh.triindex);
 
                 s = 1.0f / float(this->_textureData[this->_skinRefData[mesh.skinref]].width);
                 t = 1.0f / float(this->_textureData[this->_skinRefData[mesh.skinref]].height);

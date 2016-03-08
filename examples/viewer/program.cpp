@@ -41,7 +41,13 @@ bool AssetViewer::InitializeGraphics()
         std::string ext = filename.substr(filename.length()-4);
 
         if (ext == ".bsp")
-            this->_asset = new Hl1BspAsset(FileSystem::LoadFileData);
+        {
+            Array<byte> sig = FileSystem::LoadPartialFileData(filename, 4);
+            if (sig[0] == 'V' && sig[1] == 'B' && sig[2] == 'S' && sig[3] == 'P')
+                this->_asset = new Hl2BspAsset(FileSystem::LoadFileData);
+            else if (((int*)sig.data)[0] == HL1_BSP_SIGNATURE)
+                this->_asset = new Hl1BspAsset(FileSystem::LoadFileData);
+        }
         else if (ext == ".mdl")
             this->_asset = new Hl1MdlAsset(FileSystem::LoadFileData);
         else if (ext == ".map")
@@ -52,6 +58,8 @@ bool AssetViewer::InitializeGraphics()
         if (this->_asset != nullptr
                 && this->_asset->Load(filename))
             this->_instance = this->_asset->CreateInstance();
+
+        this->_hud.InitHud(filename, this->_instance);
     }
 
     this->_cam.MoveForward(-120.0f);
@@ -79,7 +87,7 @@ void AssetViewer::GameLoop()
     double updateDiff = time - lastUpdateTime;
     if (updateDiff > 1.0/60.0)
     {
-        if (this->_instance != nullptr)
+        if (this->_instance != nullptr && this->_hud.State.pauseAnimation == false)
             this->_instance->Update(updateDiff);
 
         lastUpdateTime = time;
@@ -88,11 +96,13 @@ void AssetViewer::GameLoop()
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     glEnable(GL_DEPTH_TEST);
-    glEnable(GL_CULL_FACE);
-    glCullFace(GL_FRONT);
+//    glEnable(GL_CULL_FACE);
+//    glCullFace(GL_FRONT);
 
     if (this->_instance != nullptr)
         this->_instance->Render(this->_proj, this->_cam.GetViewMatrix());
+
+    this->_hud.Render();
 }
 
 bool AssetViewer::IsRunning()
@@ -105,6 +115,7 @@ void AssetViewer:: Resize(int w, int h)
 {
     if (h < 1) h = 1;
 
+    this->_hud.Resize(w, h);
     glViewport(0, 0, w, h);
 
     this->_proj = glm::perspective(120.0f, float(w) / float(h), 0.1f, 4000.0f);
@@ -138,7 +149,11 @@ void AssetViewer::MouseWheel(int x, int y)
 { }
 
 void AssetViewer::KeyAction(int key, int action)
-{ }
+{
+    if (key == SDLK_SPACE && action) this->_hud.State.pauseAnimation = !this->_hud.State.pauseAnimation;
+    else
+        this->_hud.KeyAction(key, action);
+}
 
 void AssetViewer::Destroy()
 {

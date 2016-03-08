@@ -6,9 +6,11 @@
  */
 
 #include "font.h"
-#include "../shader.h"
 #include <stdio.h>
 #include <string>
+#include <map>
+#include <vector>
+#include <iostream>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
@@ -286,6 +288,11 @@ void Font::DrawText(const glm::mat4& proj, const glm::mat4& view, float x, float
                 }
             }
         }
+        else if (c == '\n')
+        {
+            x = ox;
+            y += this->_fontSize;
+        }
         else if (c >= 32 && c < 128)
         {
             local = view * glm::translate(glm::mat4(1.0f), glm::vec3(x, y, 0));
@@ -355,11 +362,15 @@ const std::string fragmentShader(
         "}"
     );
 
+// TODO : The implementation can be found in hl1shader.cpp
+GLuint LoadShaderProgram(const std::string& vertShaderStr, const std::string& fragShaderStr, const std::map<GLuint, std::string>& attrLoc);
+
 void FontShader::LoadShader()
 {
     if (FontShader::_program == 0)
     {
-        FontShader::_program = LoadShaderProgram(vertexShader, fragmentShader);
+        std::map<GLuint, std::string> attrLoc;
+        FontShader::_program = LoadShaderProgram(vertexShader, fragmentShader, attrLoc);
 
         glUseProgram(FontShader::_program);
 

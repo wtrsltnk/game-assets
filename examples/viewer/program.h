@@ -1,11 +1,11 @@
 #ifndef HL1BSPVIEWER_H
 #define HL1BSPVIEWER_H
 
-#include <glm/glm.hpp>
-
+#include "viewerhud.h"
 #include "common/application.h"
 #include "common/camera.h"
 #include <hl1types.h>
+#include <glm/glm.hpp>
 
 class AssetViewer : public Application
 {
@@ -16,6 +16,7 @@ class AssetViewer : public Application
     int _lastX, _lastY;
     bool _pan;
     Camera _cam;
+    ViewerHud _hud;
 
 public:
     AssetViewer();

@@ -30,6 +30,8 @@ public:
     int SetSkin(int iValue);
     float SetSpeed(float speed);
 
+    const Hl1MdlAsset* Asset() const { return this->_asset; }
+
 private:
     void SetupBones();
     void CalcBoneAdj();

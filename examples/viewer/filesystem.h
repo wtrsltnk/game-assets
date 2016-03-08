@@ -17,7 +17,8 @@ class FileSystem
 {
 	static LoadedFileList _loadedFiles;
 public:
-	static Array<byte>& LoadFileData(const std::string& filename);
+    static Array<byte>& LoadFileData(const std::string& filename);
+    static Array<byte> LoadPartialFileData(const std::string& filename, int count);
 	static void UnloadFileData(FileData& fileData);
 };
 

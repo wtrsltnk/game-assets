@@ -24,8 +24,10 @@ set(SRC_APP
     common/camera.cpp
     common/main_sdl.cpp
     common/glextl.cpp
+    common/font.cpp
     program.cpp
     filesystem.cpp
+    viewerhud.cpp
 )
 
 add_executable(viewer ${SRC_APP})
