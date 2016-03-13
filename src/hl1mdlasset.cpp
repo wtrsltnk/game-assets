@@ -101,6 +101,10 @@ Hl1Instance* Hl1MdlAsset::CreateInstance()
 
 void Hl1MdlAsset::RenderModels(int visibleModels[])
 {
+    glEnable(GL_DEPTH_TEST);
+    glEnable(GL_CULL_FACE);
+    glCullFace(GL_FRONT);
+
     glBindVertexArray(this->_vao);
 
     for (int bi = 0; bi < this->_bodyparts.count; bi++)

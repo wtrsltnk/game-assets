@@ -33,7 +33,7 @@ public:
     void CopyFrom(const Texture& from);
     void DefaultTexture();
 
-    void SetData(int w, int h, int bpp, unsigned char* data);
+    void SetData(int w, int h, int bpp, unsigned char* data, bool repeat = true);
     void SetName(const std::string& _name);
     void SetDimentions(int _width, int _height, int _bpp = 3, unsigned int _format = -1);
 

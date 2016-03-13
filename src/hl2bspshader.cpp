@@ -34,8 +34,8 @@ const std::string Hl2BspShader::VertexShader()
                 "{"
                 "    mat4 m = u_projection * u_view;\n"
                 "    gl_Position = m * vec4(vertex.xyz, 1.0);\n"
-                "    f_uvt = texcoords.st;\n"
-                "    f_uvl = lightcoords.st;\n"
+                "    f_uvt.st = texcoords.st;\n"
+                "    f_uvl.st = lightcoords.st;\n"
                 "}"
                 );
 }
@@ -56,7 +56,7 @@ const std::string Hl2BspShader::FragmentShader()
 
                 "void main()\n"
                 "{"
-                "   color = vec4(1.0, 0, 0, 1.0);//texture(u_tex, f_uvt.st) * texture(u_light, f_uvl.st) * u_global_color;\n"
+                "   color = texture(u_light, f_uvl.st);//texture(u_tex, f_uvt.st) * texture(u_light, f_uvl.st) * u_global_color;\n"
                 "}"
                 );
 }

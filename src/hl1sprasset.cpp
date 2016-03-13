@@ -92,13 +92,14 @@ Hl1Instance* Hl1SprAsset::CreateInstance()
 
 void Hl1SprAsset::RenderSpriteFrame(int frame)
 {
-    glBindVertexArray(this->_vao);
+    glEnable(GL_DEPTH_TEST);
     glDisable(GL_CULL_FACE);
+
+    glBindVertexArray(this->_vao);
 
     glBindTexture(GL_TEXTURE_2D, this->_frames[frame]);
     glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 
-    glEnable(GL_CULL_FACE);
     glBindVertexArray(0);
 }
 

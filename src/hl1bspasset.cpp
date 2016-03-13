@@ -400,7 +400,7 @@ bool Hl1BspAsset::LoadLightmap(const HL1::tBSPFace& in, Texture& out, float min[
         size[c] = (int) (tmax - tmin);
     }
 
-    out.SetData(size[0] + 1, size[1] + 1, 3, this->_lightingData.data + in.lightOffset);
+    out.SetData(size[0] + 1, size[1] + 1, 3, this->_lightingData.data + in.lightOffset, false);
 
     float light_adjust = 1.0f;// - config.brightness;
 
@@ -421,6 +421,10 @@ bool Hl1BspAsset::LoadLightmap(const HL1::tBSPFace& in, Texture& out, float min[
 
 void Hl1BspAsset::RenderFaces(const std::set<short>& visibleFaces)
 {
+    glEnable(GL_DEPTH_TEST);
+    glEnable(GL_CULL_FACE);
+    glCullFace(GL_FRONT);
+
     glBindVertexArray(this->_vao);
 
     for (std::set<short>::const_iterator i = visibleFaces.begin(); i != visibleFaces.end(); ++i)

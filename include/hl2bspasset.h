@@ -38,10 +38,25 @@ public:
     virtual bool Load(const std::string &filename);
     virtual Hl1Instance* CreateInstance();
 
-    void RenderFaces(const std::set<short>& visibleFaces);
+    void RenderFaces(const std::set<int>& visibleFaces);
 
     HL2::tBSPEntity* FindEntityByClassname(const std::string& classname);
     HL2::tBSPMipTexHeader* GetMiptex(int index);
+
+    // These are mapped from the input file data
+    Array<HL2::tBSPPlane> _planeData;
+    Array<byte> _textureData;
+    Array<HL2::tBSPVertex> _verticesData;
+    Array<HL2::tBSPNode> _nodeData;
+    Array<HL2::tBSPTexInfo> _texinfoData;
+    Array<HL2::tBSPFace> _faceData;
+    Array<byte> _lightingData;
+    Array<HL2::tBSPClipNode> _clipnodeData;
+    Array<HL2::tBSPLeaf> _leafData;
+    Array<unsigned short> _marksurfaceData;
+    Array<HL2::tBSPEdge> _edgeData;
+    Array<int> _surfedgeData;
+    Array<HL2::tBSPModel> _modelData;
 
     // These are parsed from the mapped data
     std::vector<HL2::tBSPEntity> _entities;
@@ -50,21 +65,6 @@ public:
     Array<tFace> _faces;
     Array<Texture> _lightMaps;
     Array<Texture> _textures;
-
-    // These are mapped from the input file data
-    Array<HL2::tBSPPlane> _planeData;
-    Array<unsigned char> _textureData;
-    Array<HL2::tBSPVertex> _verticesData;
-    Array<HL2::tBSPNode> _nodeData;
-    Array<HL2::tBSPTexInfo> _texinfoData;
-    Array<HL2::tBSPFace> _faceData;
-    Array<unsigned char> _lightingData;
-    Array<HL2::tBSPClipNode> _clipnodeData;
-    Array<HL2::tBSPLeaf> _leafData;
-    Array<unsigned short> _marksurfaceData;
-    Array<HL2::tBSPEdge> _edgeData;
-    Array<int> _surfedgeData;
-    Array<HL2::tBSPModel> _modelData;
 
 private:
     // File format header
@@ -91,14 +91,12 @@ private:
         return lump.count > 0;
     }
 
-    void CalculateSurfaceExtents(const HL2::tBSPFace& in, float min[2], float max[2]) const;
-    bool LoadLightmap(const HL2::tBSPFace& in, Texture& out, float min[2], float max[2]);
+    bool LoadLightmap(const HL2::tBSPFace& in, Texture& out);
 
     bool LoadFacesWithLightmaps(Hl2BspAsset* data);
     bool LoadTextures(const std::vector<Hl1WadAsset*>& wads);
 
     static std::vector<HL2::tBSPEntity> LoadEntities(const Array<byte>& entityData);
-    static std::vector<HL2::tBSPVisLeaf> LoadVisLeafs(const Array<byte>& visdata, const Array<HL2::tBSPLeaf>& _leafData, const Array<HL2::tBSPModel>& _modelData);
 
 };
 

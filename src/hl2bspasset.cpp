@@ -29,39 +29,32 @@ bool Hl2BspAsset::Load(const std::string &filename)
         return false;
     }
 
-    this->LoadLump(data, this->_planeData, HL2_BSP_PLANELUMP);
-    this->LoadLump(data, this->_textureData, HL2_BSP_TEXTURELUMP);
-    this->LoadLump(data, this->_verticesData, HL2_BSP_VERTEXLUMP);
-    this->LoadLump(data, this->_nodeData, HL2_BSP_NODELUMP);
-    this->LoadLump(data, this->_texinfoData, HL2_BSP_TEXINFOLUMP);
-    this->LoadLump(data, this->_faceData, HL2_BSP_FACELUMP);
-    this->LoadLump(data, this->_lightingData, HL2_BSP_LIGHTINGLUMP);
-    this->LoadLump(data, this->_clipnodeData, HL2_BSP_CLIPNODELUMP);
-    this->LoadLump(data, this->_leafData, HL2_BSP_LEAFLUMP);
-    this->LoadLump(data, this->_marksurfaceData, HL2_BSP_MARKSURFACELUMP);
-    this->LoadLump(data, this->_edgeData, HL2_BSP_EDGELUMP);
-    this->LoadLump(data, this->_surfedgeData, HL2_BSP_SURFEDGELUMP);
-    this->LoadLump(data, this->_modelData, HL2_BSP_MODELLUMP);
+    this->LoadLump(data, this->_planeData, HL2_BSP_PLANES);
+    this->LoadLump(data, this->_textureData, HL2_BSP_TEXDATA);
+    this->LoadLump(data, this->_verticesData, HL2_BSP_VERTEXES);
+    this->LoadLump(data, this->_nodeData, HL2_BSP_NODES);
+    this->LoadLump(data, this->_texinfoData, HL2_BSP_TEXINFO);
+    this->LoadLump(data, this->_faceData, HL2_BSP_FACES);
+    this->LoadLump(data, this->_lightingData, HL2_BSP_LIGHTING);
+    this->LoadLump(data, this->_clipnodeData, HL2_BSP_OCCLUSION);
+    this->LoadLump(data, this->_leafData, HL2_BSP_LEAFS);
+    this->LoadLump(data, this->_marksurfaceData, HL2_BSP_FACEIDS);
+    this->LoadLump(data, this->_edgeData, HL2_BSP_EDGES);
+    this->LoadLump(data, this->_surfedgeData, HL2_BSP_SURFEDGES);
+    this->LoadLump(data, this->_modelData, HL2_BSP_MODELS);
 
     Array<byte> entityData;
-    if (this->LoadLump(data, entityData, HL2_BSP_ENTITYLUMP))
+    if (this->LoadLump(data, entityData, HL2_BSP_ENTITIES))
         this->_entities = Hl2BspAsset::LoadEntities(entityData);
 
-    Array<byte> visibilityData;
-    if (this->LoadLump(data, visibilityData, HL2_BSP_VISIBILITYLUMP))
-
-//    std::vector<Hl1WadAsset*> wads;
-//    HL2::tBSPEntity* worldspawn = this->FindEntityByClassname("worldspawn");
-//    if (worldspawn != nullptr)
-//        wads = Hl1WadAsset::LoadWads(worldspawn->keyvalues["wad"], filename);
-//    this->LoadTextures(wads);
-//    Hl1WadAsset::UnloadWads(wads);
+    //    std::vector<Hl1WadAsset*> wads;
+    //    HL2::tBSPEntity* worldspawn = this->FindEntityByClassname("worldspawn");
+    //    if (worldspawn != nullptr)
+    //        wads = Hl1WadAsset::LoadWads(worldspawn->keyvalues["wad"], filename);
+    //    this->LoadTextures(wads);
+    //    Hl1WadAsset::UnloadWads(wads);
 
     this->LoadFacesWithLightmaps(this);
-
-    glBindTexture(GL_TEXTURE_2D, 0);                // Unbind texture
-    glPixelStorei(GL_UNPACK_ALIGNMENT, 4);          // Reset UNPACK_ALIGNMENT
-    glActiveTexture(GL_TEXTURE0);
 
     glGenVertexArrays(1, &this->_vao);
     glBindVertexArray(this->_vao);
@@ -143,88 +136,25 @@ HL2::tBSPEntity* Hl2BspAsset::FindEntityByClassname(const std::string& classname
     return nullptr;
 }
 
-std::vector<HL2::tBSPVisLeaf> Hl2BspAsset::LoadVisLeafs(const Array<byte>& visdata, const Array<HL2::tBSPLeaf>& leafs, const Array<HL2::tBSPModel>& models)
-{
-    std::vector<HL2::tBSPVisLeaf> visLeafs = std::vector<HL2::tBSPVisLeaf>(leafs.count);
-
-    for (int i = 0; i < leafs.count; i++)
-    {
-        visLeafs[i].leafs = 0;
-        visLeafs[i].leafCount = 0;
-        int visOffset = leafs[i].visofs;
-
-        for (int j = 1; j < models[0].visLeafs; visOffset++)
-        {
-            if (visdata[visOffset] == 0)
-            {
-                visOffset++;
-                j += (visdata[visOffset]<<3);
-            }
-            else
-            {
-                for (byte bit = 1; bit; bit<<=1, j++)
-                {
-                    if (visdata[visOffset] & bit)
-                        visLeafs[i].leafCount++;
-                }
-            }
-        }
-
-        if (visLeafs[i].leafCount > 0)
-        {
-            visLeafs[i].leafs = new int[visLeafs[i].leafCount];
-            if (visLeafs[i].leafs == 0)
-                return visLeafs;
-        }
-    }
-
-    for (int i = 0; i < leafs.count; i++)
-    {
-        int visOffset = leafs[i].visofs;
-        int index = 0;
-        for (int j = 1; j < models[0].visLeafs; visOffset++)
-        {
-            if (visdata[visOffset] == 0)
-            {
-                visOffset++;
-                j += (visdata[visOffset]<<3);
-            }
-            else
-            {
-                for (byte bit = 1; bit; bit<<=1, j++)
-                {
-                    if (visdata[visOffset] & bit)
-                    {
-                        visLeafs[i].leafs[index++] = j;
-                    }
-                }
-            }
-        }
-    }
-
-    return visLeafs;
-}
-
 bool Hl2BspAsset::LoadFacesWithLightmaps(Hl2BspAsset* bspAsset)
 {
     this->_faces.Allocate(bspAsset->_faceData.count);
     this->_lightMaps.Allocate(bspAsset->_faceData.count);
 
-    // Activate TEXTURE1 for lightmaps from each face
-    glActiveTexture(GL_TEXTURE1);
+    glActiveTexture(GL_TEXTURE1);                   // Activate TEXTURE1 for lightmaps from each face
     glEnable(GL_TEXTURE_2D);
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);          // UNPACK_ALIGNMENT, lightmaps are byte per pixel
 
     for (int f = 0; f < this->_faces.count; f++)
     {
         HL2::tBSPFace& in = bspAsset->_faceData[f];
-//        HL2::tBSPMipTexHeader* mip = bspAsset->GetMiptex(bspAsset->_texinfoData[in.texinfo].miptexIndex);
+        //        HL2::tBSPMipTexHeader* mip = bspAsset->GetMiptex(bspAsset->_texinfoData[in.texinfo].miptexIndex);
         Hl2BspAsset::tFace& out = this->_faces[f];
 
         out.firstVertex = this->_vertices.Count();
         out.vertexCount = in.edgeCount;
         out.flags = bspAsset->_texinfoData[in.texinfo].flags;
-        out.texture = bspAsset->_texinfoData[in.texinfo].miptexIndex;
+        //        out.texture = bspAsset->_texinfoData[in.texinfo].miptexIndex;
         out.lightmap = f;
         out.plane = bspAsset->_planeData[in.planeIndex];
 
@@ -237,16 +167,9 @@ bool Hl2BspAsset::LoadFacesWithLightmaps(Hl2BspAsset* bspAsset)
             out.plane.distance = -out.plane.distance;
         }
 
-//        // Calculate and grab the lightmap buffer
-//        float min[2], max[2];
-//        bspAsset->CalculateSurfaceExtents(in, min, max);
-//        if (bspAsset->LoadLightmap(in, this->_lightMaps[f], min, max))
-//            this->_lightMaps[f].UploadToGl();
-
-//        float lw = float(this->_lightMaps[f].Width());
-//        float lh = float(this->_lightMaps[f].Height());
-//        float halfsizew = (min[0] + max[0]) / 2.0f;
-//        float halfsizeh = (min[1] + max[1]) / 2.0f;
+        // Calculate and grab the lightmap buffer
+        if (bspAsset->LoadLightmap(in, this->_lightMaps[f]))
+            this->_lightMaps[f].UploadToGl();
 
         // Create a vertex list for this face
         for (int e = 0; e < in.edgeCount; e++)
@@ -261,95 +184,32 @@ bool Hl2BspAsset::LoadFacesWithLightmaps(Hl2BspAsset* bspAsset)
             // Copy the normal from the plane
             v.normal = out.plane.normal;
 
-//            HL2::tBSPTexInfo& ti = bspAsset->_texinfoData[in.texinfo];
-//            float s = glm::dot(v.position, glm::vec3(ti.vecs[0][0], ti.vecs[0][1], ti.vecs[0][2])) + ti.vecs[0][3];
-//            float t = glm::dot(v.position, glm::vec3(ti.vecs[1][0], ti.vecs[1][1], ti.vecs[1][2])) + ti.vecs[1][3];
+            auto pTexinfos = bspAsset->_texinfoData[in.texinfo];
+            float tc3 = pTexinfos.lightmapVecsLuxelsPerWorldUnits[0][0] * v.position[0] +
+                    pTexinfos.lightmapVecsLuxelsPerWorldUnits[0][1] * v.position[1] +
+                    pTexinfos.lightmapVecsLuxelsPerWorldUnits[0][2] * v.position[2] +
+                    pTexinfos.lightmapVecsLuxelsPerWorldUnits[0][3] - in.LightmapTextureMinsInLuxels[0];
+            float tc4 = pTexinfos.lightmapVecsLuxelsPerWorldUnits[1][0] * v.position[0] +
+                    pTexinfos.lightmapVecsLuxelsPerWorldUnits[1][1] * v.position[1] +
+                    pTexinfos.lightmapVecsLuxelsPerWorldUnits[1][2] * v.position[2] +
+                    pTexinfos.lightmapVecsLuxelsPerWorldUnits[1][3] - in.LightmapTextureMinsInLuxels[1];
 
-//            // Calculate the texture texcoords
-//            v.texcoords[0] = glm::vec2(s / float(mip->width), t / float(mip->height));
-
-//            // Calculate the lightmap texcoords
-//            v.texcoords[1] = glm::vec2(((lw / 2.0f) + (s - halfsizew) / 16.0f) / lw, ((lh / 2.0f) + (t - halfsizeh) / 16.0f) / lh);
+            v.texcoords[0].x = v.texcoords[1].x = tc3 / this->_lightMaps[f].Width();
+            v.texcoords[0].y = v.texcoords[1].y = tc4 / this->_lightMaps[f].Height();
 
             this->_vertices.Add(v);
         }
     }
+
+    glBindTexture(GL_TEXTURE_2D, 0);                // Unbind texture
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 4);          // Reset UNPACK_ALIGNMENT
+    glActiveTexture(GL_TEXTURE0);                   // Activate TEXTURE0 for regular textures
 
     return true;
 }
 
 bool Hl2BspAsset::LoadTextures(const std::vector<Hl1WadAsset*>& wads)
 {
-    this->_textures.count = int(*this->_textureData.data);
-    this->_textures.data = new Texture[this->_textures.count];
-    Array<int> textureTable(int(*((int*)this->_textureData.data)), (int*)(this->_textureData.data + sizeof(int)));
-
-    // Activate TEXTURE0 for the regular texture
-    glActiveTexture(GL_TEXTURE0);
-    glEnable(GL_TEXTURE_2D);
-
-    for (int t = 0; t < this->_textures.count; t++)
-    {
-        const unsigned char* textureData = this->_textureData.data + textureTable[t];
-        HL2::tBSPMipTexHeader* miptex = (HL2::tBSPMipTexHeader*)textureData;
-        this->_textures[t].SetName(miptex->name);
-
-        if (miptex->offsets[0] == 0)
-        {
-            for (std::vector<Hl1WadAsset*>::const_iterator i = wads.cbegin(); i != wads.cend(); ++i)
-            {
-                Hl1WadAsset* wad = *i;
-                textureData = wad->LumpData(wad->IndexOf(miptex->name));
-                if (textureData != nullptr)
-                    break;
-            }
-        }
-
-        if (textureData != nullptr)
-        {
-            miptex = (HL2::tBSPMipTexHeader*)textureData;
-            int s = miptex->width * miptex->height;
-            int bpp = 4;
-            int paletteOffset = miptex->offsets[0] + s + (s/4) + (s/16) + (s/64) + sizeof(short);
-
-            // Get the miptex data and palette
-            const unsigned char* source0 = textureData + miptex->offsets[0];
-            const unsigned char* palette = textureData + paletteOffset;
-
-            unsigned char* destination = new unsigned char[s * bpp];
-
-            unsigned char r, g, b, a;
-            for (int i = 0; i < s; i++)
-            {
-                r = palette[source0[i]*3];
-                g = palette[source0[i]*3+1];
-                b = palette[source0[i]*3+2];
-                a = 255;
-
-                // Do we need a transparent pixel
-                if (this->_textures[t].Name()[0] == '{' && source0[i] == 255)
-                    r = g = b = a = 0;
-
-                destination[i*4 + 0] = r;
-                destination[i*4 + 1] = g;
-                destination[i*4 + 2] = b;
-                destination[i*4 + 3] = a;
-            }
-
-            this->_textures[t].SetData(miptex->width, miptex->height, bpp, destination);
-
-            delete []destination;
-        }
-        else
-        {
-            std::cout << "Texture \"" << miptex->name << "\" not found" << std::endl;
-            this->_textures[t].DefaultTexture();
-        }
-        this->_textures[t].UploadToGl();
-    }
-
-    glBindTexture(GL_TEXTURE_2D, 0);                // Unbind texture
-
     return true;
 }
 
@@ -363,83 +223,61 @@ HL2::tBSPMipTexHeader* Hl2BspAsset::GetMiptex(int index)
     return 0;
 }
 
-//
-// the following computations are based on:
-// PolyEngine (c) Alexey Goloshubin and Quake I source by id Software
-//
+#define LIGHTMAP_GAMMA 2.2f
 
-void Hl2BspAsset::CalculateSurfaceExtents(const HL2::tBSPFace& in, float min[2], float max[2]) const
+bool Hl2BspAsset::LoadLightmap(const HL2::tBSPFace& in, Texture& out)
 {
-    const HL2::tBSPTexInfo* t = &this->_texinfoData[in.texinfo];
+    if (in.lightOffset < 0)
+        return false;
 
-    min[0] = min[1] =  999999;
-    max[0] = max[1] = -999999;
+    float gamma = 1.0f / 2.0f;
+    int luxelCount = (in.LightmapTextureSizeInLuxels[0] + 1) * (in.LightmapTextureSizeInLuxels[1] + 1);
+    HL2::tBSPColorRGBExp32* pLightmap = (HL2::tBSPColorRGBExp32*) (this->_lightingData.data + in.lightOffset);
 
-    for (int i = 0; i < in.edgeCount; i++)
+    Array<byte> data(luxelCount * 3);
+    for (int i = 0; i < luxelCount; i++)
     {
-        const HL2::tBSPVertex* v;
-        int e = this->_surfedgeData[in.firstEdge + i];
-        if (e >= 0)
-            v = &this->_verticesData[this->_edgeData[e].vertex[0]];
-        else
-            v = &this->_verticesData[this->_edgeData[-e].vertex[1]];
+        float r = pLightmap[i].b * powf(2.0f, pLightmap[i].exponent);
+        if (r < 0) r = 0.f; if (r > 255) r = 255.f;
+        data[i * 3 + 0] = (byte)(powf(round(r) / 255.f, gamma) *255.f);
 
-        for (int j = 0; j < 2; j++)
-        {
-            int val = v->point[0] * t->vecs[j][0] + v->point[1] * t->vecs[j][1] + v->point[2] * t->vecs[j][2] +t->vecs[j][3];
-            if (val < min[j]) min[j] = val;
-            if (val > max[j]) max[j] = val;
-        }
+        float g = pLightmap[i].g * powf(2.0f, pLightmap[i].exponent);
+        if (g < 0) g = 0.f; if (g > 255) g = 255.f;
+        data[i * 3 + 1] = (byte)(powf(round(g) / 255.f, gamma) *255.f);;
+
+        float b = pLightmap[i].b * powf(2.0f, pLightmap[i].exponent);
+        if (b < 0) b = 0.f; if (b > 255) b = 255.f;
+        data[i * 3 + 2] = (byte)(powf(round(b) / 255.f, gamma) *255.f);
     }
-}
+    out.SetData(in.LightmapTextureSizeInLuxels[0] + 1, in.LightmapTextureSizeInLuxels[1] + 1, 3, data.data, false);
 
-bool Hl2BspAsset::LoadLightmap(const HL2::tBSPFace& in, Texture& out, float min[2], float max[2])
-{
-    // compute lightmap size
-    int size[2];
-    for (int c = 0; c < 2; c++)
-    {
-        float tmin = floorf(min[c] / 16.0f);
-        float tmax = ceilf(max[c] / 16.0f);
-
-        size[c] = (int) (tmax - tmin);
-    }
-
-    out.SetData(size[0] + 1, size[1] + 1, 3, this->_lightingData.data + in.lightOffset);
-
-    float light_adjust = 1.0f;// - config.brightness;
-
-    // scale lightmap value...
-    for (int i = 0; i < out.DataSize(); i++)
-    {
-        float f = powf((out.Data()[i] + 1) / 256.0f, light_adjust);
-        int inf = f * 255.0f + 0.5f;
-
-        // clamp between 0 and 255
-        if (inf < 0) inf = 0;
-        if (inf > 255) inf = 255;
-
-        out.Data()[i] = inf;
-    }
     return true;
 }
 
-void Hl2BspAsset::RenderFaces(const std::set<short>& visibleFaces)
+void Hl2BspAsset::RenderFaces(const std::set<int>& visibleFaces)
 {
-    glBindVertexArray(this->_vao);
-    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-    for (std::set<short>::const_iterator i = visibleFaces.begin(); i != visibleFaces.end(); ++i)
-    {
-        short a = *i;
-//        glActiveTexture(GL_TEXTURE1);
-//        glBindTexture(GL_TEXTURE_2D, this->_lightMaps[this->_faces[a].lightmap].GlIndex());
+    glEnable(GL_DEPTH_TEST);
+    glEnable(GL_CULL_FACE);
+    glCullFace(GL_FRONT);
 
-//        glActiveTexture(GL_TEXTURE0);
-//        glBindTexture(GL_TEXTURE_2D, this->_textures[this->_faces[a].texture].GlIndex());
+    glBindVertexArray(this->_vao);
+    for (auto i = visibleFaces.begin(); i != visibleFaces.end(); ++i)
+    {
+        int a = *i;
+        if (this->_faces[a].flags &= SURF_SKY)
+            continue;
+        if (this->_faces[a].flags &= SURF_TRIGGER)
+            continue;
+
+        GLuint u = this->_lightMaps[a].GlIndex();
+        glActiveTexture(GL_TEXTURE1);
+        glBindTexture(GL_TEXTURE_2D, u);
+
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, 0);
 
         glDrawArrays(GL_POLYGON, this->_faces[a].firstVertex, this->_faces[a].vertexCount);
     }
-    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     glBindVertexArray(0);
 }
 

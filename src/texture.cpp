@@ -134,7 +134,7 @@ void Texture::DefaultTexture()
     this->SetData(IMAGE_ROWS, IMAGE_COLS, 3, (GLubyte*)&imageData[0][0][0]);
 }
 
-void Texture::SetData(int w, int h, int bpp, unsigned char* data)
+void Texture::SetData(int w, int h, int bpp, unsigned char* data, bool repeat)
 {
     int dataSize = w * h * bpp;
 
@@ -143,6 +143,7 @@ void Texture::SetData(int w, int h, int bpp, unsigned char* data)
         this->_width = w;
         this->_height = h;
         this->_bpp = bpp;
+        this->_repeat = repeat;
 
         if (this->_data != nullptr)
             delete []this->_data;

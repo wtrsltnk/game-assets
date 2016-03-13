@@ -22,10 +22,8 @@ public:
 private:
     Hl2BspAsset* _asset;
     Hl2BspShader* _shader;
-    std::set<short> _visibleFaces;
+    std::set<int> _visibleFaces;
 
-    std::set<short> FindVisibleFaces(const glm::vec3& pos);
-    int TracePointInLeaf(const glm::vec3& point, int startNode);
 };
 
 #endif /* _HL2BSPINSTANCE_H */

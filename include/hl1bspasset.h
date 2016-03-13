@@ -43,14 +43,6 @@ public:
     HL1::tBSPEntity* FindEntityByClassname(const std::string& classname);
     HL1::tBSPMipTexHeader* GetMiptex(int index);
 
-    // These are parsed from the mapped data
-    std::vector<HL1::tBSPEntity> _entities;
-    std::vector<HL1::tBSPVisLeaf> _visLeafs;
-    List<Hl1BspAsset::tVertex> _vertices;
-    Array<tFace> _faces;
-    Array<Texture> _lightMaps;
-    Array<Texture> _textures;
-
     // These are mapped from the input file data
     Array<HL1::tBSPPlane> _planeData;
     Array<unsigned char> _textureData;
@@ -65,6 +57,14 @@ public:
     Array<HL1::tBSPEdge> _edgeData;
     Array<int> _surfedgeData;
     Array<HL1::tBSPModel> _modelData;
+
+    // These are parsed from the mapped data
+    std::vector<HL1::tBSPEntity> _entities;
+    std::vector<HL1::tBSPVisLeaf> _visLeafs;
+    List<Hl1BspAsset::tVertex> _vertices;
+    Array<tFace> _faces;
+    Array<Texture> _lightMaps;
+    Array<Texture> _textures;
 
 private:
     // File format header
