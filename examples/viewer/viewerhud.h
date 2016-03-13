@@ -25,13 +25,6 @@ public:
 class ViewerHud
 {
 public:
-    struct sState {
-        bool pauseAnimation;
-        bool showInfo;
-        bool showHelp;
-
-    } State;
-
     struct eFonts {
         Font Regular;
         Font Info;

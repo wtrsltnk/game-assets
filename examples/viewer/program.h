@@ -23,7 +23,7 @@ public:
     virtual ~AssetViewer();
 
 public:
-    virtual const char* GetWindowTitle() { return "hl1 bspviewer"; }
+    virtual const char* GetWindowTitle() { return "asset-viewer"; }
     virtual void GetContextAttributes(int& major, int& minor, bool& core) { major = 3; minor = 0; core = false; }
 
     virtual bool InitializeApplication(System* sys);

@@ -1,5 +1,6 @@
 #include "program.h"
 #include "filesystem.h"
+#include "common/settings.h"
 #include <hl1bspasset.h>
 #include <hl2bspasset.h>
 #include <hl1mdlasset.h>
@@ -15,7 +16,11 @@ Application* gApp = new AssetViewer();
 
 AssetViewer::AssetViewer()
     : _pan(false), _lastX(0), _lastY(0), _asset(nullptr), _instance(nullptr)
-{ }
+{
+    Settings::Instance()->LoadFromDisk("assetviewer.settings");
+    Setting("Viewer.PauseAnimation").Register(false);
+    Setting("Viewer.Camera.Speed").Register(200.0f);
+}
 
 AssetViewer::~AssetViewer()
 { }
@@ -74,7 +79,7 @@ void AssetViewer::GameLoop()
 
     double time = this->_sys->GetTime();
     double diff = time - lastTime;
-    double speed = 200.0;
+    double speed = double(Setting("Viewer.Camera.Speed").AsFloat());
 
     if (this->_sys->IsKeyDown(KeyCodes::Character_A)) this->_cam.MoveLeft(diff * speed);
     else if (this->_sys->IsKeyDown(KeyCodes::Character_D)) this->_cam.MoveLeft(-diff * speed);
@@ -87,17 +92,13 @@ void AssetViewer::GameLoop()
     double updateDiff = time - lastUpdateTime;
     if (updateDiff > 1.0/60.0)
     {
-        if (this->_instance != nullptr && this->_hud.State.pauseAnimation == false)
+        if (this->_instance != nullptr && Setting("Viewer.PauseAnimation").AsBool() == false)
             this->_instance->Update(updateDiff);
 
         lastUpdateTime = time;
     }
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-    glEnable(GL_DEPTH_TEST);
-//    glEnable(GL_CULL_FACE);
-//    glCullFace(GL_FRONT);
 
     if (this->_instance != nullptr)
         this->_instance->Render(this->_proj, this->_cam.GetViewMatrix());
@@ -150,7 +151,9 @@ void AssetViewer::MouseWheel(int x, int y)
 
 void AssetViewer::KeyAction(int key, int action)
 {
-    if (key == SDLK_SPACE && action) this->_hud.State.pauseAnimation = !this->_hud.State.pauseAnimation;
+    if (key == SDLK_SPACE && action) Setting("Viewer.PauseAnimation") = !Setting("Viewer.PauseAnimation").AsBool();
+    else if (key == SDLK_KP_PLUS && action) Setting("Viewer.Camera.Speed") = Setting("Viewer.Camera.Speed").AsFloat() + 5.0f;
+    else if (key == SDLK_KP_MINUS && action) Setting("Viewer.Camera.Speed") = Setting("Viewer.Camera.Speed").AsFloat() - 5.0f;
     else
         this->_hud.KeyAction(key, action);
 }
@@ -159,4 +162,6 @@ void AssetViewer::Destroy()
 {
     if (this->_instance != nullptr) delete this->_instance;
     if (this->_asset != nullptr) delete this->_asset;
+
+    Settings::Instance()->SaveToDisk("assetviewer.settings");
 }

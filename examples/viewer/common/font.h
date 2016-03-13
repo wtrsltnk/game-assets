@@ -12,6 +12,7 @@
 
 #include <GL/glextl.h>
 #include <glm/glm.hpp>
+#include <string>
 
 class FontShader
 {
@@ -37,8 +38,7 @@ public:
     float GetTextLength(const char* text, int count = 0);
     float GetTextHeight(const char* text);
     void GetTextBoungingBox(const char* text, float bb[4]);
-    void DrawText(const glm::mat4& proj, const glm::mat4& view, float x, float y, const char *text, const glm::vec4& global_color = glm::vec4(1, 1, 1, 1));
-    void DrawTextColorLess(float x, float y, const char *text);
+    void DrawText(const glm::mat4& proj, const glm::mat4& view, float x, float y, const std::string& input, const glm::vec4& global_color = glm::vec4(1, 1, 1, 1));
     void GetBakedQuad(int pw, int ph, int char_index, float *xpos, float *ypos, stbtt_aligned_quad *q);
 
 protected:

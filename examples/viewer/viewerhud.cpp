@@ -1,4 +1,5 @@
 #include "viewerhud.h"
+#include "common/settings.h"
 #include <glm/gtc/matrix_transform.hpp>
 #include <sstream>
 #include <SDL.h>
@@ -18,13 +19,13 @@ Hl1MdlHud::Hl1MdlHud(Hl1MdlInstance *instance, ViewerHud& mainHud)
 
 void Hl1MdlHud::Render(const glm::mat4 &proj, const glm::mat4 &view)
 {
-    if (this->_mainHud.State.showInfo)
+    if (Setting("Hud.ShowInfo").AsBool())
     {
         std::stringstream ss;
         ss << "[ INFO ]" << std::endl <<
               "Sequence count : " << this->_instance->Asset()->SequenceCount() << std::endl <<
               "Bodypart count : " << this->_instance->Asset()->BodypartCount() << std::endl;
-        this->_mainHud.Fonts.Info.DrawTextA(proj, view, this->_mainHud.Size().x - 300.0f, 20.0f, ss.str().c_str());
+        this->_mainHud.Fonts.Info.DrawTextA(proj, view, this->_mainHud.Size().x - 300.0f, 20.0f, ss.str());
     }
 }
 
@@ -35,12 +36,12 @@ Hl1SprHud::Hl1SprHud(Hl1SprInstance *instance, ViewerHud& mainHud)
 
 void Hl1SprHud::Render(const glm::mat4 &proj, const glm::mat4 &view)
 {
-    if (this->_mainHud.State.showInfo)
+    if (Setting("Hud.ShowInfo").AsBool())
     {
         std::stringstream ss;
         ss << "[ INFO ]" << std::endl <<
               "  Frame count : " << this->_instance->Asset()->FrameCount();
-        this->_mainHud.Fonts.Info.DrawTextA(proj, view, this->_mainHud.Size().x - 300.0f, 20.0f, ss.str().c_str());
+        this->_mainHud.Fonts.Info.DrawTextA(proj, view, this->_mainHud.Size().x - 300.0f, 20.0f, ss.str());
     }
 }
 
@@ -55,7 +56,8 @@ void Hl2BspHud::Render(const glm::mat4 &proj, const glm::mat4 &view)
 ViewerHud::ViewerHud()
     : _hl1Bsp(nullptr), _hl1Mdl(nullptr), _hl1Spr(nullptr), _hl2Bsp(nullptr), _hud(nullptr)
 {
-    this->State.showHelp = true;
+    Setting("Hud.ShowHelp").Register(true);
+    Setting("Hud.ShowInfo").Register(false);
 }
 
 ViewerHud::~ViewerHud()
@@ -69,8 +71,8 @@ void ViewerHud::Resize(int w, int h)
 
 void ViewerHud::KeyAction(int key, int action)
 {
-    if (key == SDLK_i && action) this->State.showInfo = !this->State.showInfo;
-    else if (key == SDLK_h && action) this->State.showHelp = !this->State.showHelp;
+    if (key == SDLK_i && action) Setting("Hud.ShowInfo") = !Setting("Hud.ShowInfo").AsBool();
+    else if (key == SDLK_h && action) Setting("Hud.ShowHelp") = !Setting("Hud.ShowHelp").AsBool();
     else if (this->_hud != nullptr)
         this->_hud->KeyAction(key, action);
 }
@@ -115,22 +117,27 @@ void ViewerHud::Render()
 {
     if (this->_hud != nullptr)
     {
-        this->Fonts.Regular.DrawTextA(this->_proj, glm::mat4(1.0f), 5.0f, this->_size.y - 5.0f, (std::string("Loaded file : ") + this->_filename).c_str());
+        this->Fonts.Regular.DrawTextA(this->_proj, glm::mat4(1.0f), 5.0f, this->_size.y - 5.0f, (std::string("Loaded file : ") + this->_filename));
+        std::stringstream speed;
+        speed << "Camera speed : " << Setting("Viewer.Camera.Speed").AsFloat();
+        this->Fonts.Regular.DrawTextA(this->_proj, glm::mat4(1.0f), this->_size.x - 130.0f, this->_size.y - 5.0f, speed.str());
 
-        if (this->State.showHelp)
+        if (Setting("Hud.ShowHelp").AsBool())
         {
             std::stringstream ss;
             ss << "[ HELP ]" << std::endl <<
-                  "  <SPACE> - Pause/unpause animation" << std::endl <<
-                  "  h       - Toggle this help on/off" << std::endl <<
-                  "  i       - Toggle asset info on/off" << std::endl << this->_hud->AdditionalHelp();
-            this->Fonts.Info.DrawTextA(this->_proj, glm::mat4(1.0f), 10.0f, 20.0f, ss.str().c_str());
+                  "  <SPACE>    - Pause/unpause animation" << std::endl <<
+                  "  h          - Toggle this help on/off" << std::endl <<
+                  "  i          - Toggle asset info on/off" << std::endl <<
+                  "  <KP_PLUS>  - Increase camera speed" << std::endl <<
+                  "  <KP_MINUS> - Decrease camera speed" << std::endl << this->_hud->AdditionalHelp();
+            this->Fonts.Info.DrawTextA(this->_proj, glm::mat4(1.0f), 10.0f, 20.0f, ss.str());
 
         }
         this->_hud->Render(this->_proj, glm::mat4(1.0f));
     }
     else
     {
-        this->Fonts.Regular.DrawTextA(this->_proj, glm::mat4(1.0f), 5.0f, this->_size.y - 5.0f, (std::string("Nothing loaded")).c_str());
+        this->Fonts.Regular.DrawTextA(this->_proj, glm::mat4(1.0f), 5.0f, this->_size.y - 5.0f, (std::string("Nothing loaded")));
     }
 }

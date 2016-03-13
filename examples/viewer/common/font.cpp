@@ -259,11 +259,11 @@ void Font::GetTextBoungingBox(const char* text, float bb[4])
     }
 }
 
-void Font::DrawText(const glm::mat4& proj, const glm::mat4& view, float x, float y, const char *text, const glm::vec4& global_color)
+void Font::DrawText(const glm::mat4& proj, const glm::mat4& view, float x, float y, const std::string& input, const glm::vec4& global_color)
 {
     glm::mat4 local = glm::mat4(1.0f);
     if (this->_textureId == 0) return;
-    if (!text) return;
+    const char* text = input.c_str();
 
     const float ox = x;
 
