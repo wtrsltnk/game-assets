@@ -43,6 +43,9 @@ public:
     HL1::tBSPEntity* FindEntityByClassname(const std::string& classname);
     HL1::tBSPMipTexHeader* GetMiptex(int index);
 
+    // File format header
+    HL1::tBSPHeader* _header;
+
     // These are mapped from the input file data
     Array<HL1::tBSPPlane> _planeData;
     Array<unsigned char> _textureData;
@@ -67,9 +70,6 @@ public:
     Array<Texture> _textures;
 
 private:
-    // File format header
-    HL1::tBSPHeader* _header;
-
     // OpenGL objects
     unsigned int _vao;
     unsigned int _vbo;

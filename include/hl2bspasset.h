@@ -41,26 +41,24 @@ public:
     void RenderFaces(const std::set<int>& visibleFaces);
 
     HL2::tBSPEntity* FindEntityByClassname(const std::string& classname);
-    HL2::tBSPMipTexHeader* GetMiptex(int index);
 
     // These are mapped from the input file data
     Array<HL2::tBSPPlane> _planeData;
     Array<byte> _textureData;
     Array<HL2::tBSPVertex> _verticesData;
-    Array<HL2::tBSPNode> _nodeData;
     Array<HL2::tBSPTexInfo> _texinfoData;
     Array<HL2::tBSPFace> _faceData;
     Array<byte> _lightingData;
-    Array<HL2::tBSPClipNode> _clipnodeData;
-    Array<HL2::tBSPLeaf> _leafData;
     Array<unsigned short> _marksurfaceData;
     Array<HL2::tBSPEdge> _edgeData;
     Array<int> _surfedgeData;
     Array<HL2::tBSPModel> _modelData;
+    Array<HL2::tBSPDispInfo> _displacementInfoData;
+    Array<HL2::tBSPDispTriangle> _displacementTriangleData;
+    Array<HL2::tBSPDispVert> _displacementVertexData;
 
     // These are parsed from the mapped data
     std::vector<HL2::tBSPEntity> _entities;
-    std::vector<HL2::tBSPVisLeaf> _visLeafs;
     List<Hl2BspAsset::tVertex> _vertices;
     Array<tFace> _faces;
     Array<Texture> _lightMaps;

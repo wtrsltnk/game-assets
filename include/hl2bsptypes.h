@@ -94,6 +94,9 @@
 #define SURF_NOCHOP     0x4000  // Don't subdivide patches on this surface
 #define SURF_HITBOX     0x8000  // surface is part of a hitbox
 
+// Max # of neighboring displacement touching a displacement's corner.
+#define MAX_DISP_CORNER_NEIGHBORS	4
+
 #pragma pack(push, 4)
 
 namespace HL2
@@ -116,33 +119,6 @@ namespace HL2
         int	mapRevision;                    // the map's revision (iteration, version) number
 
     } tBSPHeader;
-
-    typedef struct sBSPMipTexOffsetTable
-    {
-        int miptexCount;
-        int offsets[1];             /* an array with "miptexcount" number of offsets */
-
-    } tBSPMipTexOffsetTable;
-
-    typedef struct sBSPMipTexHeader
-    {
-        char name[16];
-        unsigned int width;
-        unsigned int height;
-        unsigned int offsets[4];
-
-    } tBSPMipTexHeader;
-
-
-    typedef struct sBSPModel
-    {
-        glm::vec3 mins, maxs;
-        glm::vec3 origin;
-        int headnode;
-        int firstFace;
-        int faceCount;
-
-    } tBSPModel;
 
     typedef struct sBSPVertex
     {
@@ -172,7 +148,7 @@ namespace HL2
         int LightmapTextureMinsInLuxels[2];	// texture lighting info
         int LightmapTextureSizeInLuxels[2];	// texture lighting info
         int origFace;		// original face this was split from
-        unsigned short numPrims;		// primitives
+        unsigned short primitiveCount;		// primitives
         unsigned short firstPrimID;
         unsigned int smoothingGroups;	// lightmap smoothing group
 
@@ -186,55 +162,14 @@ namespace HL2
 
     } tBSPPlane;
 
-    typedef struct sBSPNode
-    {
-        int planeIndex;
-        short children[2];                  // negative numbers are -(leafs+1), not nodes
-        short mins[3];                      // for sphere culling
-        short maxs[3];
-        unsigned short firstFace;
-        unsigned short faceCount;            // counting both sides
-        short area;		// If all leaves below this node are in the same area, then this is the area index. If not, this is -1.
-        short paddding;	// pad to 32 bytes length
-
-    } tBSPNode;
-
-    typedef struct sBSPClipNode
-    {
-        int planeIndex;
-        short children[2];                  // negative numbers are contents
-
-    } tBSPClipNode;
-
     typedef struct sBSPTexInfo
     {
-        float		textureVecsTexelsPerWorldUnits[2][4];			// [s/t][xyz offset]
-        float		lightmapVecsLuxelsPerWorldUnits[2][4];			// [s/t][xyz offset] - length is in units of texels/area
-        int			flags;				// miptex flags + overrides
-        int			texdata;			// Pointer to texture name, size, etc.
+        float textureVecsTexelsPerWorldUnits[2][4];			// [s/t][xyz offset]
+        float lightmapVecsLuxelsPerWorldUnits[2][4];			// [s/t][xyz offset] - length is in units of texels/area
+        int flags;				// miptex flags + overrides
+        int texdata;			// Pointer to texture name, size, etc.
 
     } tBSPTexInfo;
-
-    typedef struct sBSPLeaf
-    {
-        int contents;
-        int visofs;                         // -1 = no visibility info
-
-        short cluster;		// cluster this leaf is in
-        short area;			// area this leaf is in
-        short flags;		// flags
-
-        short mins[3];                      // for frustum culling
-        short maxs[3];
-
-        unsigned short firstMarkSurface;
-        unsigned short markSurfacesCount;
-
-        unsigned short firstleafbrush;		// index into leafbrushes
-        unsigned short leafBrushCount;
-        short leafWaterDataID;	// -1 for not in water
-
-    } tBSPLeaf;
 
     typedef struct sBSPEntity
     {
@@ -243,13 +178,6 @@ namespace HL2
 
     } tBSPEntity;
 
-    typedef struct sBSPVisLeaf
-    {
-        int leafCount;
-        int* leafs;
-
-    } tBSPVisLeaf;
-
     typedef struct sBSPColorRGBExp32
     {
         byte r, g, b;
@@ -257,28 +185,70 @@ namespace HL2
 
     } tBSPColorRGBExp32;
 
-    /* WAD */
-    typedef struct sWADHeader
+    typedef struct sBSPModel
     {
-        char signature[4];
-        int lumpsCount;
-        int lumpsOffset;
+        glm::vec3 mins, maxs;		// bounding box
+        glm::vec3 origin;			// for sounds or lights
+        int headNode;		// index into node array
+        int firstFace, faceCount;	// index into face array
+    } tBSPModel;
 
-    } tWADHeader;
-
-    typedef struct sWADLump
+    typedef struct sBSPDispSubNeighbor
     {
-        int offset;
-        int sizeOnDisk;
-        int size;
-        char type;
-        char compression;
-        char empty0;
-        char empty1;
-        char name[16];
+        unsigned short neighbor;		// This indexes into ddispinfos. 0xFFFF if there is no neighbor here.
+        unsigned char neighborOrientation;		// (CCW) rotation of the neighbor wrt this displacement.
+        // These use the NeighborSpan type.
+        unsigned char span;						// Where the neighbor fits onto this side of our displacement.
+        unsigned char neighborSpan;				// Where we fit onto our neighbor.
 
-    } tWADLump;
+    } tBSPDispSubNeighbor;
 
+    typedef struct sBSPDispNeighbor
+    {
+        // Note: if there is a neighbor that fills the whole side (CORNER_TO_CORNER),
+        //       then it will always be in CDispNeighbor::m_Neighbors[0]
+        tBSPDispSubNeighbor subNeighbors[2];
+
+    } tBSPDispNeighbor;
+
+    typedef struct sBSPDispCornerNeighbors
+    {
+        unsigned short neighbors[MAX_DISP_CORNER_NEIGHBORS];	// indices of neighbors.
+        unsigned char nNeighbors;
+
+    } tBSPDispCornerNeighbors;
+
+    typedef struct sBSPDispInfo
+    {
+        glm::vec3 startPosition;		// start position used for orientation
+        int DispVertStart;		// Index into LUMP_DISP_VERTS.
+        int DispTriStart;		// Index into LUMP_DISP_TRIS.
+        int power;			// power - indicates size of surface (2^power	1)
+        int minTess;		// minimum tesselation allowed
+        float smoothingAngle;		// lighting smoothing angle
+        int contents;		// surface contents
+        unsigned short MapFace;		// Which map face this displacement comes from.
+        int LightmapAlphaStart;	// Index into ddisplightmapalpha.
+        int LightmapSamplePositionStart;	// Index into LUMP_DISP_LIGHTMAP_SAMPLE_POSITIONS.
+        tBSPDispNeighbor EdgeNeighbors[4];	// Indexed by NEIGHBOREDGE_ defines.
+        tBSPDispCornerNeighbors CornerNeighbors[4];	// Indexed by CORNER_ defines.
+        unsigned int AllowedVerts[10];	// active verticies
+
+    } tBSPDispInfo;
+
+    typedef struct sBSPDispVert
+    {
+        glm::vec3 vector;		// Vector field defining displacement volume.
+        float dist;		// Displacement distances.
+        float alpha;		// "per vertex" alpha values.
+
+    } tBSPDispVert;
+
+    typedef struct sBSPDispTriangle
+    {
+        unsigned short tags;
+
+    } tBSPDispTriangle;
 }
 
 #pragma pack(pop)

@@ -30,29 +30,21 @@ bool Hl2BspAsset::Load(const std::string &filename)
     }
 
     this->LoadLump(data, this->_planeData, HL2_BSP_PLANES);
-    this->LoadLump(data, this->_textureData, HL2_BSP_TEXDATA);
     this->LoadLump(data, this->_verticesData, HL2_BSP_VERTEXES);
-    this->LoadLump(data, this->_nodeData, HL2_BSP_NODES);
     this->LoadLump(data, this->_texinfoData, HL2_BSP_TEXINFO);
     this->LoadLump(data, this->_faceData, HL2_BSP_FACES);
     this->LoadLump(data, this->_lightingData, HL2_BSP_LIGHTING);
-    this->LoadLump(data, this->_clipnodeData, HL2_BSP_OCCLUSION);
-    this->LoadLump(data, this->_leafData, HL2_BSP_LEAFS);
     this->LoadLump(data, this->_marksurfaceData, HL2_BSP_FACEIDS);
     this->LoadLump(data, this->_edgeData, HL2_BSP_EDGES);
     this->LoadLump(data, this->_surfedgeData, HL2_BSP_SURFEDGES);
     this->LoadLump(data, this->_modelData, HL2_BSP_MODELS);
+    this->LoadLump(data, this->_displacementInfoData, HL2_BSP_DISPINFO);
+    this->LoadLump(data, this->_displacementTriangleData, HL2_BSP_DISP_TRIS);
+    this->LoadLump(data, this->_displacementVertexData, HL2_BSP_DISP_VERTS);
 
     Array<byte> entityData;
     if (this->LoadLump(data, entityData, HL2_BSP_ENTITIES))
         this->_entities = Hl2BspAsset::LoadEntities(entityData);
-
-    //    std::vector<Hl1WadAsset*> wads;
-    //    HL2::tBSPEntity* worldspawn = this->FindEntityByClassname("worldspawn");
-    //    if (worldspawn != nullptr)
-    //        wads = Hl1WadAsset::LoadWads(worldspawn->keyvalues["wad"], filename);
-    //    this->LoadTextures(wads);
-    //    Hl1WadAsset::UnloadWads(wads);
 
     this->LoadFacesWithLightmaps(this);
 
@@ -213,16 +205,6 @@ bool Hl2BspAsset::LoadTextures(const std::vector<Hl1WadAsset*>& wads)
     return true;
 }
 
-HL2::tBSPMipTexHeader* Hl2BspAsset::GetMiptex(int index)
-{
-    HL2::tBSPMipTexOffsetTable* bspMiptexTable = (HL2::tBSPMipTexOffsetTable*)this->_textureData.data;
-
-    if (index >= 0 && bspMiptexTable->miptexCount > index)
-        return (HL2::tBSPMipTexHeader*)(this->_textureData.data + bspMiptexTable->offsets[index]);
-
-    return 0;
-}
-
 #define LIGHTMAP_GAMMA 2.2f
 
 bool Hl2BspAsset::LoadLightmap(const HL2::tBSPFace& in, Texture& out)
@@ -263,20 +245,27 @@ void Hl2BspAsset::RenderFaces(const std::set<int>& visibleFaces)
     glBindVertexArray(this->_vao);
     for (auto i = visibleFaces.begin(); i != visibleFaces.end(); ++i)
     {
-        int a = *i;
-        if (this->_faces[a].flags &= SURF_SKY)
-            continue;
-        if (this->_faces[a].flags &= SURF_TRIGGER)
-            continue;
+        int f = *i;
+        if (this->_faceData[f].dispinfo == -1)
+        {
+            if (this->_faces[f].flags &= SURF_SKY)
+                continue;
+            if (this->_faces[f].flags &= SURF_TRIGGER)
+                continue;
 
-        GLuint u = this->_lightMaps[a].GlIndex();
-        glActiveTexture(GL_TEXTURE1);
-        glBindTexture(GL_TEXTURE_2D, u);
+            GLuint u = this->_lightMaps[f].GlIndex();
+            glActiveTexture(GL_TEXTURE1);
+            glBindTexture(GL_TEXTURE_2D, u);
 
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, 0);
+            glActiveTexture(GL_TEXTURE0);
+            glBindTexture(GL_TEXTURE_2D, 0);
 
-        glDrawArrays(GL_POLYGON, this->_faces[a].firstVertex, this->_faces[a].vertexCount);
+            glDrawArrays(GL_POLYGON, this->_faces[f].firstVertex, this->_faces[f].vertexCount);
+        }
+        else
+        {
+
+        }
     }
     glBindVertexArray(0);
 }

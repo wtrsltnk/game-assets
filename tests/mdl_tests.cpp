@@ -1,6 +1,9 @@
-#include <test_framework.h>
+#include "test_framework.h"
 
-ADD_TEST(MdlTest)
+TEST(MdlTest)
+{ }
+
+void AddTests()
 {
-    return test::Result::ReturnTrue(true);
+    ADD_TEST(MdlTest, "Test MDL file loading");
 }

@@ -54,6 +54,11 @@ public:
 
     HL1::tMDLAnimation* GetAnimation(HL1::tMDLSequenceDescription *pseqdesc);
 
+    // File format headers
+    HL1::tMDLHeader* _header;
+    HL1::tMDLHeader* _textureHeader;
+    HL1::tMDLSequenceHeader* _animationHeaders[32];
+
     // These are mapped from file data
     Array<HL1::tMDLBodyParts> _bodyPartData;
     Array<HL1::tMDLTexture> _textureData;
@@ -70,11 +75,6 @@ public:
     Array<Texture> _textures;
 
 private:
-    // File format headers
-    HL1::tMDLHeader* _header;
-    HL1::tMDLHeader* _textureHeader;
-    HL1::tMDLSequenceHeader* _animationHeaders[32];
-
     // OpenGL objects
     unsigned int _vbo;
     unsigned int _vao;

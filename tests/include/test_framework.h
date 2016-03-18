@@ -4,6 +4,8 @@
 #include <string>
 #include <vector>
 
+extern void AddTests();
+
 namespace test
 {
 class Result
@@ -17,7 +19,15 @@ public:
 
 };
 
-typedef test::Result (*pfnTestFunc)();
+class Assert
+{
+public:
+    static void IsTrue(bool expression, const std::string& expression_name = "IsTrue = false");
+    static void IsFalse(bool expression, const std::string& expression_name = "IsFalse == false");
+
+};
+
+typedef void (*pfnTestFunc)();
 
 class Test;
 class TestFramework
@@ -25,6 +35,7 @@ class TestFramework
     std::vector<Test*> _tests;
 public:
     Test* AddTest(const std::string& filename, pfnTestFunc func, const std::string& name, const std::string& description = "");
+    Test* AddTest(Test* test);
     int Run();
 
     static TestFramework& singleton()
@@ -50,13 +61,9 @@ public:
 
 }
 
-#define ADD_TEST(x)  test::Result __TestFunc_##x(); \
-    test::Test* t_##x = test::tests.AddTest(__FILE__, &__TestFunc_##x, #x); \
-    test::Result __TestFunc_##x()
+#define ADD_TEST(x, y) test::Test* t_##x = test::tests.AddTest(__FILE__, &__TestFunc_##x, #x);
 
-#define ADD_TEST_WITH_DESCRIPTION(x, y)  test::Result __TestFunc_##x(); \
-    test::Test* t_##x = test::tests.AddTest(__FILE__, &__TestFunc_##x, #x, y); \
-    test::Result __TestFunc_##x()
+#define TEST(x) void __TestFunc_##x()
 
 #endif // TEST_FRAMEWORK_H
 

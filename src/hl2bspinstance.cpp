@@ -19,8 +19,7 @@ Hl2BspInstance::Hl2BspInstance(Hl2BspAsset* asset)
 
     for (int f = 0; f < this->_asset->_modelData[0].faceCount; f++)
     {
-        if (this->_asset->_faceData[this->_asset->_modelData[0].firstFace + f].dispinfo == -1)
-            this->_visibleFaces.insert(this->_asset->_modelData[0].firstFace + f);
+        this->_visibleFaces.insert(this->_asset->_modelData[0].firstFace + f);
     }
 }
 
