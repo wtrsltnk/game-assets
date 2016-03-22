@@ -89,6 +89,10 @@ void Hl1MapInstance::Render(const glm::mat4& proj, const glm::mat4& view)
     this->_shader->SetProjectionMatrix(proj);
     this->_shader->SetViewMatrix(view);
 
+    glEnable(GL_DEPTH_TEST);
+    glEnable(GL_CULL_FACE);
+    glCullFace(GL_FRONT);
+
     glBindVertexArray(this->_vao);
 
     for (int i = 0; i < this->_faces.size(); i++)

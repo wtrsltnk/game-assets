@@ -1,6 +1,7 @@
 #include "program.h"
 #include "filesystem.h"
 #include "common/settings.h"
+#include "common/log.h"
 #include <hl1bspasset.h>
 #include <hl2bspasset.h>
 #include <hl1mdlasset.h>
@@ -13,6 +14,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 Application* gApp = new AssetViewer();
+static FileLoggingStrategy fileLogging;
 
 AssetViewer::AssetViewer()
     : _pan(false), _lastX(0), _lastY(0), _asset(nullptr), _instance(nullptr)
@@ -20,6 +22,7 @@ AssetViewer::AssetViewer()
     Settings::Instance()->LoadFromDisk("assetviewer.settings");
     Setting("Viewer.PauseAnimation").Register(false);
     Setting("Viewer.Camera.Speed").Register(200.0f);
+    Logging::Instance()->SetStrategy(&fileLogging);
 }
 
 AssetViewer::~AssetViewer()
@@ -56,7 +59,10 @@ bool AssetViewer::InitializeGraphics()
         else if (ext == ".mdl")
             this->_asset = new Hl1MdlAsset(FileSystem::LoadFileData);
         else if (ext == ".map")
+        {
+            Log().Info("Loading MAP file");
             this->_asset = new Hl1MapAsset(FileSystem::LoadFileData);
+        }
         else if (ext == ".spr")
             this->_asset = new Hl1SprAsset(FileSystem::LoadFileData);
 

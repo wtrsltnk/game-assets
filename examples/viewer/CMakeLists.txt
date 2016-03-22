@@ -26,6 +26,7 @@ set(SRC_APP
     common/glextl.cpp
     common/main_sdl.cpp
     common/settings.cpp
+    common/log.cpp
     filesystem.cpp
     program.cpp
     viewerhud.cpp
