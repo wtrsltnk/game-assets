@@ -89,6 +89,13 @@ set(SRC_APP
 
 add_library(game-assets STATIC ${SRC_APP} ${HDR_APP})
 
+install(TARGETS game-assets DESTINATION lib)
+install(
+	DIRECTORY src/include/
+	DESTINATION include
+	FILES_MATCHING PATTERN "*.h"
+	)
+
 if(BUILD_EXAMPLES)
     add_subdirectory(examples/viewer)
 endif(BUILD_EXAMPLES)
