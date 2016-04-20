@@ -21,7 +21,7 @@ set(CMAKE_MODULE_PATH
 )
 
 find_package(GLM REQUIRED)
-include_directories(${GLM_INCLUDE_DIR}/..)
+include_directories(${GLM_INCLUDE_DIR})
 
 include_directories("${CMAKE_SOURCE_DIR}/include")
 
