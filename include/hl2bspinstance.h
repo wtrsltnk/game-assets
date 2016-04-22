@@ -1,5 +1,5 @@
-#ifndef _HL2BSPINSTANCE_H
-#define _HL2BSPINSTANCE_H
+#ifndef _HL2BSPINSTANCE_H_
+#define _HL2BSPINSTANCE_H_
 
 #include "hl2bspasset.h"
 #include "hl2bspshader.h"
@@ -26,5 +26,5 @@ private:
 
 };
 
-#endif /* _HL2BSPINSTANCE_H */
+#endif // _HL2BSPINSTANCE_H_
 

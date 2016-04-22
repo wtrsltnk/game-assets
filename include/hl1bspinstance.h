@@ -1,5 +1,5 @@
-#ifndef HL1BSPINSTANCE_H
-#define	HL1BSPINSTANCE_H
+#ifndef _HL1BSPINSTANCE_H_
+#define	_HL1BSPINSTANCE_H_
 
 #include "hl1bspasset.h"
 #include "hl1bspshader.h"
@@ -28,5 +28,5 @@ private:
     int TracePointInLeaf(const glm::vec3& point, int startNode);
 };
 
-#endif	/* HL1BSPINSTANCE_H */
+#endif	/* _HL1BSPINSTANCE_H_ */
 

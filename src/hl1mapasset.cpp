@@ -1,5 +1,6 @@
 #include "hl1mapasset.h"
 #include "hl1mapinstance.h"
+
 #include <iostream>
 
 Hl1MapAsset::Hl1MapAsset(DataFileLoader& loader)

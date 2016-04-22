@@ -1,5 +1,5 @@
-#ifndef _HL1SHADER_H
-#define _HL1SHADER_H
+#ifndef _HL1SHADER_H_
+#define _HL1SHADER_H_
 
 #include <map>
 #include <string>
@@ -30,4 +30,4 @@ protected:
 
 };
 
-#endif // _HL1SHADER_H
+#endif // _HL1SHADER_H_

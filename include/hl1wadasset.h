@@ -1,8 +1,9 @@
-#ifndef _HL1WADASSET_H
-#define _HL1WADASSET_H
+#ifndef _HL1WADASSET_H_
+#define _HL1WADASSET_H_
 
 #include "hl1types.h"
 #include "hl1bsptypes.h"
+
 #include <string>
 #include <vector>
 #include <fstream>
@@ -28,4 +29,4 @@ public:
 
 };
 
-#endif // _HL1WADASSET_H
+#endif // _HL1WADASSET_H_

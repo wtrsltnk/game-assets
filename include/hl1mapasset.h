@@ -1,11 +1,14 @@
-#ifndef HL1MAPDOCUMENT_H
-#define HL1MAPDOCUMENT_H
+#ifndef _HL1MAPDOCUMENT_H_
+#define _HL1MAPDOCUMENT_H_
 
 #include "hl1types.h"
 #include "hl1wadasset.h"
 #include "tokenizer.h"
 #include "texture.h"
+
 #include <vector>
+#include <string>
+#include <map>
 #include <set>
 
 class Hl1MapAsset : public Hl1Asset
@@ -79,4 +82,4 @@ private:
 
 };
 
-#endif // HL1MAPDOCUMENT_H
+#endif // _HL1MAPDOCUMENT_H_

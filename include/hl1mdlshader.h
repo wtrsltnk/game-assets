@@ -1,5 +1,5 @@
-#ifndef _HL1MDLSHADER_H
-#define _HL1MDLSHADER_H
+#ifndef _HL1MDLSHADER_H_
+#define _HL1MDLSHADER_H_
 
 #include "hl1shader.h"
 
@@ -29,4 +29,4 @@ public:
 
 };
 
-#endif // _HL1MDLSHADER_H
+#endif // _HL1MDLSHADER_H_

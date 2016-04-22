@@ -1,4 +1,5 @@
 #include "hl1wadasset.h"
+
 #include <algorithm>
 #include <cctype>
 #include <sstream>

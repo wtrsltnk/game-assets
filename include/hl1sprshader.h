@@ -1,5 +1,5 @@
-#ifndef _HL1SPRSHADER_H
-#define _HL1SPRSHADER_H
+#ifndef _HL1SPRSHADER_H_
+#define _HL1SPRSHADER_H_
 
 #include "hl1shader.h"
 
@@ -23,4 +23,4 @@ public:
 
 };
 
-#endif // _HL1SPRSHADER_H
+#endif // _HL1SPRSHADER_H_

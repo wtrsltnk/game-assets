@@ -1,5 +1,5 @@
-#ifndef _SPRTYPES_H
-#define	_SPRTYPES_H
+#ifndef _HL1SPRTYPES_H_
+#define	_HL1SPRTYPES_H_
 
 #include "hl1types.h"
 
@@ -49,5 +49,5 @@ namespace HL1
 
 #pragma pack(pop)
 
-#endif	/* _SPRTYPES_H */
+#endif	// _HL1SPRTYPES_H_
 

@@ -1,5 +1,5 @@
-#ifndef _HL2BSPTYPES_H
-#define _HL2BSPTYPES_H
+#ifndef _HL2BSPTYPES_H_
+#define _HL2BSPTYPES_H_
 
 #include "hl1types.h"
 
@@ -253,5 +253,5 @@ namespace HL2
 
 #pragma pack(pop)
 
-#endif /* _HL2BSPTYPES_H */
+#endif // _HL2BSPTYPES_H_
 

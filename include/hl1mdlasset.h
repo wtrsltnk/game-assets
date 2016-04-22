@@ -1,12 +1,13 @@
-#ifndef _HL1MDLASSET_H
-#define _HL1MDLASSET_H
+#ifndef _HL1MDLASSET_H_
+#define _HL1MDLASSET_H_
 
 #include "hl1mdltypes.h"
 #include "hl1mdlshader.h"
 #include "texture.h"
+
 #include <string>
 #include <vector>
-#include <glm/glm.hpp>
+#include <GL/glextl.h>
 
 class Hl1MdlAsset : public Hl1Asset
 {
@@ -76,8 +77,8 @@ public:
 
 private:
     // OpenGL objects
-    unsigned int _vbo;
-    unsigned int _vao;
+    GLuint _vbo;
+    GLuint _vao;
 
 private:
     void LoadTextures();
@@ -85,4 +86,4 @@ private:
 
 };
 
-#endif // _HL1MDLASSET_H
+#endif // _HL1MDLASSET_H_

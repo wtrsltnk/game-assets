@@ -1,13 +1,8 @@
 #include "hl1bspinstance.h"
 #include "hl1bspshader.h"
 
-#include <iostream>
-#include <fstream>
-#include <set>
-#include <GL/glextl.h>
 #include <glm/glm.hpp>
-#include <glm/gtc/type_ptr.hpp>
-#include <memory.h>
+#include <set>
 
 using namespace std;
 
@@ -84,6 +79,7 @@ std::set<short> Hl1BspInstance::FindVisibleFaces(const glm::vec3& pos)
             this->_visibleFaces.insert(i);
         }
     }
+
     for (int m = 1; m < this->_asset->_modelData.count; m++)
     {
         // add all faces of current leaf

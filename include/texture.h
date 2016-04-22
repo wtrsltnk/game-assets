@@ -1,5 +1,5 @@
-#ifndef _TEXTURE_H
-#define	_TEXTURE_H
+#ifndef _TEXTURE_H_
+#define	_TEXTURE_H_
 
 #include <string>
 
@@ -41,5 +41,4 @@ public:
 
 };
 
-#endif	/* _TEXTURE_H */
-
+#endif	// _TEXTURE_H_

@@ -1,19 +1,14 @@
 #include "hl1mdlasset.h"
 #include "hl1mdlshader.h"
 #include "hl1mdlinstance.h"
+
 #include <sstream>
-#include <iostream>
-#include <fstream>
 #include <iomanip>
-#include <vector>
-#include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
-#include <GL/glextl.h>
 
 Hl1MdlAsset::Hl1MdlAsset(DataFileLoader& loader)
     : Hl1Asset(loader), _header(0), _vao(0), _vbo(0)
 { }
-
 
 Hl1MdlAsset::~Hl1MdlAsset()
 {

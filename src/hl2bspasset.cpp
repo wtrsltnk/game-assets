@@ -1,10 +1,8 @@
 #include "hl2bspasset.h"
 #include "hl2bspshader.h"
 #include "hl2bspinstance.h"
-#include <fstream>
+
 #include <iostream>
-#include <math.h>
-#include <GL/glextl.h>
 #include <glm/gtc/type_ptr.hpp>
 
 Hl2BspAsset::Hl2BspAsset(DataFileLoader& loader)

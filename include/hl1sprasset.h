@@ -1,7 +1,8 @@
-#ifndef _HL1SPRASSET_H
-#define _HL1SPRASSET_H
+#ifndef _HL1SPRASSET_H_
+#define _HL1SPRASSET_H_
 
 #include "hl1sprtypes.h"
+
 #include <GL/glextl.h>
 
 class Hl1SprAsset : public Hl1Asset
@@ -29,10 +30,10 @@ private:
     HL1::tSPRHeader* _header;
 
     // OpenGL objects
-    unsigned int _vao;
-    unsigned int _vbo;
+    GLuint _vao;
+    GLuint _vbo;
 
     Array<GLuint> _frames;
 };
 
-#endif // _HL1SPRASSET_H
+#endif // _HL1SPRASSET_H_

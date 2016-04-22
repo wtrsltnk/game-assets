@@ -1,9 +1,13 @@
-#ifndef HL1MAPINSTANCE_H
-#define HL1MAPINSTANCE_H
+#ifndef _HL1MAPINSTANCE_H_
+#define _HL1MAPINSTANCE_H_
 
 #include "hl1types.h"
 #include "hl1mapasset.h"
 #include "hl1mapshader.h"
+
+#include <glm/glm.hpp>
+#include <vector>
+#include <string>
 
 class Hl1MapInstance : public Hl1Instance
 {
@@ -46,4 +50,4 @@ private:
 
 };
 
-#endif // HL1MAPINSTANCE_H
+#endif // _HL1MAPINSTANCE_H_

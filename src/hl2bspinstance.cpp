@@ -2,14 +2,8 @@
 #include "hl2bspshader.h"
 
 #include <iostream>
-#include <fstream>
-#include <set>
 #include <GL/glextl.h>
-#include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
-#include <memory.h>
-
-using namespace std;
 
 Hl2BspInstance::Hl2BspInstance(Hl2BspAsset* asset)
     : _asset(asset), _shader(nullptr)

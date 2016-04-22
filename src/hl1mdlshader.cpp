@@ -1,4 +1,5 @@
 #include "hl1mdlshader.h"
+
 #include <glm/gtc/type_ptr.hpp>
 
 const std::map<GLuint, std::string> Hl1MdlShader::AttribLocations()

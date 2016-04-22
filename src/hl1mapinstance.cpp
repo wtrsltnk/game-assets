@@ -1,5 +1,6 @@
 #include "hl1mapinstance.h"
 #include "hl1worldsize.h"
+
 #include <GL/glextl.h>
 
 Hl1MapInstance::Hl1MapInstance(Hl1MapAsset* asset)

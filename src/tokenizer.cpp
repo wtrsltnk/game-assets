@@ -1,10 +1,3 @@
-/* 
- * File:   tokenizer.cpp
- * Author: wouter
- * 
- * Created on August 6, 2010, 3:37 PM
- */
-
 /*
  * Wellicht handig dit een keer te gebruiken:
  *
@@ -36,18 +29,17 @@ catch (std::regex_error& err)
 */
 
 #include "tokenizer.h"
+
 #include <stdlib.h>
 #include <string.h>
 
 Tokenizer::Tokenizer(const char* data, int size)
 	: data(data), dataSize(size), cursor(0), token(0), tokenSize(0)
-{
-}
+{ }
 
 Tokenizer::Tokenizer(const Tokenizer& orig)
 	: data(orig.data), dataSize(orig.dataSize), cursor(0), token(0), tokenSize(0)
-{
-}
+{ }
 
 Tokenizer::~Tokenizer()
 {
@@ -67,7 +59,7 @@ const char* Tokenizer::getNextToken()
 
 	return 0;
 }
-///*
+
 bool Tokenizer::nextToken()
 {
 	// Check if we are at the end
@@ -125,84 +117,6 @@ bool Tokenizer::nextToken()
 
 	return true;
 }
-/*/
-bool Tokenizer::nextToken()
-{
-	// Check if we are at the end
-	if (cursor >= this->dataSize)
-		return false;
-
-	// Trim to the token
-	while (cursor < this->dataSize && Tokenizer::isSeperator(data[cursor]))
-		cursor++;
-
-	// Make sure we stop when the cursor is hits the end of the file
-	if (cursor >= this->dataSize)
-		return false;
-
-	int c = 0;
-
-	// Are we at a quoted token?
-	if (Tokenizer::isQuote(data[cursor]))
-	{
-		while (cursor + c + 1 < this->dataSize && data[cursor] != data[cursor + c + 1] && data[cursor + c + 1] != 0)
-			c++;
-
-		// Make sure we stop when the cursor is hits the end of the file
-		if (cursor + c + 1 >= this->dataSize)
-			return false;
-
-		if (this->tokenSize < c + 2)
-		{
-			if (this->token != 0)
-				delete []this->token;
-			this->token = new char[c + 2];
-			this->tokenSize = c + 2;
-		}
-		memset(this->token, 0, this->tokenSize);
-		memcpy(this->token, data + cursor + 1, c);
-		this->token[c] = 0;
-		cursor+= c + 2;
-	}
-	else
-	{
-		if (data[cursor] == '/' && data[cursor+1] == '/')
-		{
-			while (cursor + c < this->dataSize && data[cursor] != '\n')
-				cursor++;
-
-			// Trim to the token
-			while (cursor < this->dataSize && Tokenizer::isSeperator(data[cursor]))
-				cursor++;
-
-			// Make sure we stop when the cursor is hits the end of the file
-			if (cursor >= this->dataSize)
-				return false;
-		}
-		while (cursor + c < this->dataSize && Tokenizer::isSeperator(data[cursor + c]) == false)
-			c++;
-
-		// Make sure we stop when the cursor is hits the end of the file
-		if (cursor + c >= this->dataSize)
-			return false;
-
-		if (this->tokenSize < c + 2)
-		{
-			if (this->token != 0)
-				delete []this->token;
-			this->token = new char[c + 2];
-			this->tokenSize = c + 2;
-		}
-		memset(this->token, 0, this->tokenSize);
-		memcpy(this->token, data + cursor, c);
-		this->token[c] = 0;
-		cursor+= c;
-	}
-
-	return true;
-}
-
-//*/
 
 bool Tokenizer::isSeperator(char c)
 {

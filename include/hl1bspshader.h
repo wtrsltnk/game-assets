@@ -1,5 +1,5 @@
-#ifndef HL1BSPSHADER_H
-#define HL1BSPSHADER_H
+#ifndef _HL1BSPSHADER_H_
+#define _HL1BSPSHADER_H_
 
 #include "hl1shader.h"
 
@@ -29,4 +29,4 @@ public:
 
 };
 
-#endif // HL1BSPSHADER_H
+#endif // _HL1BSPSHADER_H_

@@ -1,5 +1,5 @@
-#ifndef _HLMDLTYPES_H
-#define _HLMDLTYPES_H
+#ifndef _HLMDLTYPES_H_
+#define _HLMDLTYPES_H_
 
 #include "hl1types.h"
 
@@ -335,4 +335,4 @@ typedef struct
 
 }
 
-#endif  // _HLMDLTYPES_H
+#endif  // _HLMDLTYPES_H_

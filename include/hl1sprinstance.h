@@ -1,5 +1,5 @@
-#ifndef _HL1SPRINSTANCE_H
-#define _HL1SPRINSTANCE_H
+#ifndef _HL1SPRINSTANCE_H_
+#define _HL1SPRINSTANCE_H_
 
 #include "hl1sprasset.h"
 #include "hl1sprshader.h"
@@ -23,4 +23,4 @@ private:
 
 };
 
-#endif  // _HL1SPRINSTANCE_H
+#endif  // _HL1SPRINSTANCE_H_

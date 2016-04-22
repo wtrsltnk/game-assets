@@ -1,12 +1,12 @@
-#ifndef HL1BSPASSET_H
-#define	HL1BSPASSET_H
+#ifndef _HL1BSPASSET_H_
+#define	_HL1BSPASSET_H_
 
 #include "hl1bsptypes.h"
 #include "hl1wadasset.h"
 #include "texture.h"
+
 #include <string>
 #include <set>
-#include <glm/glm.hpp>
 
 class Hl1BspAsset : public Hl1Asset
 {
@@ -102,5 +102,5 @@ private:
 
 };
 
-#endif	/* _BSPDATA_H */
+#endif	/* _HL1BSPASSET_H_ */
 

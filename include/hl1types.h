@@ -1,5 +1,5 @@
-#ifndef _HL1TYPES_H
-#define	_HL1TYPES_H
+#ifndef _HL1TYPES_H_
+#define	_HL1TYPES_H_
 
 #include <string>
 #include <map>
@@ -113,5 +113,5 @@ public:
     virtual Hl1Instance* CreateInstance() = 0;
 };
 
-#endif	/* _HL1TYPES_H */
+#endif	// _HL1TYPES_H_
 

@@ -1,9 +1,8 @@
 #include "hl1bspasset.h"
 #include "hl1bspshader.h"
 #include "hl1bspinstance.h"
-#include <fstream>
+
 #include <iostream>
-#include <math.h>
 #include <GL/glextl.h>
 #include <glm/gtc/type_ptr.hpp>
 

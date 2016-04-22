@@ -1,5 +1,5 @@
-#ifndef _BSPTYPES_H
-#define	_BSPTYPES_H
+#ifndef _HL1BSPTYPES_H_
+#define	_HL1BSPTYPES_H_
 
 #include "hl1types.h"
 
@@ -191,5 +191,5 @@ namespace HL1
 
 #pragma pack(pop)
 
-#endif	/* _BSPTYPES_H */
+#endif	/* _HL1BSPTYPES_H_ */
 
