@@ -24,14 +24,9 @@ Hl2BspInstance::~Hl2BspInstance()
 
 void Hl2BspInstance::Render(const glm::mat4& proj, const glm::mat4& view)
 {
-    static glm::vec4 global_color(1.0f, 1.0f, 1.0f, 1.0f);
-
-    glm::mat3 rotMat(view);
-    glm::vec3 pos = -glm::vec3(view[3]) * rotMat;
     this->_shader->UseProgram();
     this->_shader->SetProjectionMatrix(proj);
     this->_shader->SetViewMatrix(view);
-    this->_shader->SetGlobalColorVec(global_color);
 
     this->_asset->RenderFaces(this->_visibleFaces);
 }

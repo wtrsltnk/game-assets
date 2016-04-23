@@ -19,23 +19,23 @@ const std::string Hl2BspShader::VertexShader()
     return std::string(
                 "#version 150\n"
 
-                "in vec3 vertex;\n"
-                "in vec3 texcoords;\n"
-                "in vec3 lightcoords;\n"
-                "in vec3 normal;\n"
+                "in vec3 vertex;"
+                "in vec3 texcoords;"
+                "in vec3 lightcoords;"
+                "in vec3 normal;"
 
-                "uniform mat4 u_projection;\n"
-                "uniform mat4 u_view;\n"
+                "uniform mat4 u_projection;"
+                "uniform mat4 u_view;"
 
-                "out vec2 f_uvt;\n"
-                "out vec2 f_uvl;\n"
+                "out vec2 f_uv_tex;"
+                "out vec2 f_uv_light;"
 
-                "void main()\n"
+                "void main()"
                 "{"
-                "    mat4 m = u_projection * u_view;\n"
-                "    gl_Position = m * vec4(vertex.xyz, 1.0);\n"
-                "    f_uvt.st = texcoords.st;\n"
-                "    f_uvl.st = lightcoords.st;\n"
+                "    mat4 m = u_projection * u_view;"
+                "    gl_Position = m * vec4(vertex.xyz, 1.0);"
+                "    f_uv_tex.st = texcoords.st;"
+                "    f_uv_light.st = lightcoords.st;"
                 "}"
                 );
 }
@@ -45,25 +45,24 @@ const std::string Hl2BspShader::FragmentShader()
     return std::string(
                 "#version 150\n"
 
-                "uniform sampler2D u_tex;\n"
-                "uniform sampler2D u_light;\n"
-                "uniform vec4 u_global_color;\n"
+                "uniform sampler2D u_tex;"
+                "uniform sampler2D u_light;"
 
-                "in vec2 f_uvt;\n"
-                "in vec2 f_uvl;\n"
+                "in vec2 f_uv_tex;"
+                "in vec2 f_uv_light;"
 
                 "out vec4 color;"
 
-                "void main()\n"
+                "void main()"
                 "{"
-                "   color = texture(u_light, f_uvl.st);//texture(u_tex, f_uvt.st) * texture(u_light, f_uvl.st) * u_global_color;\n"
+                "   color = texture(u_light, f_uv_light.st);"
+//                "   color = texture(u_tex, f_uv_tex.st) * texture(u_light, f_uv_light.st);"
                 "}"
                 );
 }
 
 void Hl2BspShader::OnProgramLinked(GLuint program)
 {
-    this->_u_global_color = glGetUniformLocation(this->_program, "u_global_color");
     this->_u_tex = glGetUniformLocation(this->_program, "u_tex");
     this->_u_light = glGetUniformLocation(this->_program, "u_light");
 
@@ -72,9 +71,4 @@ void Hl2BspShader::OnProgramLinked(GLuint program)
 
     glActiveTexture(GL_TEXTURE0);
     glUniform1i(this->_u_tex, 0);
-}
-
-void Hl2BspShader::SetGlobalColorVec(const glm::vec4& v)
-{
-    glUniform4fv(this->_u_global_color, 1, glm::value_ptr(v));
 }

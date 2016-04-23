@@ -31,6 +31,18 @@ public:
 
     } tFace;
 
+    typedef struct sModel
+    {
+        glm::vec3 position;
+        int firstFace;
+        int faceCount;
+
+        int rendermode;         // "Render Mode" [ 0: "Normal" 1: "Color" 2: "Texture" 3: "Glow" 4: "Solid" 5: "Additive" ]
+        char renderamt;         // "FX Amount (1 - 255)"
+        glm::vec4 rendercolor;  // "FX Color (R G B)"
+
+    } tModel;
+
 public:
     Hl1BspAsset(DataFileLoader& loader);
     virtual ~Hl1BspAsset();
@@ -68,6 +80,7 @@ public:
     Array<tFace> _faces;
     Array<Texture> _lightMaps;
     Array<Texture> _textures;
+    Array<tModel> _models;
 
 private:
     // OpenGL objects
@@ -94,8 +107,9 @@ private:
     void CalculateSurfaceExtents(const HL1::tBSPFace& in, float min[2], float max[2]) const;
     bool LoadLightmap(const HL1::tBSPFace& in, Texture& out, float min[2], float max[2]);
 
-    bool LoadFacesWithLightmaps(Hl1BspAsset* data);
+    bool LoadFacesWithLightmaps();
     bool LoadTextures(const std::vector<Hl1WadAsset*>& wads);
+    bool LoadModels();
 
     static std::vector<HL1::sBSPEntity> LoadEntities(const Array<byte>& entityData);
     static std::vector<HL1::tBSPVisLeaf> LoadVisLeafs(const Array<byte>& visdata, const Array<HL1::tBSPLeaf>& _leafData, const Array<HL1::tBSPModel>& _modelData);

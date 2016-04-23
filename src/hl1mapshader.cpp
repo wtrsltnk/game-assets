@@ -37,7 +37,7 @@ const std::string Hl1MapShader::FragmentShader()
     return std::string(
                 "#version 150\n"
 
-                "uniform sampler2D u_tex;"
+                "uniform sampler2D tex;"
 
                 "in vec2 f_uvt;"
 
@@ -45,14 +45,14 @@ const std::string Hl1MapShader::FragmentShader()
 
                 "void main()"
                 "{"
-                "   color = texture(u_tex, f_uvt.st);"
+                "   color = texture(tex, f_uvt.st);"
                 "}"
                 );
 }
 
 void Hl1MapShader::OnProgramLinked(GLuint program)
 {
-    this->_u_tex = glGetUniformLocation(this->_program, "u_tex");
+    this->_u_tex = glGetUniformLocation(this->_program, "tex");
 
     glActiveTexture(GL_TEXTURE0);
     glUniform1i(this->_u_tex, 0);

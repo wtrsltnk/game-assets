@@ -8,8 +8,7 @@ namespace Hl1MdlShaderAttributeLocations
     enum {
         Vertex = 0,
         Normal,
-        UvBone,
-        Color
+        UvBone
     };
 }
 

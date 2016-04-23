@@ -21,13 +21,13 @@ const std::string Hl1SprShader::VertexShader()
                 "uniform mat4 u_projection;"
                 "uniform mat4 u_view;"
 
-                "out vec2 f_uvt;"
+                "out vec2 f_uv_tex;"
 
                 "void main()"
                 "{"
                 "    mat4 m = u_projection * u_view;"
                 "    gl_Position = m * vec4(vertex.xyz, 1.0);"
-                "    f_uvt = texcoords.st;"
+                "    f_uv_tex = texcoords.st;"
                 "}"
                 );
 }
@@ -37,22 +37,22 @@ const std::string Hl1SprShader::FragmentShader()
     return std::string(
                 "#version 150\n"
 
-                "uniform sampler2D u_tex;"
+                "uniform sampler2D tex;"
 
-                "in vec2 f_uvt;"
+                "in vec2 f_uv_tex;"
 
                 "out vec4 color;"
 
                 "void main()"
                 "{"
-                "   color = texture(u_tex, f_uvt.st);"
+                "   color = texture(u_tex, f_uv_tex.st);"
                 "}"
                 );
 }
 
 void Hl1SprShader::OnProgramLinked(GLuint program)
 {
-    this->_u_tex = glGetUniformLocation(this->_program, "u_tex");\
+    this->_u_tex = glGetUniformLocation(this->_program, "tex");\
 
     glActiveTexture(GL_TEXTURE0);
     glUniform1i(this->_u_tex, 0);

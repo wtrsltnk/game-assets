@@ -20,8 +20,6 @@ Hl1BspInstance::~Hl1BspInstance()
 
 void Hl1BspInstance::Render(const glm::mat4& proj, const glm::mat4& view)
 {
-    static glm::vec4 global_color(1.0f, 1.0f, 1.0f, 1.0f);
-
     glm::mat3 rotMat(view);
     glm::vec3 pos = -glm::vec3(view[3]) * rotMat;
     std::set<short> visibleFaces = this->FindVisibleFaces(pos);
@@ -31,7 +29,6 @@ void Hl1BspInstance::Render(const glm::mat4& proj, const glm::mat4& view)
     this->_shader->UseProgram();
     this->_shader->SetProjectionMatrix(proj);
     this->_shader->SetViewMatrix(view);
-    this->_shader->SetGlobalColorVec(global_color);
 
     this->_asset->RenderFaces(this->_visibleFaces);
 }
@@ -82,7 +79,6 @@ std::set<short> Hl1BspInstance::FindVisibleFaces(const glm::vec3& pos)
 
     for (int m = 1; m < this->_asset->_modelData.count; m++)
     {
-        // add all faces of current leaf
         for (int f = this->_asset->_modelData[m].firstFace; f < this->_asset->_modelData[m].faceCount; f++)
         {
             if (this->_asset->_faces[f].flags == 0)

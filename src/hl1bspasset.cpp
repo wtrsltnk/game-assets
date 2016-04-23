@@ -51,7 +51,9 @@ bool Hl1BspAsset::Load(const std::string &filename)
     this->LoadTextures(wads);
     Hl1WadAsset::UnloadWads(wads);
 
-    this->LoadFacesWithLightmaps(this);
+    this->LoadFacesWithLightmaps();
+
+    this->LoadModels();
 
     glBindTexture(GL_TEXTURE_2D, 0);                // Unbind texture
     glPixelStorei(GL_UNPACK_ALIGNMENT, 4);          // Reset UNPACK_ALIGNMENT
@@ -199,10 +201,10 @@ std::vector<HL1::tBSPVisLeaf> Hl1BspAsset::LoadVisLeafs(const Array<byte>& visda
     return visLeafs;
 }
 
-bool Hl1BspAsset::LoadFacesWithLightmaps(Hl1BspAsset* bspAsset)
+bool Hl1BspAsset::LoadFacesWithLightmaps()
 {
-    this->_faces.Allocate(bspAsset->_faceData.count);
-    this->_lightMaps.Allocate(bspAsset->_faceData.count);
+    this->_faces.Allocate(this->_faceData.count);
+    this->_lightMaps.Allocate(this->_faceData.count);
 
     // Activate TEXTURE1 for lightmaps from each face
     glActiveTexture(GL_TEXTURE1);
@@ -211,16 +213,16 @@ bool Hl1BspAsset::LoadFacesWithLightmaps(Hl1BspAsset* bspAsset)
 
     for (int f = 0; f < this->_faces.count; f++)
     {
-        HL1::tBSPFace& in = bspAsset->_faceData[f];
-        HL1::tBSPMipTexHeader* mip = bspAsset->GetMiptex(bspAsset->_texinfoData[in.texinfo].miptexIndex);
+        HL1::tBSPFace& in = this->_faceData[f];
+        HL1::tBSPMipTexHeader* mip = this->GetMiptex(this->_texinfoData[in.texinfo].miptexIndex);
         Hl1BspAsset::tFace& out = this->_faces[f];
 
         out.firstVertex = this->_vertices.Count();
         out.vertexCount = in.edgeCount;
-        out.flags = bspAsset->_texinfoData[in.texinfo].flags;
-        out.texture = bspAsset->_texinfoData[in.texinfo].miptexIndex;
+        out.flags = this->_texinfoData[in.texinfo].flags;
+        out.texture = this->_texinfoData[in.texinfo].miptexIndex;
         out.lightmap = f;
-        out.plane = bspAsset->_planeData[in.planeIndex];
+        out.plane = this->_planeData[in.planeIndex];
 
         // Flip face normal when side == 1
         if (in.side == 1)
@@ -233,8 +235,8 @@ bool Hl1BspAsset::LoadFacesWithLightmaps(Hl1BspAsset* bspAsset)
 
         // Calculate and grab the lightmap buffer
         float min[2], max[2];
-        bspAsset->CalculateSurfaceExtents(in, min, max);
-        if (bspAsset->LoadLightmap(in, this->_lightMaps[f], min, max))
+        this->CalculateSurfaceExtents(in, min, max);
+        if (this->LoadLightmap(in, this->_lightMaps[f], min, max))
             this->_lightMaps[f].UploadToGl();
 
         float lw = float(this->_lightMaps[f].Width());
@@ -248,14 +250,14 @@ bool Hl1BspAsset::LoadFacesWithLightmaps(Hl1BspAsset* bspAsset)
             Hl1BspAsset::tVertex v;
 
             // Get the edge index
-            int ei = bspAsset->_surfedgeData[in.firstEdge + e];
+            int ei = this->_surfedgeData[in.firstEdge + e];
             // Determine the vertex based on the edge index
-            v.position = bspAsset->_verticesData[bspAsset->_edgeData[ei < 0 ? -ei : ei].vertex[ei < 0 ? 1 : 0]].point;
+            v.position = this->_verticesData[this->_edgeData[ei < 0 ? -ei : ei].vertex[ei < 0 ? 1 : 0]].point;
 
             // Copy the normal from the plane
             v.normal = out.plane.normal;
 
-            HL1::tBSPTexInfo& ti = bspAsset->_texinfoData[in.texinfo];
+            HL1::tBSPTexInfo& ti = this->_texinfoData[in.texinfo];
             float s = glm::dot(v.position, glm::vec3(ti.vecs[0][0], ti.vecs[0][1], ti.vecs[0][2])) + ti.vecs[0][3];
             float t = glm::dot(v.position, glm::vec3(ti.vecs[1][0], ti.vecs[1][1], ti.vecs[1][2])) + ti.vecs[1][3];
 
@@ -415,6 +417,20 @@ bool Hl1BspAsset::LoadLightmap(const HL1::tBSPFace& in, Texture& out, float min[
 
         out.Data()[i] = inf;
     }
+    return true;
+}
+
+bool Hl1BspAsset::LoadModels()
+{
+    this->_models.Allocate(this->_modelData.count);
+
+    for (int m = 0; m < this->_modelData.count; m++)
+    {
+        this->_models[m].position = this->_modelData[m].origin;
+        this->_models[m].firstFace = this->_modelData[m].firstFace;
+        this->_models[m].faceCount = this->_modelData[m].faceCount;
+    }
+
     return true;
 }
 

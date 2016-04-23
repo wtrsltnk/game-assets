@@ -81,9 +81,6 @@ bool Hl1MdlAsset::Load(const std::string &filename)
         glVertexAttribPointer((GLuint)Hl1MdlShaderAttributeLocations::UvBone, 3, GL_FLOAT, GL_FALSE, sizeof(tVertex), (GLvoid*)(sizeof(float) * 6));
         glEnableVertexAttribArray((GLuint)Hl1MdlShaderAttributeLocations::UvBone);
 
-        glVertexAttribPointer((GLuint)Hl1MdlShaderAttributeLocations::Color, 3, GL_FLOAT, GL_FALSE, sizeof(tVertex), (GLvoid*)(sizeof(float) * 9));
-        glEnableVertexAttribArray((GLuint)Hl1MdlShaderAttributeLocations::Color);
-
         glBindVertexArray(0);
     }
     return true;
@@ -260,7 +257,6 @@ void Hl1MdlAsset::LoadBodyParts()
 
                         v.pos = vertices[ptricmds[0]];
                         v.nor = normals[ptricmds[0]];
-                        v.col = glm::vec3(1.0f);//lv[q];
                         v.stbone = glm::vec3(ptricmds[2] * s, ptricmds[3] * t, float(int(vertexBones[ptricmds[0]])));
 
                         if (vertnum < 0)    // TRIANGLE_FAN
