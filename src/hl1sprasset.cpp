@@ -1,8 +1,8 @@
 #include "hl1sprasset.h"
 #include "hl1sprinstance.h"
 
-Hl1SprAsset::Hl1SprAsset(DataFileLoader& loader)
-    : Hl1Asset(loader), _vao(0), _vbo(0)
+Hl1SprAsset::Hl1SprAsset(DataFileLocator& locator, DataFileLoader& loader)
+    : Hl1Asset(locator, loader), _vao(0), _vbo(0)
 { }
 
 Hl1SprAsset::~Hl1SprAsset()

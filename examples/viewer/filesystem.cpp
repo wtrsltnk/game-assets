@@ -3,6 +3,11 @@
 
 LoadedFileList FileSystem::_loadedFiles;
 
+std::string FileSystem::LocateDataFile(const std::string& filename)
+{
+    return filename;
+}
+
 Array<byte>& FileSystem::LoadFileData(const std::string& filename)
 {
     if (FileSystem::_loadedFiles.find(filename) == FileSystem::_loadedFiles.end())

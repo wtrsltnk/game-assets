@@ -44,7 +44,7 @@ public:
     } tModel;
 
 public:
-    Hl1BspAsset(DataFileLoader& loader);
+    Hl1BspAsset(DataFileLocator& locator, DataFileLoader& loader);
     virtual ~Hl1BspAsset();
 
     virtual bool Load(const std::string &filename);

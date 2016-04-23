@@ -6,8 +6,8 @@
 #include <GL/glextl.h>
 #include <glm/gtc/type_ptr.hpp>
 
-Hl1BspAsset::Hl1BspAsset(DataFileLoader& loader)
-    : Hl1Asset(loader), _vao(0), _vbo(0)
+Hl1BspAsset::Hl1BspAsset(DataFileLocator& locator, DataFileLoader& loader)
+    : Hl1Asset(locator, loader), _vao(0), _vbo(0)
 { }
 
 Hl1BspAsset::~Hl1BspAsset()

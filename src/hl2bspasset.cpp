@@ -5,8 +5,8 @@
 #include <iostream>
 #include <glm/gtc/type_ptr.hpp>
 
-Hl2BspAsset::Hl2BspAsset(DataFileLoader& loader)
-    : Hl1Asset(loader), _vao(0), _vbo(0)
+Hl2BspAsset::Hl2BspAsset(DataFileLocator& locator, DataFileLoader& loader)
+    : Hl1Asset(locator, loader), _vao(0), _vbo(0)
 { }
 
 Hl2BspAsset::~Hl2BspAsset()

@@ -41,7 +41,7 @@ public:
     } tBodypart;
 
 public:
-    Hl1MdlAsset(DataFileLoader& loader);
+    Hl1MdlAsset(DataFileLocator& locator, DataFileLoader& loader);
     virtual ~Hl1MdlAsset();
 
     virtual bool Load(const std::string &filename);

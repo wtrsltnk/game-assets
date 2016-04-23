@@ -61,7 +61,7 @@ public:
     } tEntity;
 
 public:
-    Hl1MapAsset(DataFileLoader& loader);
+    Hl1MapAsset(DataFileLocator& locator, DataFileLoader& loader);
     virtual ~Hl1MapAsset();
 
     virtual bool Load(const std::string& filename);

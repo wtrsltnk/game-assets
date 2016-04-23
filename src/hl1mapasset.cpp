@@ -3,8 +3,8 @@
 
 #include <iostream>
 
-Hl1MapAsset::Hl1MapAsset(DataFileLoader& loader)
-    : Hl1Asset(loader)
+Hl1MapAsset::Hl1MapAsset(DataFileLocator& locator, DataFileLoader& loader)
+    : Hl1Asset(locator, loader)
 { }
 
 Hl1MapAsset::~Hl1MapAsset()

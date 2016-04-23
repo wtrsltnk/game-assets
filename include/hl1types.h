@@ -88,8 +88,6 @@ public:
     }
 };
 
-typedef Array<byte>& (DataFileLoader)(const std::string& filename);
-
 class Hl1Instance
 {
 public:
@@ -100,13 +98,17 @@ public:
 
 };
 
+typedef std::string (DataFileLocator)(const std::string& relativeFilename);
+typedef Array<byte>& (DataFileLoader)(const std::string& filename);
+
 class Hl1Asset
 {
 protected:
+    DataFileLocator& _locator;
     DataFileLoader& _loader;
 
 public:
-    Hl1Asset(DataFileLoader& loader) : _loader(loader) { }
+    Hl1Asset(DataFileLocator& locator, DataFileLoader& loader) : _locator(locator), _loader(loader) { }
     virtual ~Hl1Asset() { }
 
     virtual bool Load(const std::string& filename) = 0;

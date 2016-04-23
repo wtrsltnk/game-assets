@@ -32,7 +32,7 @@ public:
     } tFace;
 
 public:
-    Hl2BspAsset(DataFileLoader& loader);
+    Hl2BspAsset(DataFileLocator& locator, DataFileLoader& loader);
     virtual ~Hl2BspAsset();
 
     virtual bool Load(const std::string &filename);

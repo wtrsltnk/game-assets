@@ -6,8 +6,8 @@
 #include <iomanip>
 #include <glm/gtc/type_ptr.hpp>
 
-Hl1MdlAsset::Hl1MdlAsset(DataFileLoader& loader)
-    : Hl1Asset(loader), _header(0), _vao(0), _vbo(0)
+Hl1MdlAsset::Hl1MdlAsset(DataFileLocator& locator, DataFileLoader& loader)
+    : Hl1Asset(locator, loader), _header(0), _vao(0), _vbo(0)
 { }
 
 Hl1MdlAsset::~Hl1MdlAsset()

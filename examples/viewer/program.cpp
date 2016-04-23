@@ -52,19 +52,19 @@ bool AssetViewer::InitializeGraphics()
         {
             Array<byte> sig = FileSystem::LoadPartialFileData(filename, 4);
             if (sig[0] == 'V' && sig[1] == 'B' && sig[2] == 'S' && sig[3] == 'P')
-                this->_asset = new Hl2BspAsset(FileSystem::LoadFileData);
+                this->_asset = new Hl2BspAsset(FileSystem::LocateDataFile, FileSystem::LoadFileData);
             else if (((int*)sig.data)[0] == HL1_BSP_SIGNATURE)
-                this->_asset = new Hl1BspAsset(FileSystem::LoadFileData);
+                this->_asset = new Hl1BspAsset(FileSystem::LocateDataFile, FileSystem::LoadFileData);
         }
         else if (ext == ".mdl")
-            this->_asset = new Hl1MdlAsset(FileSystem::LoadFileData);
+            this->_asset = new Hl1MdlAsset(FileSystem::LocateDataFile, FileSystem::LoadFileData);
         else if (ext == ".map")
         {
             Log().Info("Loading MAP file");
-            this->_asset = new Hl1MapAsset(FileSystem::LoadFileData);
+            this->_asset = new Hl1MapAsset(FileSystem::LocateDataFile, FileSystem::LoadFileData);
         }
         else if (ext == ".spr")
-            this->_asset = new Hl1SprAsset(FileSystem::LoadFileData);
+            this->_asset = new Hl1SprAsset(FileSystem::LocateDataFile, FileSystem::LoadFileData);
 
         if (this->_asset != nullptr
                 && this->_asset->Load(filename))
