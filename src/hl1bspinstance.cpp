@@ -22,7 +22,7 @@ void Hl1BspInstance::Render(const glm::mat4& proj, const glm::mat4& view)
 {
     glm::mat3 rotMat(view);
     glm::vec3 pos = -glm::vec3(view[3]) * rotMat;
-    std::set<short> visibleFaces = this->FindVisibleFaces(pos);
+    std::set<unsigned short> visibleFaces = this->FindVisibleFaces(pos, this->_asset->_modelData[0].headnode[0]);
     if (visibleFaces.size() > 0)
         this->_visibleFaces = visibleFaces;
 
@@ -39,11 +39,11 @@ void Hl1BspInstance::Unload()
     this->_shader = nullptr;
 }
 
-std::set<short> Hl1BspInstance::FindVisibleFaces(const glm::vec3& pos)
+std::set<unsigned short> Hl1BspInstance::FindVisibleFaces(const glm::vec3& pos, int headNode)
 {
-    std::set<short> leafFaces;
+    std::set<unsigned short> leafFaces;
 
-    int leaf = this->TracePointInLeaf(pos, this->_asset->_modelData[0].headnode[0]);
+    int leaf = this->TracePointInLeaf(pos, headNode);
     if (leaf != 0)
     {
         // add all faces of current leaf
@@ -65,24 +65,27 @@ std::set<short> Hl1BspInstance::FindVisibleFaces(const glm::vec3& pos)
                     leafFaces.insert(findex);
             }
         }
+
+        // Add all faces of non worldspawn model
+        for (int m = 1; m < this->_asset->_modelData.count; m++)
+        {
+            for (unsigned short f = 0; f < this->_asset->_modelData[m].faceCount; f++)
+            {
+                if (this->_asset->_faces[f + this->_asset->_modelData[m].firstFace].flags != 0)
+                    continue;
+
+                leafFaces.insert(f + this->_asset->_modelData[m].firstFace);
+            }
+        }
     }
     else
     {
-        for (int i = 0; i < this->_asset->_faces.count; i++)
+        for (unsigned short i = 0; i < this->_asset->_faces.count; i++)
         {
             if (this->_asset->_faces[i].flags != 0)
                 continue;
 
             this->_visibleFaces.insert(i);
-        }
-    }
-
-    for (int m = 1; m < this->_asset->_modelData.count; m++)
-    {
-        for (int f = this->_asset->_modelData[m].firstFace; f < this->_asset->_modelData[m].faceCount; f++)
-        {
-            if (this->_asset->_faces[f].flags == 0)
-                leafFaces.insert(f);
         }
     }
 

@@ -22,9 +22,9 @@ public:
 private:
     Hl1BspAsset* _asset;
     Hl1BspShader* _shader;
-    std::set<short> _visibleFaces;
+    std::set<unsigned short> _visibleFaces;
 
-    std::set<short> FindVisibleFaces(const glm::vec3& pos);
+    std::set<unsigned short> FindVisibleFaces(const glm::vec3& pos, int headNode);
     int TracePointInLeaf(const glm::vec3& point, int startNode);
 };
 

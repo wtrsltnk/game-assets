@@ -434,7 +434,7 @@ bool Hl1BspAsset::LoadModels()
     return true;
 }
 
-void Hl1BspAsset::RenderFaces(const std::set<short>& visibleFaces)
+void Hl1BspAsset::RenderFaces(const std::set<unsigned short>& visibleFaces)
 {
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
@@ -442,7 +442,7 @@ void Hl1BspAsset::RenderFaces(const std::set<short>& visibleFaces)
 
     glBindVertexArray(this->_vao);
 
-    for (std::set<short>::const_iterator i = visibleFaces.begin(); i != visibleFaces.end(); ++i)
+    for (std::set<unsigned short>::const_iterator i = visibleFaces.begin(); i != visibleFaces.end(); ++i)
     {
         short a = *i;
         glActiveTexture(GL_TEXTURE1);

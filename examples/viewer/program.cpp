@@ -106,6 +106,9 @@ void AssetViewer::GameLoop()
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+    glEnable(GL_ALPHA_TEST);
+    glAlphaFunc(GL_GEQUAL, 0.8f);
+
     if (this->_instance != nullptr)
         this->_instance->Render(this->_proj, this->_cam.GetViewMatrix());
 

@@ -7,6 +7,7 @@
 
 #include <string>
 #include <set>
+#include <GL/glextl.h>
 
 class Hl1BspAsset : public Hl1Asset
 {
@@ -50,7 +51,7 @@ public:
     virtual bool Load(const std::string &filename);
     virtual Hl1Instance* CreateInstance();
 
-    void RenderFaces(const std::set<short>& visibleFaces);
+    void RenderFaces(const std::set<unsigned short>& visibleFaces);
 
     HL1::tBSPEntity* FindEntityByClassname(const std::string& classname);
     HL1::tBSPMipTexHeader* GetMiptex(int index);
@@ -84,8 +85,8 @@ public:
 
 private:
     // OpenGL objects
-    unsigned int _vao;
-    unsigned int _vbo;
+    GLuint _vao;
+    GLuint _vbo;
 
 private:
     // Constructs an Array from the given lump index. The memory in the lump is not owned by the lump
