@@ -115,6 +115,11 @@ void ViewerHud::InitHud(const std::string& filename, Hl1Instance* instance)
 
 void ViewerHud::Render()
 {
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+    glActiveTexture(GL_TEXTURE0);
+    glDisable(GL_DEPTH_TEST);
+    glDisable(GL_CULL_FACE);
+    glDisable(GL_ALPHA_TEST);
     if (this->_hud != nullptr)
     {
         this->Fonts.Regular.DrawTextA(this->_proj, glm::mat4(1.0f), 5.0f, this->_size.y - 5.0f, (std::string("Loaded file : ") + this->_filename));
