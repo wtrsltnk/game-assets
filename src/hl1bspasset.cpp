@@ -1,10 +1,33 @@
 #include "hl1bspasset.h"
 #include "hl1bspshader.h"
 #include "hl1bspinstance.h"
+#define STB_RECT_PACK_IMPLEMENTATION
+#include "stb_rect_pack.h"
+#define STB_IMAGE_WRITE_IMPLEMENTATION
+#include "stb_image_write.h"
 
 #include <iostream>
+#include <sstream>
 #include <GL/glextl.h>
 #include <glm/gtc/type_ptr.hpp>
+
+std::ostream& operator << (std::ostream& os, const glm::vec2& v)
+{
+    os << "[" << v[0] << ", " << v[1] << "]";
+    return os;
+}
+
+std::ostream& operator << (std::ostream& os, const glm::vec3& v)
+{
+    os << "[" << v[0] << ", " << v[1] << ", " << v[2] << "]";
+    return os;
+}
+
+std::ostream& operator << (std::ostream& os, const glm::vec4& v)
+{
+    os << "[" << v[0] << ", " << v[1] << ", " << v[2] << ", " << v[3] << "]";
+    return os;
+}
 
 Hl1BspAsset::Hl1BspAsset(DataFileLocator& locator, DataFileLoader& loader)
     : Hl1Asset(locator, loader), _vao(0), _vbo(0)
@@ -209,8 +232,9 @@ bool Hl1BspAsset::LoadFacesWithLightmaps()
     // Activate TEXTURE1 for lightmaps from each face
     glActiveTexture(GL_TEXTURE1);
     glEnable(GL_TEXTURE_2D);
-    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);          // UNPACK_ALIGNMENT, lightmaps are byte per pixel
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
+    std::vector<stbrp_rect> rects;
     for (int f = 0; f < this->_faces.count; f++)
     {
         HL1::tBSPFace& in = this->_faceData[f];
@@ -222,6 +246,7 @@ bool Hl1BspAsset::LoadFacesWithLightmaps()
         out.flags = this->_texinfoData[in.texinfo].flags;
         out.texture = this->_texinfoData[in.texinfo].miptexIndex;
         out.lightmap = f;
+        out.atlas = false;
         out.plane = this->_planeData[in.planeIndex];
 
         // Flip face normal when side == 1
@@ -236,8 +261,17 @@ bool Hl1BspAsset::LoadFacesWithLightmaps()
         // Calculate and grab the lightmap buffer
         float min[2], max[2];
         this->CalculateSurfaceExtents(in, min, max);
-        if (this->LoadLightmap(in, this->_lightMaps[f], min, max))
-            this->_lightMaps[f].UploadToGl();
+        if (out.flags == 0)
+        {
+            if (this->LoadLightmap(in, this->_lightMaps[f], min, max))
+            {
+                stbrp_rect rect;
+                rect.id = f;
+                rect.w = this->_lightMaps[f].Width() + 2;
+                rect.h = this->_lightMaps[f].Height() + 2;
+                rects.push_back(rect);
+            }
+        }
 
         float lw = float(this->_lightMaps[f].Width());
         float lh = float(this->_lightMaps[f].Height());
@@ -270,6 +304,49 @@ bool Hl1BspAsset::LoadFacesWithLightmaps()
             this->_vertices.Add(v);
         }
     }
+
+    // Setup one atlas texture (for now)
+    this->_atlas = new Texture();
+    this->_atlas->SetDimentions(1024, 1024, 3);
+    this->_atlas->Fill(glm::vec4(0.0f, 0.0f, 0.0f, 0.0f));
+
+    // pack the lightmap rects into one atlas
+    stbrp_context context = { 0 };
+    Array<stbrp_node> nodes(rects.size());
+    stbrp_init_target(&context, this->_atlas->Width(), this->_atlas->Height(), nodes, rects.size());
+    stbrp_pack_rects(&context, (stbrp_rect*)&rects[0], rects.size());
+
+    for (auto rect = rects.begin(); rect != rects.end(); rect++)
+    {
+        // a reference to the loaded lightmapfrom the rect
+        Texture& lm = this->_lightMaps[_faces[(*rect).id].lightmap];
+        if ((*rect).was_packed)
+        {
+            // Copy the lightmap texture into the atlas
+            this->_atlas->FillAtPosition(lm, glm::vec2((*rect).x + 1, (*rect).y + 1), true);
+            for (int vertexIndex = 0; vertexIndex < _faces[(*rect).id].vertexCount; vertexIndex++)
+            {
+                // Recalculate the lightmap texcoords for the atlas
+                glm::vec2& vec = this->_vertices[this->_faces[(*rect).id].firstVertex + vertexIndex]->texcoords[1];
+                vec.s = float((*rect).x + 1 + (float(lm.Width()) * vec.s)) / this->_atlas->Width();
+                vec.t = float((*rect).y + 1 + (float(lm.Height()) * vec.t)) / this->_atlas->Height();
+            }
+
+            // Make sure we will use the (correct) atlas when we render
+            this->_faces[(*rect).id].lightmap = 0;
+            this->_faces[(*rect).id].atlas = true;
+        }
+        else
+        {
+            // When the lightmap was not packed into the atlas, we upload the original and use that(for now)
+            std::cout << (*rect).id << " not packed\n";
+            lm.UploadToGl();
+        }
+    }
+
+    // upload the atlas with all its lightmap textures
+    this->_atlas->UploadToGl();
+//    stbi_write_png("test.png", this->_atlas->Width(), this->_atlas->Height(), this->_atlas->Bpp(), this->_atlas->Data(), this->_atlas->Width() * this->_atlas->Bpp());
 
     return true;
 }
@@ -403,20 +480,6 @@ bool Hl1BspAsset::LoadLightmap(const HL1::tBSPFace& in, Texture& out, float min[
 
     out.SetData(size[0] + 1, size[1] + 1, 3, this->_lightingData.data + in.lightOffset, false);
 
-    float light_adjust = 1.0f;// - config.brightness;
-
-    // scale lightmap value...
-    for (int i = 0; i < out.DataSize(); i++)
-    {
-        float f = powf((out.Data()[i] + 1) / 256.0f, light_adjust);
-        int inf = f * 255.0f + 0.5f;
-
-        // clamp between 0 and 255
-        if (inf < 0) inf = 0;
-        if (inf > 255) inf = 255;
-
-        out.Data()[i] = inf;
-    }
     return true;
 }
 
@@ -446,7 +509,11 @@ void Hl1BspAsset::RenderFaces(const std::set<unsigned short>& visibleFaces)
     {
         short a = *i;
         glActiveTexture(GL_TEXTURE1);
-        glBindTexture(GL_TEXTURE_2D, this->_lightMaps[this->_faces[a].lightmap].GlIndex());
+
+        if (!this->_faces[a].atlas)
+            glBindTexture(GL_TEXTURE_2D, this->_lightMaps[this->_faces[a].lightmap].GlIndex());
+        else
+            glBindTexture(GL_TEXTURE_2D, this->_atlas->GlIndex());
 
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, this->_textures[this->_faces[a].texture].GlIndex());

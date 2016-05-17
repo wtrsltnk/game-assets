@@ -41,7 +41,7 @@ bool AssetViewer::InitializeGraphics()
     std::cout << "GL_SHADING_LANGUAGE_VERSION : " << glGetString(GL_SHADING_LANGUAGE_VERSION) << std::endl;
     std::cout << "GL_RENDERER                 : " << glGetString(GL_RENDERER) << std::endl;
     std::cout << "GL_VENDOR                   : " << glGetString(GL_VENDOR) << std::endl;
-    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+    glClearColor(0 / 255.0f, 129 / 255.0f, 210 / 255.0f, 255 / 255.0f);
 
     if (this->_sys->GetArgs().size() > 1)
     {

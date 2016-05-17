@@ -102,20 +102,90 @@ void Texture::CopyFrom(const Texture& from)
 
 void Texture::DefaultTexture()
 {
-#define IMAGE_ROWS 64
-#define IMAGE_COLS 64
     int value;
-    GLubyte imageData[IMAGE_ROWS][IMAGE_COLS][3];
-    for (int row = 0; row < IMAGE_ROWS; row++) {
-       for (int col = 0; col < IMAGE_COLS; col++) {
+    for (int row = 0; row < this->_width; row++) {
+       for (int col = 0; col < this->_height; col++) {
           // Each cell is 8x8, value is 0 or 255 (black or white)
           value = (((row & 0x8) == 0) ^ ((col & 0x8) == 0)) * 255;
-          imageData[row][col][0] = (GLubyte)value;
-          imageData[row][col][1] = (GLubyte)value;
-          imageData[row][col][2] = (GLubyte)value;
+          SetPixelAt(glm::vec4(float(value), float(value), float(value), float(value)), row, col);
        }
     }
-    this->SetData(IMAGE_ROWS, IMAGE_COLS, 3, (GLubyte*)&imageData[0][0][0]);
+}
+
+glm::vec4 Texture::PixelAt(int x, int y) const
+{
+    glm::vec4 r(1.0f, 1.0f, 1.0f, 1.0f);
+    int p = x + (y*_width);
+    for (int i = 0 ; i < this->_bpp; i++)
+        r[i] = _data[(p * _bpp) + i];
+    return r;
+}
+
+void Texture::SetPixelAt(const glm::vec4& pixel, int x, int y)
+{
+    int p = x + (y*_width);
+    for (int i = 0 ; i < this->_bpp; i++)
+        _data[(p * _bpp) + i] = pixel[i];
+}
+
+void Texture::Fill(const glm::vec4& color)
+{
+    for (int y = 0; y < _height; y++)
+    {
+        for (int x = 0; x < _width; x++)
+        {
+            this->SetPixelAt(color, x, y);
+        }
+    }
+}
+
+void Texture::Fill(const Texture& from)
+{
+    int x = 0, y = 0;
+    while (x < this->Width())
+    {
+        while (y < this->Height())
+        {
+            FillAtPosition(from, glm::vec2(x, y));
+            y += from.Height();
+        }
+        x += from.Width();
+    }
+}
+
+void Texture::FillAtPosition(const Texture& from, const glm::vec2& pos, bool expandBorder)
+{
+    if (pos.x > this->Width() || pos.y > this->Height()) return;
+
+    int w = from.Width();
+    int h = from.Height();
+
+    for (int y = 0; y < h; y++)
+    {
+        for (int x = 0; x < w; x++)
+        {
+            this->SetPixelAt(from.PixelAt(x, y), int(pos.x + x), int(pos.y + y));
+            if (expandBorder)
+            {
+                if (y == 0)
+                {
+                    this->SetPixelAt(from.PixelAt(x, y), int(pos.x + x), int(pos.y + y) - 1);
+                    if (x == 0) this->SetPixelAt(from.PixelAt(x, y), int(pos.x + x) - 1, int(pos.y + y) - 1);
+                    if (x == w-1) this->SetPixelAt(from.PixelAt(x, y), int(pos.x + x) + 1, int(pos.y + y) - 1);
+                }
+                else if (y == h-1)
+                {
+                    this->SetPixelAt(from.PixelAt(x, y), int(pos.x + x), int(pos.y + y + 1));
+                    if (x == 0) this->SetPixelAt(from.PixelAt(x, y), int(pos.x + x) - 1, int(pos.y + y) + 1);
+                    if (x == w-1) this->SetPixelAt(from.PixelAt(x, y), int(pos.x + x) + 1, int(pos.y + y) + 1);
+                }
+                if (x == 0)
+                    this->SetPixelAt(from.PixelAt(x, y), int(pos.x + x) - 1, int(pos.y + y));
+                else if (x == w-1)
+                    this->SetPixelAt(from.PixelAt(x, y), int(pos.x + x) + 1, int(pos.y + y));
+            }
+        }
+    }
 }
 
 void Texture::SetData(int w, int h, int bpp, unsigned char* data, bool repeat)

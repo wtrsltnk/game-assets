@@ -28,6 +28,7 @@ public:
 
         HL1::tBSPPlane plane;
         unsigned int lightmap;
+        bool atlas;
         unsigned int texture;
 
     } tFace;
@@ -82,6 +83,7 @@ public:
     Array<Texture> _lightMaps;
     Array<Texture> _textures;
     Array<tModel> _models;
+    Texture* _atlas;
 
 private:
     // OpenGL objects

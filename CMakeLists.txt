@@ -57,6 +57,7 @@ set(HDR_APP
 
     include/texture.h
     include/tokenizer.h
+    include/stb_rect_pack.h
     )
 
 set(SRC_APP

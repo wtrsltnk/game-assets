@@ -59,6 +59,7 @@ public:
 
     operator T*(void) const { return data; }
     const T* operator[](int i) const { return data + i; }
+    T* operator[](int i) { return data + i; }
 
     int Count() const { return count; }
 
