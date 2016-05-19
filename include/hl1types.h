@@ -4,6 +4,19 @@
 #include <string>
 #include <map>
 #include <glm/glm.hpp>
+#include <GL/glextl.h>
+
+namespace HL1
+{
+    typedef struct sVertex
+    {
+        glm::vec3 position;
+        glm::vec2 texcoords[2];
+        glm::vec3 normal;
+        int bone;
+
+    } tVertex;
+}
 
 typedef std::map<std::string, std::string> KeyValueList;
 
@@ -89,6 +102,21 @@ public:
     }
 };
 
+class Hl1VertexArray
+{
+private:
+    GLuint _vbo;
+    GLuint _vao;
+
+public:
+    Hl1VertexArray();
+    virtual ~Hl1VertexArray();
+
+    void Load(const List<HL1::tVertex>& vertices);
+    void Bind();
+    void Unbind();
+};
+
 class Hl1Instance
 {
 public:
@@ -107,6 +135,7 @@ class Hl1Asset
 protected:
     DataFileLocator& _locator;
     DataFileLoader& _loader;
+    Hl1VertexArray _va;
 
 public:
     Hl1Asset(DataFileLocator& locator, DataFileLoader& loader) : _locator(locator), _loader(loader) { }

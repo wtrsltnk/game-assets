@@ -12,19 +12,12 @@
 class Hl1MdlAsset : public Hl1Asset
 {
 public:
-    typedef struct sVertex
-    {
-        glm::vec3 pos;
-        glm::vec3 nor;
-        glm::vec3 stbone;
-
-    } tVertex;
-
     typedef struct sMesh
     {
-        int start;
-        int count;
-        int skin;
+        int firstVertex;
+        int vertexCount;
+        unsigned int lightmap;
+        unsigned int texture;
 
     } tMesh;
 
@@ -71,13 +64,8 @@ public:
 
     // These are parsed from the mapped data
     Array<tBodypart> _bodyparts;
-    List<tVertex> _vertices;
+    List<HL1::tVertex> _vertices;
     Array<Texture> _textures;
-
-private:
-    // OpenGL objects
-    GLuint _vbo;
-    GLuint _vao;
 
 private:
     void LoadTextures();

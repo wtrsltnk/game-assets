@@ -1,5 +1,4 @@
 #include "hl1bspinstance.h"
-#include "hl1bspshader.h"
 
 #include <glm/glm.hpp>
 #include <set>
@@ -9,7 +8,7 @@ using namespace std;
 Hl1BspInstance::Hl1BspInstance(Hl1BspAsset* asset)
     : _asset(asset), _shader(nullptr)
 {
-    this->_shader = new Hl1BspShader();
+    this->_shader = new Hl1Shader();
     this->_shader->BuildProgram();
 }
 

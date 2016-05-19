@@ -33,7 +33,6 @@ set(HDR_APP
     include/hl1bsptypes.h
     include/hl1bspasset.h
     include/hl1bspinstance.h
-    include/hl1bspshader.h
     include/hl1wadasset.h
 
     include/hl2bsptypes.h
@@ -62,10 +61,10 @@ set(HDR_APP
 
 set(SRC_APP
     src/hl1shader.cpp
+    src/hl1types.cpp
 
     src/hl1bspasset.cpp
     src/hl1bspinstance.cpp
-    src/hl1bspshader.cpp
     src/hl1wadasset.cpp
 
     src/hl2bspasset.cpp

@@ -2,7 +2,7 @@
 #define	_HL1BSPINSTANCE_H_
 
 #include "hl1bspasset.h"
-#include "hl1bspshader.h"
+#include "hl1shader.h"
 
 #include <set>
 #include <string>
@@ -21,7 +21,7 @@ public:
 
 private:
     Hl1BspAsset* _asset;
-    Hl1BspShader* _shader;
+    Hl1Shader* _shader;
     std::set<unsigned short> _visibleFaces;
 
     std::set<unsigned short> FindVisibleFaces(const glm::vec3& pos, int headNode);

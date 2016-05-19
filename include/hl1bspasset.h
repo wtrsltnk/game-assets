@@ -3,6 +3,7 @@
 
 #include "hl1bsptypes.h"
 #include "hl1wadasset.h"
+#include "hl1shader.h"
 #include "texture.h"
 
 #include <string>
@@ -12,14 +13,6 @@
 class Hl1BspAsset : public Hl1Asset
 {
 public:
-    typedef struct sVertex
-    {
-        glm::vec3 position;
-        glm::vec2 texcoords[2];
-        glm::vec3 normal;
-
-    } tVertex;
-
     typedef struct sFace
     {
         int flags;
@@ -28,7 +21,6 @@ public:
 
         HL1::tBSPPlane plane;
         unsigned int lightmap;
-        bool atlas;
         unsigned int texture;
 
     } tFace;
@@ -78,17 +70,11 @@ public:
     // These are parsed from the mapped data
     std::vector<HL1::tBSPEntity> _entities;
     std::vector<HL1::tBSPVisLeaf> _visLeafs;
-    List<Hl1BspAsset::tVertex> _vertices;
+    List<HL1::tVertex> _vertices;
     Array<tFace> _faces;
-    Array<Texture> _lightMaps;
     Array<Texture> _textures;
     Array<tModel> _models;
-    Texture* _atlas;
-
-private:
-    // OpenGL objects
-    GLuint _vao;
-    GLuint _vbo;
+    std::vector<Texture*> _atlasTextures;
 
 private:
     // Constructs an Array from the given lump index. The memory in the lump is not owned by the lump

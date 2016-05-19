@@ -72,7 +72,7 @@ void Hl1MdlInstance::Render(const glm::mat4& proj, const glm::mat4& view)
         this->_shader->SetProjectionMatrix(proj);
         this->_shader->SetViewMatrix(view);
 
-        this->_shader->SetNormalMatrix(glm::transpose(glm::inverse(view)));
+//        this->_shader->SetNormalMatrix(glm::transpose(glm::inverse(view)));
 
         this->_asset->RenderModels(this->_visibleModels);
 
