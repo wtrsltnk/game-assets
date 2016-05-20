@@ -1,5 +1,4 @@
 #include "hl1mdlasset.h"
-#include "hl1mdlshader.h"
 #include "hl1mdlinstance.h"
 
 #include <sstream>
@@ -12,9 +11,7 @@ Hl1MdlAsset::Hl1MdlAsset(DataFileLocator& locator, DataFileLoader& loader)
 
 Hl1MdlAsset::~Hl1MdlAsset()
 {
-    this->_textures.Delete();
     this->_bodyparts.Delete();
-    this->_vertices.Clear();
 }
 
 bool Hl1MdlAsset::Load(const std::string &filename)
@@ -57,10 +54,11 @@ bool Hl1MdlAsset::Load(const std::string &filename)
     this->_boneControllerData.Map(this->_header->numbonecontrollers, (HL1::tMDLBoneController*)(file.data + this->_header->bonecontrollerindex));
     this->_boneData.Map(this->_header->numbones, (HL1::tMDLBone*)(file.data + this->_header->boneindex));
 
-    this->LoadTextures();
-    this->LoadBodyParts();
+    std::vector<HL1::tVertex> vertices;
+    this->LoadTextures(this->_va.Textures());
+    this->LoadBodyParts(this->_va.Faces(), this->_va.Lightmaps(), vertices);
 
-    this->_va.Load(_vertices);
+    this->_va.LoadVertices(vertices);
 
     return true;
 }
@@ -70,15 +68,14 @@ Hl1Instance* Hl1MdlAsset::CreateInstance()
     return new Hl1MdlInstance(this);
 }
 
-void Hl1MdlAsset::LoadTextures()
+void Hl1MdlAsset::LoadTextures(std::vector<Texture*>& _textures)
 {
     glActiveTexture(GL_TEXTURE0);
     glEnable(GL_TEXTURE_2D);
 
-    this->_textures.Allocate(this->_textureHeader->numtextures);
     for (int i = 0; i < this->_textureHeader->numtextures; i++)
     {
-        Texture& t = this->_textures[i];
+        Texture* t = new Texture();
         HL1::tMDLTexture *ptexture= &this->_textureData[i];
 
         byte* data = ((byte*)this->_textureHeader) + ptexture->index;
@@ -86,7 +83,7 @@ void Hl1MdlAsset::LoadTextures()
 
         std::stringstream ss;
         ss << ptexture->name << long(*(long*)ptexture);
-        t.SetName(ss.str());
+        t->SetName(ss.str());
 
         // unsigned *in, int inwidth, int inheight, unsigned *out,  int outwidth, int outheight;
         int outwidth, outheight;
@@ -138,17 +135,25 @@ void Hl1MdlAsset::LoadTextures()
             }
         }
 
-        t.SetData(outwidth, outheight, 4, tex);
+        t->SetData(outwidth, outheight, 4, tex);
+        t->UploadToGl();
         delete []tex;
 
-        this->_textureData[i].index = this->_textures[i].UploadToGl();
+        this->_textureData[i].index = _textures.size();
+        _textures.push_back(t);
     }
 }
 
-void Hl1MdlAsset::LoadBodyParts()
+void Hl1MdlAsset::LoadBodyParts(std::vector<HL1::tFace>& faces, std::vector<Texture*>& lightmaps, std::vector<HL1::tVertex>& _vertices)
 {
     float s, t;
     int vertnum;
+
+    Texture* lm = new Texture();
+    lm->SetDimentions(32, 32, 3);
+    lm->Fill(glm::vec4(255, 255, 255, 255));
+    lm->UploadToGl();
+    lightmaps.push_back(lm);
 
     this->_bodyparts.Allocate(this->_header->numbodyparts);
     for (int i = 0; i < this->_header->numbodyparts; i++)
@@ -162,19 +167,21 @@ void Hl1MdlAsset::LoadBodyParts()
         {
             HL1::tMDLModel& model = models[j];
             tModel& m = b.models[j];
-            m.meshes.Allocate(model.nummesh);
+            m.firstFace = faces.size();
+            m.faceCount = model.nummesh;
+            m.faces.Allocate(model.nummesh);
 
             Array<glm::vec3> vertices(model.numverts, (glm::vec3*)((byte*)this->_header + model.vertindex));
             Array<byte> vertexBones(model.numverts, (byte*)this->_header + model.vertinfoindex);
             Array<glm::vec3> normals(model.numnorms, (glm::vec3*)((byte*)this->_header + model.normindex));
 
             Array<HL1::tMDLMesh> meshes(model.nummesh, (HL1::tMDLMesh*)((byte*)this->_header + model.meshindex));
-            for (int k = 0; k < meshes.count; k++)
+            for (int k = 0; k < model.nummesh; k++)
             {
                 HL1::tMDLMesh& mesh = meshes[k];
-                tMesh& e = m.meshes[k];
+                HL1::tFace& e = m.faces[k];
 
-                e.firstVertex = this->_vertices.Count();
+                e.firstVertex = _vertices.size();
                 e.lightmap = 0;
                 e.texture = this->_textureData[this->_skinRefData[mesh.skinref]].index;
 
@@ -203,9 +210,9 @@ void Hl1MdlAsset::LoadBodyParts()
                                 prev = v;
                             else
                             {
-                                this->_vertices.Add(first);
-                                this->_vertices.Add(prev);
-                                this->_vertices.Add(v);
+                                _vertices.push_back(first);
+                                _vertices.push_back(prev);
+                                _vertices.push_back(v);
 
                                 // laatste statement
                                 prev = v;
@@ -221,15 +228,15 @@ void Hl1MdlAsset::LoadBodyParts()
                             {
                                 if (l & 1)
                                 {
-                                    this->_vertices.Add(first);
-                                    this->_vertices.Add(v);
-                                    this->_vertices.Add(prev);
+                                    _vertices.push_back(first);
+                                    _vertices.push_back(v);
+                                    _vertices.push_back(prev);
                                 }
                                 else
                                 {
-                                    this->_vertices.Add(first);
-                                    this->_vertices.Add(prev);
-                                    _vertices.Add(v);
+                                    _vertices.push_back(first);
+                                    _vertices.push_back(prev);
+                                    _vertices.push_back(v);
                                 }
 
                                 // laatste statement
@@ -239,7 +246,8 @@ void Hl1MdlAsset::LoadBodyParts()
                         }
                     }
                 }
-                e.vertexCount = this->_vertices.Count() - e.firstVertex;
+                e.vertexCount = _vertices.size() - e.firstVertex;
+                faces.push_back(e);
             }
         }
     }
@@ -265,35 +273,11 @@ HL1::tMDLAnimation* Hl1MdlAsset::GetAnimation(HL1::tMDLSequenceDescription *pseq
     return (HL1::tMDLAnimation*)((byte*)this->_animationHeaders[pseqdesc->seqgroup] + pseqdesc->animindex);
 }
 
-void Hl1MdlAsset::RenderModels(int visibleModels[])
+void Hl1MdlAsset::RenderFaces(const std::set<unsigned short>& visibleFaces)
 {
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
     glCullFace(GL_FRONT);
 
-    this->_va.Bind();
-
-    for (int bi = 0; bi < this->_bodyparts.count; bi++)
-    {
-        tBodypart& b = this->_bodyparts[bi];
-        for (int mi = 0; mi < b.models.count; mi++)
-        {
-            tModel& m = b.models[visibleModels[bi]];
-
-            for (int e = 0; e < m.meshes.count; e++)
-            {
-                tMesh& mesh = m.meshes[e];
-
-                glActiveTexture(GL_TEXTURE1);
-                glBindTexture(GL_TEXTURE_2D, mesh.lightmap);
-
-                glActiveTexture(GL_TEXTURE0);
-                glBindTexture(GL_TEXTURE_2D, mesh.texture);
-
-                glDrawArrays(GL_TRIANGLES, mesh.firstVertex, mesh.vertexCount);
-            }
-        }
-    }
-
-    this->_va.Unbind();
+    this->_va.RenderFaces(visibleFaces, GL_TRIANGLES);
 }

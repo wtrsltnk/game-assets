@@ -1,6 +1,6 @@
 #include "hl1mdlinstance.h"
 #include "hl1mdlasset.h"
-#include "hl1mdlshader.h"
+#include "hl1shader.h"
 
 #include <GL/glextl.h>
 #include <glm/gtc/matrix_transform.hpp>
@@ -8,7 +8,7 @@
 Hl1MdlInstance::Hl1MdlInstance(Hl1MdlAsset* asset)
     : _asset(asset), _shader(nullptr), _speed(1.0f)
 {
-    this->_shader = new Hl1MdlShader();
+    this->_shader = new Hl1Shader();
     this->_shader->BuildProgram();
 
     this->SetSequence(0, true);
@@ -18,11 +18,6 @@ Hl1MdlInstance::Hl1MdlInstance(Hl1MdlAsset* asset)
     this->SetController(2, 0.0f);
     this->SetController(3, 0.0f);
     this->SetMouth(0);
-
-    glGenBuffers(1, &this->_bonesBuffer);
-    glBindBuffer(GL_UNIFORM_BUFFER, this->_bonesBuffer);
-    glBufferData(GL_UNIFORM_BUFFER, MAX_MDL_BONES * sizeof(glm::mat4), 0, GL_STREAM_DRAW);
-    glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
     for (int bi = 0; bi < MAX_MDL_BODYPARTS; bi++)
         this->_visibleModels[bi] = 0;
@@ -51,6 +46,8 @@ void Hl1MdlInstance::Update(float dt)
             else // wrap
                 this->_frame -= (int)(this->_frame / (pseqdesc.numframes - 1)) * (pseqdesc.numframes - 1);
         }
+
+        this->SetupBones();
     }
 }
 
@@ -61,22 +58,31 @@ void Hl1MdlInstance::Render(const glm::mat4& proj, const glm::mat4& view)
         if (_asset->_bodyparts == 0)
             return;
 
-        this->SetupBones();
-
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
-        glBindBuffer(GL_UNIFORM_BUFFER, this->_bonesBuffer);
-        this->_shader->SetBones(this->_bonetransform, MAX_MDL_BONES, this->_bonesBuffer);
-
         this->_shader->UseProgram();
+        this->_shader->BindBones(this->_bonetransform, MAX_MDL_BONES);
         this->_shader->SetProjectionMatrix(proj);
         this->_shader->SetViewMatrix(view);
 
 //        this->_shader->SetNormalMatrix(glm::transpose(glm::inverse(view)));
 
-        this->_asset->RenderModels(this->_visibleModels);
+        std::set<unsigned short> indices;
+        for (int bi = 0; bi < _asset->_bodyparts.count; bi++)
+        {
+            Hl1MdlAsset::tBodypart& b = _asset->_bodyparts[bi];
+            for (int mi = 0; mi < b.models.count; mi++)
+            {
+                Hl1MdlAsset::tModel& m = b.models[_visibleModels[bi]];
+                for (int e = 0; e < m.faces.count; e++)
+                {
+                    indices.insert(m.firstFace + e);
+                }
+            }
+        }
+        this->_asset->RenderFaces(indices);
 
-        glBindBuffer(GL_UNIFORM_BUFFER, 0);
+        this->_shader->UnbindBones();
     }
 }
 

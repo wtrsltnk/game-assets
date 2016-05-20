@@ -28,6 +28,10 @@ protected:
     GLuint _u_light;
     GLuint _u_bones;
 
+    // The bones are different for each instance of mdl so we need to manage
+    // the data to the uniformbuffer in the instance, not the asset
+    unsigned int _bonesBuffer;
+
 public:
     Hl1Shader();
     virtual ~Hl1Shader();
@@ -37,7 +41,8 @@ public:
 
     void SetProjectionMatrix(const glm::mat4& m);
     void SetViewMatrix(const glm::mat4& m);
-    void SetBones(const glm::mat4 m[], int count, GLuint bufferIndex);
+    void BindBones(const glm::mat4 m[], int count);
+    void UnbindBones();
 protected:
     GLuint _program;
 

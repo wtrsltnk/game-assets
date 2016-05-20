@@ -107,6 +107,12 @@ void Hl1Shader::BuildProgram()
     GLint uniform_block_index = glGetUniformBlockIndex(this->_program, "u_bones");
     glUniformBlockBinding(this->_program, uniform_block_index, this->_u_bones);
 
+#define MAX_MDL_BONES  128
+    glGenBuffers(1, &this->_bonesBuffer);
+    glBindBuffer(GL_UNIFORM_BUFFER, this->_bonesBuffer);
+    glBufferData(GL_UNIFORM_BUFFER, MAX_MDL_BONES * sizeof(glm::mat4), 0, GL_STREAM_DRAW);
+    glBindBuffer(GL_UNIFORM_BUFFER, 0);
+
     this->OnProgramLinked(this->_program);
 }
 
@@ -125,10 +131,16 @@ void Hl1Shader::SetViewMatrix(const glm::mat4 &m)
     glUniformMatrix4fv(this->_u_view, 1, false, glm::value_ptr(m));
 }
 
-void Hl1Shader::SetBones(const glm::mat4 m[], int count, GLuint bufferIndex)
+void Hl1Shader::BindBones(const glm::mat4 m[], int count)
 {
+    glBindBuffer(GL_UNIFORM_BUFFER, this->_bonesBuffer);
     glBufferSubData(GL_UNIFORM_BUFFER, 0, count * sizeof(glm::mat4), glm::value_ptr(m[0]));
-    glBindBufferRange(GL_UNIFORM_BUFFER, this->_u_bones, bufferIndex, 0, count * sizeof(glm::mat4));
+    glBindBufferRange(GL_UNIFORM_BUFFER, this->_u_bones, this->_bonesBuffer, 0, count * sizeof(glm::mat4));
+}
+
+void Hl1Shader::UnbindBones()
+{
+    glBindBuffer(GL_UNIFORM_BUFFER, 0);
 }
 
 const std::string Hl1Shader::VertexShader()

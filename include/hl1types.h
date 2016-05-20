@@ -3,8 +3,11 @@
 
 #include <string>
 #include <map>
+#include <vector>
+#include <set>
 #include <glm/glm.hpp>
 #include <GL/glextl.h>
+#include "texture.h"
 
 namespace HL1
 {
@@ -16,6 +19,19 @@ namespace HL1
         int bone;
 
     } tVertex;
+
+    typedef struct sFace
+    {
+        int firstVertex;
+        int vertexCount;
+        unsigned int lightmap;
+        unsigned int texture;
+
+        int flags;
+        glm::vec4 plane;
+
+    } tFace;
+
 }
 
 typedef std::map<std::string, std::string> KeyValueList;
@@ -71,8 +87,8 @@ public:
     virtual ~List() { this->Clear(); }
 
     operator T*(void) const { return data; }
-    const T* operator[](int i) const { return data + i; }
-    T* operator[](int i) { return data + i; }
+    const T& operator[](int i) const { return data[i]; }
+    T& operator[](int i) { return data[i]; }
 
     int Count() const { return count; }
 
@@ -107,12 +123,21 @@ class Hl1VertexArray
 private:
     GLuint _vbo;
     GLuint _vao;
+    std::vector<HL1::tFace> _faces;
+    std::vector<Texture*> _textures;
+    std::vector<Texture*> _lightmaps;
 
 public:
     Hl1VertexArray();
     virtual ~Hl1VertexArray();
 
-    void Load(const List<HL1::tVertex>& vertices);
+    void LoadVertices(const std::vector<HL1::tVertex>& vertices);
+    void RenderFaces(const std::set<unsigned short>& visibleFaces, GLenum mode = GL_TRIANGLE_FAN);
+
+    std::vector<HL1::tFace>& Faces() { return this->_faces; }
+    std::vector<Texture*>& Textures() { return this->_textures; }
+    std::vector<Texture*>& Lightmaps() { return this->_lightmaps; }
+
     void Bind();
     void Unbind();
 };

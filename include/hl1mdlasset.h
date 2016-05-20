@@ -12,18 +12,11 @@
 class Hl1MdlAsset : public Hl1Asset
 {
 public:
-    typedef struct sMesh
-    {
-        int firstVertex;
-        int vertexCount;
-        unsigned int lightmap;
-        unsigned int texture;
-
-    } tMesh;
-
     typedef struct sModel
     {
-        Array<tMesh> meshes;
+        int firstFace;
+        int faceCount;
+        Array<HL1::tFace> faces;
 
     } tModel;
 
@@ -40,7 +33,7 @@ public:
     virtual bool Load(const std::string &filename);
     virtual Hl1Instance* CreateInstance();
 
-    void RenderModels(int visibleModels[]);
+    void RenderFaces(const std::set<unsigned short>& visibleFaces);
 
     int SequenceCount() const;
     int BodypartCount() const;
@@ -64,12 +57,10 @@ public:
 
     // These are parsed from the mapped data
     Array<tBodypart> _bodyparts;
-    List<HL1::tVertex> _vertices;
-    Array<Texture> _textures;
 
 private:
-    void LoadTextures();
-    void LoadBodyParts();
+    void LoadTextures(std::vector<Texture*>& textures);
+    void LoadBodyParts(std::vector<HL1::tFace>& faces, std::vector<Texture*>& lightmaps, std::vector<HL1::tVertex>& vertices);
 
 };
 

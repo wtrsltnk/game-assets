@@ -2,7 +2,7 @@
 #define _HL1MDLINSTANCE_H_
 
 #include "hl1mdlasset.h"
-#include "hl1mdlshader.h"
+#include "hl1shader.h"
 
 #include <string>
 #include <glm/glm.hpp>
@@ -40,10 +40,6 @@ private:
     void CalcBonePosition(int frame, float s, HL1::tMDLBone *pbone, HL1::tMDLAnimation *panim, glm::vec3& pos);
     void SlerpBones(glm::quat q1[], glm::vec3 pos1[], glm::quat q2[], glm::vec3 pos2[], float s);
 
-    // The bones are different for each instance of mdl so we need to manage
-    // the data to the uniformbuffer in the instance, not the asset
-    unsigned int _bonesBuffer;
-
     glm::mat4 _bonetransform[MAX_MDL_BONES];
     int _visibleModels[MAX_MDL_BODYPARTS];
 
@@ -58,7 +54,7 @@ private:
     glm::quat _adj;			// FIX: non persistant, make static
 
     Hl1MdlAsset* _asset;
-    Hl1MdlShader* _shader;
+    Hl1Shader* _shader;
 };
 
 #endif // _HL1MDLINSTANCE_H_

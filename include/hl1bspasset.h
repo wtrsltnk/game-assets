@@ -13,18 +13,6 @@
 class Hl1BspAsset : public Hl1Asset
 {
 public:
-    typedef struct sFace
-    {
-        int flags;
-        int firstVertex;
-        int vertexCount;
-
-        HL1::tBSPPlane plane;
-        unsigned int lightmap;
-        unsigned int texture;
-
-    } tFace;
-
     typedef struct sModel
     {
         glm::vec3 position;
@@ -48,6 +36,7 @@ public:
 
     HL1::tBSPEntity* FindEntityByClassname(const std::string& classname);
     HL1::tBSPMipTexHeader* GetMiptex(int index);
+    int FaceFlags(int index);
 
     // File format header
     HL1::tBSPHeader* _header;
@@ -70,11 +59,7 @@ public:
     // These are parsed from the mapped data
     std::vector<HL1::tBSPEntity> _entities;
     std::vector<HL1::tBSPVisLeaf> _visLeafs;
-    List<HL1::tVertex> _vertices;
-    Array<tFace> _faces;
-    Array<Texture> _textures;
     Array<tModel> _models;
-    std::vector<Texture*> _atlasTextures;
 
 private:
     // Constructs an Array from the given lump index. The memory in the lump is not owned by the lump
@@ -96,8 +81,8 @@ private:
     void CalculateSurfaceExtents(const HL1::tBSPFace& in, float min[2], float max[2]) const;
     bool LoadLightmap(const HL1::tBSPFace& in, Texture& out, float min[2], float max[2]);
 
-    bool LoadFacesWithLightmaps();
-    bool LoadTextures(const std::vector<Hl1WadAsset*>& wads);
+    bool LoadFacesWithLightmaps(std::vector<HL1::tFace>& faces, std::vector<Texture*>& lightmaps, std::vector<HL1::tVertex>& vertices);
+    bool LoadTextures(std::vector<Texture*>& textures, const std::vector<Hl1WadAsset*>& wads);
     bool LoadModels();
 
     static std::vector<HL1::sBSPEntity> LoadEntities(const Array<byte>& entityData);

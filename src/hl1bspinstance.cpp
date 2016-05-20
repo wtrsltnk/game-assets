@@ -49,7 +49,7 @@ std::set<unsigned short> Hl1BspInstance::FindVisibleFaces(const glm::vec3& pos, 
         for (int f = 0; f < this->_asset->_leafData[leaf].markSurfacesCount; f++)
         {
             unsigned short findex = this->_asset->_marksurfaceData[this->_asset->_leafData[leaf].firstMarkSurface + f];
-            if (this->_asset->_faces[findex].flags == 0)
+            if (this->_asset->FaceFlags(findex) == 0)
                 leafFaces.insert(findex);
         }
 
@@ -60,7 +60,7 @@ std::set<unsigned short> Hl1BspInstance::FindVisibleFaces(const glm::vec3& pos, 
             for (int f = 0; f < this->_asset->_leafData[visleaf->leafs[l]].markSurfacesCount; f++)
             {
                 unsigned short findex = this->_asset->_marksurfaceData[this->_asset->_leafData[visleaf->leafs[l]].firstMarkSurface + f];
-                if (this->_asset->_faces[findex].flags == 0)
+                if (this->_asset->FaceFlags(findex) == 0)
                     leafFaces.insert(findex);
             }
         }
@@ -70,7 +70,7 @@ std::set<unsigned short> Hl1BspInstance::FindVisibleFaces(const glm::vec3& pos, 
         {
             for (unsigned short f = 0; f < this->_asset->_modelData[m].faceCount; f++)
             {
-                if (this->_asset->_faces[f + this->_asset->_modelData[m].firstFace].flags != 0)
+                if (this->_asset->FaceFlags(f + this->_asset->_modelData[m].firstFace) != 0)
                     continue;
 
                 leafFaces.insert(f + this->_asset->_modelData[m].firstFace);
@@ -79,9 +79,9 @@ std::set<unsigned short> Hl1BspInstance::FindVisibleFaces(const glm::vec3& pos, 
     }
     else
     {
-        for (unsigned short i = 0; i < this->_asset->_faces.count; i++)
+        for (unsigned short i = 0; i < this->_asset->_faceData.count; i++)
         {
-            if (this->_asset->_faces[i].flags != 0)
+            if (this->_asset->FaceFlags(i) != 0)
                 continue;
 
             this->_visibleFaces.insert(i);
