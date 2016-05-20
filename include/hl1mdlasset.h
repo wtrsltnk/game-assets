@@ -2,7 +2,6 @@
 #define _HL1MDLASSET_H_
 
 #include "hl1mdltypes.h"
-#include "hl1mdlshader.h"
 #include "texture.h"
 
 #include <string>
