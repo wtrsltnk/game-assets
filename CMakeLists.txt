@@ -47,7 +47,6 @@ set(HDR_APP
     include/hl1mdltypes.h
     include/hl1mdlasset.h
     include/hl1mdlinstance.h
-    include/hl1mdlshader.h
 
     include/hl1sprtypes.h
     include/hl1sprasset.h
@@ -77,7 +76,6 @@ set(SRC_APP
 
     src/hl1mdlasset.cpp
     src/hl1mdlinstance.cpp
-    src/hl1mdlshader.cpp
 
     src/hl1sprasset.cpp
     src/hl1sprinstance.cpp
