@@ -2,7 +2,7 @@
 #define _HL1SPRINSTANCE_H_
 
 #include "hl1sprasset.h"
-#include "hl1sprshader.h"
+#include "hl1shader.h"
 
 class Hl1SprInstance : public Hl1Instance
 {
@@ -18,7 +18,7 @@ public:
     const Hl1SprAsset* Asset() const { return this->_asset; }
 private:
     Hl1SprAsset* _asset;
-    Hl1SprShader* _shader;
+    Hl1Shader* _shader;
     int _currentFrame;
 
 };

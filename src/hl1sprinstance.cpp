@@ -3,7 +3,7 @@
 Hl1SprInstance::Hl1SprInstance(Hl1SprAsset* asset)
     : _asset(asset), _shader(nullptr), _currentFrame(0)
 {
-    this->_shader = new Hl1SprShader();
+    this->_shader = new Hl1Shader();
     this->_shader->BuildProgram();
 }
 

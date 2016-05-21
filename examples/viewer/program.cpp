@@ -52,23 +52,37 @@ bool AssetViewer::InitializeGraphics()
         {
             Array<byte> sig = FileSystem::LoadPartialFileData(filename, 4);
             if (sig[0] == 'V' && sig[1] == 'B' && sig[2] == 'S' && sig[3] == 'P')
+            {
+                Log().Info("Loading Source BSP file");
                 this->_asset = new Hl2BspAsset(FileSystem::LocateDataFile, FileSystem::LoadFileData);
+            }
             else if (((int*)sig.data)[0] == HL1_BSP_SIGNATURE)
+            {
+                Log().Info("Loading GoldSrc BSP file");
                 this->_asset = new Hl1BspAsset(FileSystem::LocateDataFile, FileSystem::LoadFileData);
+            }
         }
         else if (ext == ".mdl")
+        {
+            Log().Info("Loading MDL file");
             this->_asset = new Hl1MdlAsset(FileSystem::LocateDataFile, FileSystem::LoadFileData);
+        }
         else if (ext == ".map")
         {
             Log().Info("Loading MAP file");
             this->_asset = new Hl1MapAsset(FileSystem::LocateDataFile, FileSystem::LoadFileData);
         }
         else if (ext == ".spr")
+        {
+            Log().Info("Loading SPR file");
             this->_asset = new Hl1SprAsset(FileSystem::LocateDataFile, FileSystem::LoadFileData);
+        }
 
         if (this->_asset != nullptr
                 && this->_asset->Load(filename))
             this->_instance = this->_asset->CreateInstance();
+        else
+            Log().Info("Nothing loaded");
 
         this->_hud.InitHud(filename, this->_instance);
     }

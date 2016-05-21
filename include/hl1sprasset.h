@@ -8,14 +8,6 @@
 class Hl1SprAsset : public Hl1Asset
 {
 public:
-    typedef struct sVertex
-    {
-        glm::vec3 position;
-        glm::vec2 texcoords;
-
-    } tVertex;
-
-public:
     Hl1SprAsset(DataFileLocator& locator, DataFileLoader& loader);
     virtual ~Hl1SprAsset();
 
@@ -28,10 +20,6 @@ public:
 private:
     // File format header
     HL1::tSPRHeader* _header;
-
-    // OpenGL objects
-    GLuint _vao;
-    GLuint _vbo;
 
     Array<GLuint> _frames;
 };

@@ -51,7 +51,6 @@ set(HDR_APP
     include/hl1sprtypes.h
     include/hl1sprasset.h
     include/hl1sprinstance.h
-    include/hl1sprshader.h
 
     include/texture.h
     include/tokenizer.h
@@ -79,7 +78,6 @@ set(SRC_APP
 
     src/hl1sprasset.cpp
     src/hl1sprinstance.cpp
-    src/hl1sprshader.cpp
 
     src/texture.cpp
     src/tokenizer.cpp

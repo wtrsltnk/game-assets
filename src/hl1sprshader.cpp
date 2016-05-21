@@ -45,7 +45,7 @@ const std::string Hl1SprShader::FragmentShader()
 
                 "void main()"
                 "{"
-                "   color = texture(u_tex, f_uv_tex.st);"
+                "   color = texture(tex, f_uv_tex.st);"
                 "}"
                 );
 }
