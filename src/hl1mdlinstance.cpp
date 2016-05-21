@@ -21,6 +21,8 @@ Hl1MdlInstance::Hl1MdlInstance(Hl1MdlAsset* asset)
 
     for (int bi = 0; bi < MAX_MDL_BODYPARTS; bi++)
         this->_visibleModels[bi] = 0;
+
+    this->SetupBones();
 }
 
 Hl1MdlInstance::~Hl1MdlInstance()
