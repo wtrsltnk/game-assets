@@ -11,34 +11,13 @@
 class Hl2BspAsset : public Hl1Asset
 {
 public:
-    typedef struct sVertex
-    {
-        glm::vec3 position;
-        glm::vec2 texcoords[2];
-        glm::vec3 normal;
-
-    } tVertex;
-
-    typedef struct sFace
-    {
-        int flags;
-        int firstVertex;
-        int vertexCount;
-
-        HL2::tBSPPlane plane;
-        unsigned int lightmap;
-        unsigned int texture;
-
-    } tFace;
-
-public:
     Hl2BspAsset(DataFileLocator& locator, DataFileLoader& loader);
     virtual ~Hl2BspAsset();
 
     virtual bool Load(const std::string &filename);
     virtual Hl1Instance* CreateInstance();
 
-    void RenderFaces(const std::set<int>& visibleFaces);
+    void RenderFaces(const std::set<unsigned short>& visibleFaces);
 
     HL2::tBSPEntity* FindEntityByClassname(const std::string& classname);
 
@@ -59,10 +38,6 @@ public:
 
     // These are parsed from the mapped data
     std::vector<HL2::tBSPEntity> _entities;
-    List<Hl2BspAsset::tVertex> _vertices;
-    Array<tFace> _faces;
-    Array<Texture> _lightMaps;
-    Array<Texture> _textures;
 
 private:
     // File format header
@@ -91,7 +66,7 @@ private:
 
     bool LoadLightmap(const HL2::tBSPFace& in, Texture& out);
 
-    bool LoadFacesWithLightmaps(Hl2BspAsset* data);
+    bool LoadFacesWithLightmaps(std::vector<HL1::tVertex>& vertices);
     bool LoadTextures(const std::vector<Hl1WadAsset*>& wads);
 
     static std::vector<HL2::tBSPEntity> LoadEntities(const Array<byte>& entityData);

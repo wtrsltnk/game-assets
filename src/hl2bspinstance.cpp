@@ -8,7 +8,7 @@
 Hl2BspInstance::Hl2BspInstance(Hl2BspAsset* asset)
     : _asset(asset), _shader(nullptr)
 {
-    this->_shader = new Hl2BspShader();
+    this->_shader = new Hl1Shader();
     this->_shader->BuildProgram();
 
     for (int f = 0; f < this->_asset->_modelData[0].faceCount; f++)

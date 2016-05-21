@@ -38,7 +38,6 @@ set(HDR_APP
     include/hl2bsptypes.h
     include/hl2bspasset.h
     include/hl2bspinstance.h
-    include/hl2bspshader.h
 
     include/hl1mapasset.h
     include/hl1mapinstance.h
@@ -67,7 +66,6 @@ set(SRC_APP
 
     src/hl2bspasset.cpp
     src/hl2bspinstance.cpp
-    src/hl2bspshader.cpp
 
     src/hl1mapasset.cpp
     src/hl1mapinstance.cpp

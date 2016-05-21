@@ -21,8 +21,8 @@ public:
 
 private:
     Hl2BspAsset* _asset;
-    Hl2BspShader* _shader;
-    std::set<int> _visibleFaces;
+    Hl1Shader* _shader;
+    std::set<unsigned short> _visibleFaces;
 
 };
 
