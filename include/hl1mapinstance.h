@@ -29,14 +29,14 @@ public:
     } tFace;
 
 public:
-	Hl1MapInstance(Hl1MapAsset* asset);
-	virtual ~Hl1MapInstance();
+    Hl1MapInstance(Hl1MapAsset* asset);
+    virtual ~Hl1MapInstance();
 
-	virtual void Update(float dt);
-	virtual void Render(const glm::mat4& proj, const glm::mat4& view);
+    virtual void Update(float dt);
+    virtual void Render(const glm::mat4& proj, const glm::mat4& view);
 
 private:
-	Hl1MapAsset* _asset;
+    Hl1MapAsset* _asset;
     Hl1MapShader* _shader;
 
     // OpenGL objects
