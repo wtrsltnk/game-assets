@@ -2,7 +2,7 @@
 #define _HL2BSPINSTANCE_H_
 
 #include "hl2bspasset.h"
-#include "hl2bspshader.h"
+#include "hl1shader.h"
 
 #include <set>
 #include <string>

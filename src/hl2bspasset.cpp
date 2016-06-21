@@ -1,5 +1,4 @@
 #include "hl2bspasset.h"
-#include "hl2bspshader.h"
 #include "hl2bspinstance.h"
 
 // Implementation is already don in hl1bsp

@@ -1,5 +1,4 @@
 #include "hl2bspinstance.h"
-#include "hl2bspshader.h"
 
 #include <iostream>
 #include <GL/glextl.h>
