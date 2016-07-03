@@ -32,7 +32,7 @@ set(SRC_APP
     common/log.cpp
     filesystem.cpp
     program.cpp
-    viewerhud.cpp
+	viewerhud.cpp
 )
 
 add_executable(viewer ${SRC_APP})

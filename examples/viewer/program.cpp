@@ -101,6 +101,8 @@ void AssetViewer::GameLoop()
     double diff = time - lastTime;
     double speed = double(Setting("Viewer.Camera.Speed").AsFloat());
 
+    auto prevpos = this->_cam.Position();
+
     if (this->_sys->IsKeyDown(KeyCodes::Character_A)) this->_cam.MoveLeft(diff * speed);
     else if (this->_sys->IsKeyDown(KeyCodes::Character_D)) this->_cam.MoveLeft(-diff * speed);
 

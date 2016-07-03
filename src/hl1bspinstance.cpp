@@ -110,3 +110,134 @@ int Hl1BspInstance::TracePointInLeaf(const glm::vec3& point, int nodenum)
 
     return -nodenum - 1;
 }
+
+void Hl1BspInstance::BotmanTraceLine (glm::vec3 start, glm::vec3 end, botman_trace_t *tr)
+{
+    HL1::tBSPLeaf  *startleaf, *endleaf;
+    int      numsteps, totalsteps;
+    glm::vec3   move, step, position;
+    float    dist, trace_dist;
+
+    memset(tr, 0, sizeof(botman_trace_t));
+
+    if ((start[0] < -4095) || (start[0] > 4095) ||
+            (start[1] < -4095) || (start[1] > 4095) ||
+            (start[2] < -4095) || (start[2] > 4095))
+    {
+        // start beyond edge of world is INVALID!!!
+        fprintf(stderr,"TraceLine: start point beyond edge of world!\n");
+    }
+
+    if (end[0] > 4095.0f)
+    {
+        float percent = 4095.0f / end[0];
+        end[1] = end[1] * percent;
+        end[2] = end[2] * percent;
+        end[0] = 4095.0f;
+    }
+
+    if (end[1] > 4095.0f)
+    {
+        float percent = 4095.0f / end[1];
+        end[0] = end[0] * percent;
+        end[2] = end[2] * percent;
+        end[1] = 4095.0f;
+    }
+
+    if (end[2] > 4095.0f)
+    {
+        float percent = 4095.0f / end[2];
+        end[0] = end[0] * percent;
+        end[1] = end[1] * percent;
+        end[2] = 4095.0f;
+    }
+
+    if (end[0] < -4095.0f)
+    {
+        float percent = 4095.0f / end[0];
+        end[1] = end[1] * percent;
+        end[2] = end[2] * percent;
+        end[0] = -4095.0f;
+    }
+
+    if (end[1] < -4095.0f)
+    {
+        float percent = 4095.0f / end[1];
+        end[0] = end[0] * percent;
+        end[2] = end[2] * percent;
+        end[1] = -4095.0f;
+    }
+
+    if (end[2] < -4095.0f)
+    {
+        float percent = 4095.0f / end[2];
+        end[0] = end[0] * percent;
+        end[1] = end[1] * percent;
+        end[2] = -4095.0f;
+    }
+
+    // find the starting and ending leafs...
+    startleaf = &this->_asset->_leafData[TracePointInLeaf(start, 0)];
+    endleaf = &this->_asset->_leafData[TracePointInLeaf(end, 0)];
+
+    // set endpos, fraction and contents to the default (trace completed)
+    tr->endpos = end;
+    tr->fraction = 1.0f;
+    tr->contents = endleaf->contents;
+
+    if (startleaf->contents == CONTENTS_SOLID)
+        tr->startsolid = TRUE;
+
+    // is start and end leaf the same (couldn't possibly hit the world)...
+    if (startleaf == endleaf) {
+        if (startleaf->contents == CONTENTS_SOLID)
+            tr->allsolid = TRUE;
+        return;
+    }
+
+    // get the length of each interation of the loop...
+    move = end - start;
+    dist = glm::length(move);
+
+    // determine the number of steps from start to end...
+    if (dist > 1.0f)
+        numsteps = totalsteps = (int)dist + 1;
+    else
+        numsteps = totalsteps = 1;
+
+    // calculate the length of the step vector...
+    step = move * float(2/numsteps);
+
+    position = start;
+
+    while (numsteps)
+    {
+        position = position + step;
+
+        endleaf = &this->_asset->_leafData[TracePointInLeaf(position, 0)];
+
+        if ((endleaf->contents == CONTENTS_SOLID) ||  // we hit something solid...
+                (endleaf->contents == CONTENTS_SKY))      // we hit the sky
+        {
+            glm::vec3 hitpos = position;
+
+            // store the hit position
+            tr->hitpos = position;
+
+            // back off one step before solid
+            position = position - step;
+
+            // store the end position and end position contents
+            tr->endpos = position;
+            tr->contents = endleaf->contents;
+
+            move = position - start;
+            trace_dist = glm::length(move);
+            tr->fraction = trace_dist / dist;
+
+            break;  // break out of while loop
+        }
+
+        numsteps--;
+    }
+}
