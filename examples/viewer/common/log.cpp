@@ -14,7 +14,7 @@ class FileLoggingStrategy_Impl
 {
 public:
     FileLoggingStrategy_Impl(FileLoggingStrategy* parent, const std::string& filename)
-        : _parent(parent), _stream(std::ofstream(filename))
+        : _parent(parent), _stream(filename.c_str())
     { }
 
     FileLoggingStrategy* _parent;

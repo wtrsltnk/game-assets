@@ -265,10 +265,11 @@ int Hl1MdlAsset::BodypartCount() const
 
 HL1::tMDLAnimation* Hl1MdlAsset::GetAnimation(HL1::tMDLSequenceDescription *pseqdesc)
 {
-    HL1::tMDLSequenceGroup& pseqgroup = this->_sequenceGroupData[pseqdesc->seqgroup];
-
     if (pseqdesc->seqgroup == 0)
+    {
+        HL1::tMDLSequenceGroup& pseqgroup = this->_sequenceGroupData[pseqdesc->seqgroup];
         return (HL1::tMDLAnimation*)((byte*)this->_header + pseqgroup.unused2 + pseqdesc->animindex);
+    }
 
     return (HL1::tMDLAnimation*)((byte*)this->_animationHeaders[pseqdesc->seqgroup] + pseqdesc->animindex);
 }
