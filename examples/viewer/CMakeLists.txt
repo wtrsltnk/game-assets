@@ -26,7 +26,6 @@ include_directories(${CMAKE_SOURCE_DIR}/common)
 set(SRC_APP
     common/camera.cpp
     common/font.cpp
-    common/glextl.cpp
     common/main_sdl.cpp
     common/settings.cpp
     common/log.cpp

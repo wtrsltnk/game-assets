@@ -7,7 +7,6 @@
 #include <hl1mdlasset.h>
 #include <hl1mapasset.h>
 #include <hl1sprasset.h>
-#include <GL/glextl.h>
 #include <SDL.h>
 #include <iostream>
 #include <glm/gtx/rotate_vector.hpp>

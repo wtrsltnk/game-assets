@@ -1,3 +1,5 @@
+
+#define GLEXTL_IMPLEMENTATION
 #include <GL/glextl.h>
 
 #define SDL_MAIN_HANDLED
