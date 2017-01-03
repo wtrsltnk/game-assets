@@ -28,31 +28,31 @@ catch (std::regex_error& err)
 }
 */
 
-#include "tokenizer.h"
+#include "hltokenizer.h"
 
 #include <stdlib.h>
 #include <string.h>
 
-Tokenizer::Tokenizer(const char* data, int size)
+HlTokenizer::HlTokenizer(const char* data, int size)
 	: data(data), dataSize(size), cursor(0), token(0), tokenSize(0)
 { }
 
-Tokenizer::Tokenizer(const Tokenizer& orig)
+HlTokenizer::HlTokenizer(const HlTokenizer& orig)
 	: data(orig.data), dataSize(orig.dataSize), cursor(0), token(0), tokenSize(0)
 { }
 
-Tokenizer::~Tokenizer()
+HlTokenizer::~HlTokenizer()
 {
 	if (this->token)
 		delete []this->token;
 }
 
-const char* Tokenizer::getToken()
+const char* HlTokenizer::getToken()
 {
     return this->token;
 }
 
-const char* Tokenizer::getNextToken()
+const char* HlTokenizer::getNextToken()
 {
 	if (this->nextToken())
 		return this->getToken();
@@ -60,7 +60,7 @@ const char* Tokenizer::getNextToken()
 	return 0;
 }
 
-bool Tokenizer::nextToken()
+bool HlTokenizer::nextToken()
 {
 	// Check if we are at the end
 	if (cursor >= this->dataSize)
@@ -72,7 +72,7 @@ bool Tokenizer::nextToken()
 	this->token = 0;
 
 	// Trim to the token
-	while (cursor < this->dataSize && Tokenizer::isSeperator(data[cursor]))
+    while (cursor < this->dataSize && HlTokenizer::isSeperator(data[cursor]))
 		cursor++;
 
 	// Check if we are at the end
@@ -87,7 +87,7 @@ bool Tokenizer::nextToken()
 			cursor++;
 
 		// Trim to the token
-		while (cursor < this->dataSize && Tokenizer::isSeperator(data[cursor]))
+        while (cursor < this->dataSize && HlTokenizer::isSeperator(data[cursor]))
 			cursor++;
 
 		// Make sure we stop when the cursor is hits the end of the file
@@ -96,7 +96,7 @@ bool Tokenizer::nextToken()
 	}
 
 	// Are we at a quoted token?
-	if (Tokenizer::isQuote(data[cursor]))
+    if (HlTokenizer::isQuote(data[cursor]))
 	{
 		while (data[cursor] != data[cursor + c + 1] && data[cursor + c + 1] != 0 && cursor < this->dataSize)
 			c++;
@@ -107,7 +107,7 @@ bool Tokenizer::nextToken()
 	}
 	else
 	{
-		while (Tokenizer::isSeperator(data[cursor + c]) == false && cursor < this->dataSize)
+        while (HlTokenizer::isSeperator(data[cursor + c]) == false && cursor < this->dataSize)
 			c++;
 		this->token = new char[c + 2];
 		memcpy(this->token, data + cursor, c);
@@ -118,14 +118,14 @@ bool Tokenizer::nextToken()
 	return true;
 }
 
-bool Tokenizer::isSeperator(char c)
+bool HlTokenizer::isSeperator(char c)
 {
 	if (c <= ' ') return true;
 
 	return false;
 }
 
-bool Tokenizer::isQuote(char c)
+bool HlTokenizer::isQuote(char c)
 {
 	if (c == '\"') return true;
 	if (c == '\'') return true;

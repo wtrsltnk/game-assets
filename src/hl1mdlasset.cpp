@@ -63,14 +63,14 @@ bool Hl1MdlAsset::Load(const std::string &filename)
     return true;
 }
 
-void Hl1MdlAsset::LoadTextures(std::vector<Texture*>& _textures)
+void Hl1MdlAsset::LoadTextures(std::vector<HlTexture*>& _textures)
 {
     glActiveTexture(GL_TEXTURE0);
     glEnable(GL_TEXTURE_2D);
 
     for (int i = 0; i < this->_textureHeader->numtextures; i++)
     {
-        Texture* t = new Texture();
+        HlTexture* t = new HlTexture();
         HL1::tMDLTexture *ptexture= &this->_textureData[i];
 
         byte* data = ((byte*)this->_textureHeader) + ptexture->index;
@@ -139,12 +139,12 @@ void Hl1MdlAsset::LoadTextures(std::vector<Texture*>& _textures)
     }
 }
 
-void Hl1MdlAsset::LoadBodyParts(std::vector<HL1::tFace>& faces, std::vector<Texture*>& lightmaps, std::vector<HL1::tVertex>& _vertices)
+void Hl1MdlAsset::LoadBodyParts(std::vector<HL1::tFace>& faces, std::vector<HlTexture*>& lightmaps, std::vector<HL1::tVertex>& _vertices)
 {
     float s, t;
     int vertnum;
 
-    Texture* lm = new Texture();
+    HlTexture* lm = new HlTexture();
     lm->SetDimentions(32, 32, 3);
     lm->Fill(glm::vec4(255, 255, 255, 255));
     lm->UploadToGl();

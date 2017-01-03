@@ -3,8 +3,7 @@
 
 #include "hl1types.h"
 #include "hl1wadasset.h"
-#include "tokenizer.h"
-#include "texture.h"
+#include "hltokenizer.h"
 
 #include <vector>
 #include <string>
@@ -70,12 +69,12 @@ public:
 
     std::vector<tEntity> _entities;
     std::set<std::string> _textureNames;
-    std::map<std::string, Texture*> _textures;
+    std::map<std::string, HlTexture*> _textures;
 
 private:
     int _mapVersion;
-    bool LoadEntity(Tokenizer& tok);
-    bool LoadBrush(Tokenizer& tok, tEntity& entity);
+    bool LoadEntity(HlTokenizer& tok);
+    bool LoadBrush(HlTokenizer& tok, tEntity& entity);
     static tBrushFace CreateFace(const glm::vec3& v1, const glm::vec3& v2, const glm::vec3& v3);
     bool LoadTextures(const std::vector<Hl1WadAsset*>& wads);
 

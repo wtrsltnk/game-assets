@@ -10,7 +10,7 @@ Hl1SprAsset::~Hl1SprAsset()
 
 bool Hl1SprAsset::Load(const std::string &filename)
 {
-    Texture* lm = new Texture();
+    HlTexture* lm = new HlTexture();
     lm->SetDimentions(32, 32, 3);
     lm->Fill(glm::vec4(255, 255, 255, 255));
     lm->UploadToGl();
@@ -68,7 +68,7 @@ bool Hl1SprAsset::Load(const std::string &filename)
                     textureData[item * 3 + 2] = palette[index * 3 + 2];
                 }
             }
-            auto tex = new Texture();
+            auto tex = new HlTexture();
             tex->SetData(frame->width, frame->height, 3, textureData);
             this->_frames[f] = tex->UploadToGl();
             this->_va.Textures().push_back(tex);

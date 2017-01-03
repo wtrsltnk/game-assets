@@ -14,7 +14,7 @@ bool Hl1MapAsset::Load(const std::string& filename)
 {
     Array<byte>& data = this->_loader(filename);
 
-    Tokenizer tok((char*)data.data, data.count);
+    HlTokenizer tok((char*)data.data, data.count);
 
     while (tok.nextToken())
     {
@@ -37,7 +37,7 @@ bool Hl1MapAsset::Load(const std::string& filename)
     return true;
 }
 
-bool Hl1MapAsset::LoadEntity(Tokenizer& tok)
+bool Hl1MapAsset::LoadEntity(HlTokenizer& tok)
 {
     tEntity e;
 
@@ -68,7 +68,7 @@ bool Hl1MapAsset::LoadEntity(Tokenizer& tok)
     return strcmp(tok.getToken(), "}") == 0;
 }
 
-bool Hl1MapAsset::LoadBrush(Tokenizer& tok, tEntity& entity)
+bool Hl1MapAsset::LoadBrush(HlTokenizer& tok, tEntity& entity)
 {
     tBrush b;
 
@@ -162,7 +162,7 @@ bool Hl1MapAsset::LoadTextures(const std::vector<Hl1WadAsset*>& wads)
 
     for (std::set<std::string>::iterator n = this->_textureNames.begin(); n != this->_textureNames.end(); ++n)
     {
-        Texture* texture = new Texture();
+        HlTexture* texture = new HlTexture();
         texture->SetName(*n);
         this->_textures.insert(std::make_pair(*n, texture));
 

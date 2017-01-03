@@ -172,10 +172,10 @@ std::vector<HL1::tBSPVisLeaf> Hl1BspAsset::LoadVisLeafs(const Array<byte>& visda
     return visLeafs;
 }
 
-bool Hl1BspAsset::LoadFacesWithLightmaps(std::vector<HL1::tFace>& faces, std::vector<Texture*>& lightmaps, std::vector<HL1::tVertex>& vertices)
+bool Hl1BspAsset::LoadFacesWithLightmaps(std::vector<HL1::tFace>& faces, std::vector<HlTexture*>& lightmaps, std::vector<HL1::tVertex>& vertices)
 {
     // Temporary lightmap array for each face, these will be packed into an atlas later
-    Array<Texture> lightMaps;
+    Array<HlTexture> lightMaps;
 
     // Allocate the arrays for faces and lightmaps
     lightMaps.Allocate(this->_faceData.count);
@@ -269,7 +269,7 @@ bool Hl1BspAsset::LoadFacesWithLightmaps(std::vector<HL1::tFace>& faces, std::ve
     while (rects.size() > 0)
     {
         // Setup one atlas texture (for now)
-        Texture* atlas = new Texture();
+        HlTexture* atlas = new HlTexture();
         atlas->SetDimentions(512, 512, 3);
         atlas->Fill(glm::vec4(0.0f, 0.0f, 0.0f, 0.0f));
 
@@ -283,7 +283,7 @@ bool Hl1BspAsset::LoadFacesWithLightmaps(std::vector<HL1::tFace>& faces, std::ve
         for (auto rect = rects.begin(); rect != rects.end(); rect++)
         {
             // a reference to the loaded lightmapfrom the rect
-            Texture& lm = lightMaps[faces[(*rect).id].lightmap];
+            HlTexture& lm = lightMaps[faces[(*rect).id].lightmap];
             if ((*rect).was_packed)
             {
                 // Copy the lightmap texture into the atlas
@@ -318,7 +318,7 @@ bool Hl1BspAsset::LoadFacesWithLightmaps(std::vector<HL1::tFace>& faces, std::ve
     return true;
 }
 
-bool Hl1BspAsset::LoadTextures(std::vector<Texture*>& textures, const std::vector<Hl1WadAsset*>& wads)
+bool Hl1BspAsset::LoadTextures(std::vector<HlTexture*>& textures, const std::vector<Hl1WadAsset*>& wads)
 {
     Array<int> textureTable(int(*this->_textureData.data), (int*)(this->_textureData.data + sizeof(int)));
 
@@ -330,7 +330,7 @@ bool Hl1BspAsset::LoadTextures(std::vector<Texture*>& textures, const std::vecto
     {
         const unsigned char* textureData = this->_textureData.data + textureTable[t];
         HL1::tBSPMipTexHeader* miptex = (HL1::tBSPMipTexHeader*)textureData;
-        Texture* tex = new Texture();
+        HlTexture* tex = new HlTexture();
         tex->SetName(miptex->name);
 
         if (miptex->offsets[0] == 0)
@@ -441,7 +441,7 @@ void Hl1BspAsset::CalculateSurfaceExtents(const HL1::tBSPFace& in, float min[2],
     }
 }
 
-bool Hl1BspAsset::LoadLightmap(const HL1::tBSPFace& in, Texture& out, float min[2], float max[2])
+bool Hl1BspAsset::LoadLightmap(const HL1::tBSPFace& in, HlTexture& out, float min[2], float max[2])
 {
     // compute lightmap size
     int size[2];

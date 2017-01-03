@@ -63,8 +63,8 @@ set(HDR_APP
     include/hl1sprasset.h
     include/hl1sprinstance.h
 
-    include/texture.h
-    include/tokenizer.h
+    include/hltexture.h
+    include/hltokenizer.h
     include/stb_rect_pack.h
     )
 
@@ -89,8 +89,8 @@ set(SRC_APP
     src/hl1sprasset.cpp
     src/hl1sprinstance.cpp
 
-    src/texture.cpp
-    src/tokenizer.cpp
+    src/hltexture.cpp
+    src/hltokenizer.cpp
 )
 
 add_library(game-assets STATIC ${SRC_APP} ${HDR_APP})

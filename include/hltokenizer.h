@@ -1,12 +1,12 @@
-#ifndef _TOKENIZER_H_
-#define _TOKENIZER_H_
+#ifndef _HLTOKENIZER_H_
+#define _HLTOKENIZER_H_
 
-class Tokenizer
+class HlTokenizer
 {
 public:
-	Tokenizer(const char* data, int size);
-	Tokenizer(const Tokenizer& orig);
-	virtual ~Tokenizer();
+	HlTokenizer(const char* data, int size);
+	HlTokenizer(const HlTokenizer& orig);
+	virtual ~HlTokenizer();
 
 	const char* getToken();
 	const char* getNextToken();
@@ -25,5 +25,5 @@ private:
 
 };
 
-#endif // _TOKENIZER_H_
+#endif // _HLTOKENIZER_H_
 

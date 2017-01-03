@@ -4,7 +4,6 @@
 #include "hl1bsptypes.h"
 #include "hl1wadasset.h"
 #include "hl1shader.h"
-#include "texture.h"
 
 #include <string>
 #include <set>
@@ -78,10 +77,10 @@ private:
     }
 
     void CalculateSurfaceExtents(const HL1::tBSPFace& in, float min[2], float max[2]) const;
-    bool LoadLightmap(const HL1::tBSPFace& in, Texture& out, float min[2], float max[2]);
+    bool LoadLightmap(const HL1::tBSPFace& in, HlTexture& out, float min[2], float max[2]);
 
-    bool LoadFacesWithLightmaps(std::vector<HL1::tFace>& faces, std::vector<Texture*>& lightmaps, std::vector<HL1::tVertex>& vertices);
-    bool LoadTextures(std::vector<Texture*>& textures, const std::vector<Hl1WadAsset*>& wads);
+    bool LoadFacesWithLightmaps(std::vector<HL1::tFace>& faces, std::vector<HlTexture*>& lightmaps, std::vector<HL1::tVertex>& vertices);
+    bool LoadTextures(std::vector<HlTexture*>& textures, const std::vector<Hl1WadAsset*>& wads);
     bool LoadModels();
 
     static std::vector<HL1::sBSPEntity> LoadEntities(const Array<byte>& entityData);

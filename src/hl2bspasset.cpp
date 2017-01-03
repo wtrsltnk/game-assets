@@ -56,7 +56,7 @@ bool Hl2BspAsset::Load(const std::string &filename)
 bool Hl2BspAsset::LoadFacesWithLightmaps(std::vector<HL1::tVertex>& vertices)
 {
     // Temporary lightmap array for each face, these will be packed into an atlas later
-    Array<Texture> lightMaps;
+    Array<HlTexture> lightMaps;
 
     // Allocate the arrays for faces and lightmaps
     lightMaps.Allocate(this->_faceData.count);
@@ -136,7 +136,7 @@ bool Hl2BspAsset::LoadFacesWithLightmaps(std::vector<HL1::tVertex>& vertices)
     while (rects.size() > 0)
     {
         // Setup one atlas texture (for now)
-        Texture* atlas = new Texture();
+        HlTexture* atlas = new HlTexture();
         atlas->SetDimentions(512, 512, 3);
         atlas->Fill(glm::vec4(0.0f, 0.0f, 0.0f, 0.0f));
 
@@ -150,7 +150,7 @@ bool Hl2BspAsset::LoadFacesWithLightmaps(std::vector<HL1::tVertex>& vertices)
         for (auto rect = rects.begin(); rect != rects.end(); rect++)
         {
             // a reference to the loaded lightmapfrom the rect
-            Texture& lm = lightMaps[(*rect).id];
+            HlTexture& lm = lightMaps[(*rect).id];
             if ((*rect).was_packed)
             {
                 // Copy the lightmap texture into the atlas
@@ -190,7 +190,7 @@ bool Hl2BspAsset::LoadTextures(const std::vector<Hl1WadAsset*>& wads)
     glActiveTexture(GL_TEXTURE0);
     glEnable(GL_TEXTURE_2D);
 
-    Texture* lm = new Texture();
+    HlTexture* lm = new HlTexture();
     lm->SetDimentions(32, 32, 3);
     lm->Fill(glm::vec4(255, 255, 255, 255));
     lm->UploadToGl();
@@ -251,7 +251,7 @@ HL2::tBSPEntity* Hl2BspAsset::FindEntityByClassname(const std::string& classname
 
 #define LIGHTMAP_GAMMA 2.2f
 
-bool Hl2BspAsset::LoadLightmap(const HL2::tBSPFace& in, Texture& out)
+bool Hl2BspAsset::LoadLightmap(const HL2::tBSPFace& in, HlTexture& out)
 {
     if (in.lightOffset < 0)
         return false;

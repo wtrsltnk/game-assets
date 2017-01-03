@@ -2,7 +2,6 @@
 #define _HL1MDLASSET_H_
 
 #include "hl1mdltypes.h"
-#include "texture.h"
 
 #include <string>
 #include <vector>
@@ -57,8 +56,8 @@ public:
     Array<tBodypart> _bodyparts;
 
 private:
-    void LoadTextures(std::vector<Texture*>& textures);
-    void LoadBodyParts(std::vector<HL1::tFace>& faces, std::vector<Texture*>& lightmaps, std::vector<HL1::tVertex>& vertices);
+    void LoadTextures(std::vector<HlTexture*>& textures);
+    void LoadBodyParts(std::vector<HL1::tFace>& faces, std::vector<HlTexture*>& lightmaps, std::vector<HL1::tVertex>& vertices);
 
 };
 

@@ -3,7 +3,6 @@
 
 #include "hl2bsptypes.h"
 #include "hl1wadasset.h"
-#include "texture.h"
 
 #include <string>
 #include <set>
@@ -63,7 +62,7 @@ private:
         return lump.count > 0;
     }
 
-    bool LoadLightmap(const HL2::tBSPFace& in, Texture& out);
+    bool LoadLightmap(const HL2::tBSPFace& in, HlTexture& out);
 
     bool LoadFacesWithLightmaps(std::vector<HL1::tVertex>& vertices);
     bool LoadTextures(const std::vector<Hl1WadAsset*>& wads);

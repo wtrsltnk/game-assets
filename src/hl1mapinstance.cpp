@@ -41,7 +41,7 @@ Hl1MapInstance::Hl1MapInstance(Hl1MapAsset* asset)
                 o.normal = face.normal;
                 this->_faces.push_back(o);
 
-                Texture* texture = this->_asset->_textures[face.texture];
+                HlTexture* texture = this->_asset->_textures[face.texture];
                 float W, H, SX, SY;
                 W = 1.0f / (float)texture->Width();
                 H = 1.0f / (float)texture->Height();

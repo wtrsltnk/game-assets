@@ -7,7 +7,7 @@
 #include <set>
 #include <glm/glm.hpp>
 #include <GL/glextl.h>
-#include "texture.h"
+#include "hltexture.h"
 
 namespace HL1
 {
@@ -124,8 +124,8 @@ private:
     GLuint _vbo;
     GLuint _vao;
     std::vector<HL1::tFace> _faces;
-    std::vector<Texture*> _textures;
-    std::vector<Texture*> _lightmaps;
+    std::vector<HlTexture*> _textures;
+    std::vector<HlTexture*> _lightmaps;
 
 public:
     Hl1VertexArray();
@@ -135,8 +135,8 @@ public:
     void RenderFaces(const std::set<unsigned short>& visibleFaces, GLenum mode = GL_TRIANGLE_FAN);
 
     std::vector<HL1::tFace>& Faces() { return this->_faces; }
-    std::vector<Texture*>& Textures() { return this->_textures; }
-    std::vector<Texture*>& Lightmaps() { return this->_lightmaps; }
+    std::vector<HlTexture*>& Textures() { return this->_textures; }
+    std::vector<HlTexture*>& Lightmaps() { return this->_lightmaps; }
 
     void Bind();
     void Unbind();
