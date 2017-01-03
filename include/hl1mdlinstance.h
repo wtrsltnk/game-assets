@@ -11,9 +11,8 @@
 
 class Hl1MdlInstance : public Hl1Instance
 {
-    friend class Hl1MdlAsset;
-    Hl1MdlInstance(Hl1MdlAsset* asset);
 public:
+    Hl1MdlInstance(Hl1MdlAsset* asset);
     virtual ~Hl1MdlInstance();
 
     virtual void Update(float dt);

@@ -12,7 +12,6 @@ public:
     virtual ~Hl1SprAsset();
 
     virtual bool Load(const std::string &filename);
-    virtual Hl1Instance* CreateInstance();
 
     void RenderSpriteFrame(int frame);
 

@@ -20,9 +20,8 @@ typedef struct
 
 class Hl1BspInstance : public Hl1Instance
 {
-    friend class Hl1BspAsset;
-    Hl1BspInstance(Hl1BspAsset* asset);
 public:
+    Hl1BspInstance(Hl1BspAsset* asset);
     virtual ~Hl1BspInstance();
 
     virtual void Update(float dt) { }

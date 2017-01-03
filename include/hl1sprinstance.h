@@ -6,9 +6,8 @@
 
 class Hl1SprInstance : public Hl1Instance
 {
-    friend class Hl1SprAsset;
-    Hl1SprInstance(Hl1SprAsset* asset);
 public:
+    Hl1SprInstance(Hl1SprAsset* asset);
     virtual ~Hl1SprInstance();
 
     virtual void Update(float dt);

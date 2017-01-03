@@ -37,11 +37,6 @@ bool Hl1MapAsset::Load(const std::string& filename)
     return true;
 }
 
-Hl1Instance* Hl1MapAsset::CreateInstance()
-{
-    return new Hl1MapInstance(this);
-}
-
 bool Hl1MapAsset::LoadEntity(Tokenizer& tok)
 {
     tEntity e;

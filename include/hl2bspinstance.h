@@ -10,9 +10,8 @@
 
 class Hl2BspInstance : public Hl1Instance
 {
-    friend class Hl2BspAsset;
-    Hl2BspInstance(Hl2BspAsset* asset);
 public:
+    Hl2BspInstance(Hl2BspAsset* asset);
     virtual ~Hl2BspInstance();
 
     virtual void Update(float dt) { }

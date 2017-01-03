@@ -30,7 +30,6 @@ public:
     virtual ~Hl1MdlAsset();
 
     virtual bool Load(const std::string &filename);
-    virtual Hl1Instance* CreateInstance();
 
     void RenderFaces(const std::set<unsigned short>& visibleFaces);
 

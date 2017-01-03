@@ -63,11 +63,6 @@ bool Hl1MdlAsset::Load(const std::string &filename)
     return true;
 }
 
-Hl1Instance* Hl1MdlAsset::CreateInstance()
-{
-    return new Hl1MdlInstance(this);
-}
-
 void Hl1MdlAsset::LoadTextures(std::vector<Texture*>& _textures)
 {
     glActiveTexture(GL_TEXTURE0);

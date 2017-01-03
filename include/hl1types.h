@@ -167,7 +167,6 @@ public:
     virtual ~Hl1Asset() { }
 
     virtual bool Load(const std::string& filename) = 0;
-    virtual Hl1Instance* CreateInstance() = 0;
 };
 
 #endif	// _HL1TYPES_H_

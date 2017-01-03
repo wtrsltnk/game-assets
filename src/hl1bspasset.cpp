@@ -60,11 +60,6 @@ bool Hl1BspAsset::Load(const std::string &filename)
     return true;
 }
 
-Hl1Instance* Hl1BspAsset::CreateInstance()
-{
-    return new Hl1BspInstance(this);
-}
-
 std::vector<HL1::sBSPEntity> Hl1BspAsset::LoadEntities(const Array<byte>& entityData)
 {
     const byte* itr = entityData.data;

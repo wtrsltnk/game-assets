@@ -82,11 +82,6 @@ bool Hl1SprAsset::Load(const std::string &filename)
     return true;
 }
 
-Hl1Instance* Hl1SprAsset::CreateInstance()
-{
-    return new Hl1SprInstance(this);
-}
-
 void Hl1SprAsset::RenderSpriteFrame(int frame)
 {
     glEnable(GL_DEPTH_TEST);

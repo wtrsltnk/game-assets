@@ -199,11 +199,6 @@ bool Hl2BspAsset::LoadTextures(const std::vector<Hl1WadAsset*>& wads)
     return true;
 }
 
-Hl1Instance* Hl2BspAsset::CreateInstance()
-{
-    return new Hl2BspInstance(this);
-}
-
 std::vector<HL2::tBSPEntity> Hl2BspAsset::LoadEntities(const Array<byte>& entityData)
 {
     const byte* itr = entityData.data;

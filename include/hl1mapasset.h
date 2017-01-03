@@ -65,7 +65,6 @@ public:
     virtual ~Hl1MapAsset();
 
     virtual bool Load(const std::string& filename);
-    virtual Hl1Instance* CreateInstance();
 
     tEntity* FindEntityByClassname(const std::string& classname);
 
