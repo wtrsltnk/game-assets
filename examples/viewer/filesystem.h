@@ -5,7 +5,7 @@
 #include <map>
 #include <string>
 
-class FileData : public valve::Array<byte>
+class FileData : public valve::Array<valve::byte>
 {
 public:
 	std::string _filename;
@@ -18,8 +18,8 @@ class FileSystem
 	static LoadedFileList _loadedFiles;
 public:
     static std::string LocateDataFile(const std::string& filename);
-    static valve::Array<byte>& LoadFileData(const std::string& filename);
-    static valve::Array<byte> LoadPartialFileData(const std::string& filename, int count);
+    static valve::Array<valve::byte>& LoadFileData(const std::string& filename);
+    static valve::Array<valve::byte> LoadPartialFileData(const std::string& filename, int count);
 
 private:
     static void UnloadFileData(FileData& fileData);
