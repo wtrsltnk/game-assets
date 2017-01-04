@@ -2,16 +2,16 @@
 #include "filesystem.h"
 #include "common/settings.h"
 #include "common/log.h"
-#include <hl1bspasset.h>
-#include <hl1bspinstance.h>
-#include <hl2bspasset.h>
-#include <hl2bspinstance.h>
-#include <hl1mdlasset.h>
-#include <hl1mdlinstance.h>
-#include <hl1mapasset.h>
-#include <hl1mapinstance.h>
-#include <hl1sprasset.h>
-#include <hl1sprinstance.h>
+#include <valve/hl1bspasset.h>
+#include <valve/hl1bspinstance.h>
+#include <valve/hl2bspasset.h>
+#include <valve/hl2bspinstance.h>
+#include <valve/hl1mdlasset.h>
+#include <valve/hl1mdlinstance.h>
+#include <valve/hl1mapasset.h>
+#include <valve/hl1mapinstance.h>
+#include <valve/hl1sprasset.h>
+#include <valve/hl1sprinstance.h>
 #include <SDL.h>
 #include <iostream>
 #include <glm/gtx/rotate_vector.hpp>
@@ -54,42 +54,42 @@ bool AssetViewer::InitializeGraphics()
 
         if (ext == ".bsp")
         {
-            Array<byte> sig = FileSystem::LoadPartialFileData(filename, 4);
+            valve::Array<byte> sig = FileSystem::LoadPartialFileData(filename, 4);
             if (sig[0] == 'V' && sig[1] == 'B' && sig[2] == 'S' && sig[3] == 'P')
             {
                 Log().Info("Loading Source BSP file");
-                this->_asset = new Hl2BspAsset(FileSystem::LocateDataFile, FileSystem::LoadFileData);
+                this->_asset = new valve::hl2::BspAsset(FileSystem::LocateDataFile, FileSystem::LoadFileData);
                 if (this->_asset->Load(filename))
-                    this->_instance = new Hl2BspInstance((Hl2BspAsset*)this->_asset);
+                    this->_instance = new valve::hl2::BspInstance((valve::hl2::BspAsset*)this->_asset);
             }
             else if (((int*)sig.data)[0] == HL1_BSP_SIGNATURE)
             {
                 Log().Info("Loading GoldSrc BSP file");
-                this->_asset = new Hl1BspAsset(FileSystem::LocateDataFile, FileSystem::LoadFileData);
+                this->_asset = new valve::hl1::BspAsset(FileSystem::LocateDataFile, FileSystem::LoadFileData);
                 if (this->_asset->Load(filename))
-                    this->_instance = new Hl1BspInstance((Hl1BspAsset*)this->_asset);
+                    this->_instance = new valve::hl1::BspInstance((valve::hl1::BspAsset*)this->_asset);
             }
         }
         else if (ext == ".mdl")
         {
             Log().Info("Loading MDL file");
-            this->_asset = new Hl1MdlAsset(FileSystem::LocateDataFile, FileSystem::LoadFileData);
+            this->_asset = new valve::hl1::MdlAsset(FileSystem::LocateDataFile, FileSystem::LoadFileData);
             if (this->_asset->Load(filename))
-                this->_instance = new Hl1MdlInstance((Hl1MdlAsset*)this->_asset);
+                this->_instance = new valve::hl1::MdlInstance((valve::hl1::MdlAsset*)this->_asset);
         }
         else if (ext == ".map")
         {
             Log().Info("Loading MAP file");
-            this->_asset = new Hl1MapAsset(FileSystem::LocateDataFile, FileSystem::LoadFileData);
+            this->_asset = new valve::hl1::MapAsset(FileSystem::LocateDataFile, FileSystem::LoadFileData);
             if (this->_asset->Load(filename))
-                this->_instance = new Hl1MapInstance((Hl1MapAsset*)this->_asset);
+                this->_instance = new valve::hl1::MapInstance((valve::hl1::MapAsset*)this->_asset);
         }
         else if (ext == ".spr")
         {
             Log().Info("Loading SPR file");
-            this->_asset = new Hl1SprAsset(FileSystem::LocateDataFile, FileSystem::LoadFileData);
+            this->_asset = new valve::hl1::SprAsset(FileSystem::LocateDataFile, FileSystem::LoadFileData);
             if (this->_asset->Load(filename))
-                this->_instance = new Hl1SprInstance((Hl1SprAsset*)this->_asset);
+                this->_instance = new valve::hl1::SprInstance((valve::hl1::SprAsset*)this->_asset);
         }
 
         if (this->_asset == nullptr || this->_instance == nullptr)

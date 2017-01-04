@@ -5,7 +5,7 @@
 #include <SDL.h>
 
 /// HL1 BSP
-Hl1BspHud::Hl1BspHud(Hl1BspInstance *instance, ViewerHud& mainHud)
+Hl1BspHud::Hl1BspHud(valve::hl1::BspInstance *instance, ViewerHud& mainHud)
     : _instance(instance), _mainHud(mainHud)
 { }
 
@@ -13,7 +13,7 @@ void Hl1BspHud::Render(const glm::mat4 &proj, const glm::mat4 &view)
 { }
 
 /// HL1 MDL
-Hl1MdlHud::Hl1MdlHud(Hl1MdlInstance *instance, ViewerHud& mainHud)
+Hl1MdlHud::Hl1MdlHud(valve::hl1::MdlInstance *instance, ViewerHud& mainHud)
     : _instance(instance), _mainHud(mainHud)
 { }
 
@@ -30,7 +30,7 @@ void Hl1MdlHud::Render(const glm::mat4 &proj, const glm::mat4 &view)
 }
 
 /// HL1 SPR
-Hl1SprHud::Hl1SprHud(Hl1SprInstance *instance, ViewerHud& mainHud)
+Hl1SprHud::Hl1SprHud(valve::hl1::SprInstance *instance, ViewerHud& mainHud)
     : _instance(instance), _mainHud(mainHud)
 { }
 
@@ -46,7 +46,7 @@ void Hl1SprHud::Render(const glm::mat4 &proj, const glm::mat4 &view)
 }
 
 /// HL2 BSP
-Hl2BspHud::Hl2BspHud(Hl2BspInstance *instance, ViewerHud& mainHud)
+Hl2BspHud::Hl2BspHud(valve::hl2::BspInstance *instance, ViewerHud& mainHud)
     : _instance(instance), _mainHud(mainHud)
 { }
 
@@ -77,35 +77,35 @@ void ViewerHud::KeyAction(int key, int action)
         this->_hud->KeyAction(key, action);
 }
 
-void ViewerHud::InitHud(const std::string& filename, Hl1Instance* instance)
+void ViewerHud::InitHud(const std::string& filename, valve::Hl1Instance* instance)
 {
     this->Fonts.Regular.InitializeFont("c:\\windows\\fonts\\verdana.ttf");
     this->Fonts.Info.InitializeFont("c:\\windows\\fonts\\cour.ttf", 18.0f);
 
     this->_filename = filename;
 
-    this->_hl1Bsp = dynamic_cast<Hl1BspInstance*>(instance);
+    this->_hl1Bsp = dynamic_cast<valve::hl1::BspInstance*>(instance);
     if (this->_hl1Bsp != nullptr)
     {
         this->_hud = new Hl1BspHud(this->_hl1Bsp, *this);
         return;
     }
 
-    this->_hl1Mdl = dynamic_cast<Hl1MdlInstance*>(instance);
+    this->_hl1Mdl = dynamic_cast<valve::hl1::MdlInstance*>(instance);
     if (this->_hl1Mdl != nullptr)
     {
         this->_hud = new Hl1MdlHud(this->_hl1Mdl, *this);
         return;
     }
 
-    this->_hl1Spr = dynamic_cast<Hl1SprInstance*>(instance);
+    this->_hl1Spr = dynamic_cast<valve::hl1::SprInstance*>(instance);
     if (this->_hl1Spr != nullptr)
     {
         this->_hud = new Hl1SprHud(this->_hl1Spr, *this);
         return;
     }
 
-    this->_hl2Bsp = dynamic_cast<Hl2BspInstance*>(instance);
+    this->_hl2Bsp = dynamic_cast<valve::hl2::BspInstance*>(instance);
     if (this->_hl2Bsp != nullptr)
     {
         this->_hud = new Hl2BspHud(this->_hl2Bsp, *this);

@@ -2,11 +2,11 @@
 #define VIEWERHUD_H
 
 #include "common/font.h"
-#include <hl1types.h>
-#include <hl1bspinstance.h>
-#include <hl1mdlinstance.h>
-#include <hl1sprinstance.h>
-#include <hl2bspinstance.h>
+#include <valve/hl1types.h>
+#include <valve/hl1bspinstance.h>
+#include <valve/hl1mdlinstance.h>
+#include <valve/hl1sprinstance.h>
+#include <valve/hl2bspinstance.h>
 #include <string>
 #include <glm/glm.hpp>
 
@@ -38,7 +38,7 @@ public:
     void Resize(int w, int h);
     virtual void KeyAction(int key, int action);
 
-    void InitHud(const std::string& filename, Hl1Instance* instance);
+    void InitHud(const std::string& filename, valve::Hl1Instance* instance);
     void Render();
 
     const glm::vec2& Size() const { return this->_size; }
@@ -49,10 +49,10 @@ private:
 
     std::string _filename;
 
-    Hl1BspInstance* _hl1Bsp;
-    Hl1MdlInstance* _hl1Mdl;
-    Hl1SprInstance* _hl1Spr;
-    Hl2BspInstance* _hl2Bsp;
+    valve::hl1::BspInstance* _hl1Bsp;
+    valve::hl1::MdlInstance* _hl1Mdl;
+    valve::hl1::SprInstance* _hl1Spr;
+    valve::hl2::BspInstance* _hl2Bsp;
 
     IHud* _hud;
 
@@ -60,11 +60,11 @@ private:
 
 class Hl1BspHud : public IHud
 {
-    Hl1BspInstance* _instance;
+    valve::hl1::BspInstance* _instance;
     ViewerHud& _mainHud;
 
 public:
-    Hl1BspHud(Hl1BspInstance* instance, ViewerHud& mainHud);
+    Hl1BspHud(valve::hl1::BspInstance* instance, ViewerHud& mainHud);
     virtual ~Hl1BspHud() { }
 
     virtual void Render(const glm::mat4& proj, const glm::mat4& view);
@@ -73,11 +73,11 @@ public:
 
 class Hl1MdlHud : public IHud
 {
-    Hl1MdlInstance* _instance;
+    valve::hl1::MdlInstance* _instance;
     ViewerHud& _mainHud;
 
 public:
-    Hl1MdlHud(Hl1MdlInstance* instance, ViewerHud& mainHud);
+    Hl1MdlHud(valve::hl1::MdlInstance* instance, ViewerHud& mainHud);
     virtual ~Hl1MdlHud() { }
 
     virtual void Render(const glm::mat4& proj, const glm::mat4& view);
@@ -86,11 +86,11 @@ public:
 
 class Hl1SprHud : public IHud
 {
-    Hl1SprInstance* _instance;
+    valve::hl1::SprInstance* _instance;
     ViewerHud& _mainHud;
 
 public:
-    Hl1SprHud(Hl1SprInstance* instance, ViewerHud& mainHud);
+    Hl1SprHud(valve::hl1::SprInstance* instance, ViewerHud& mainHud);
     virtual ~Hl1SprHud() { }
 
     virtual void Render(const glm::mat4& proj, const glm::mat4& view);
@@ -99,11 +99,11 @@ public:
 
 class Hl2BspHud : public IHud
 {
-    Hl2BspInstance* _instance;
+    valve::hl2::BspInstance* _instance;
     ViewerHud& _mainHud;
 
 public:
-    Hl2BspHud(Hl2BspInstance* instance, ViewerHud& mainHud);
+    Hl2BspHud(valve::hl2::BspInstance* instance, ViewerHud& mainHud);
     virtual ~Hl2BspHud() { }
 
     virtual void Render(const glm::mat4& proj, const glm::mat4& view);

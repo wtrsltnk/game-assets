@@ -4,14 +4,14 @@
 #include "viewerhud.h"
 #include "common/application.h"
 #include "common/camera.h"
-#include <hl1types.h>
+#include <valve/hl1types.h>
 #include <glm/glm.hpp>
 
 class AssetViewer : public Application
 {
     System* _sys;
-    Hl1Asset* _asset;
-    Hl1Instance* _instance;
+    valve::Hl1Asset* _asset;
+    valve::Hl1Instance* _instance;
     glm::mat4 _proj;
     int _lastX, _lastY;
     bool _pan;
