@@ -5,11 +5,11 @@
 
 using namespace valve;
 
-Hl1VertexArray::Hl1VertexArray()
+VertexArray::VertexArray()
     : _vao(0), _vbo(0)
 { }
 
-Hl1VertexArray::~Hl1VertexArray()
+VertexArray::~VertexArray()
 {
 //    this->_faces.Delete();
 //    this->_textures.Delete();
@@ -21,7 +21,7 @@ Hl1VertexArray::~Hl1VertexArray()
 //    }
 }
 
-void Hl1VertexArray::LoadVertices(const std::vector<hl1::tVertex>& vertices)
+void VertexArray::LoadVertices(const std::vector<tVertex>& vertices)
 {
     if (vertices.size() > 0)
     {
@@ -32,29 +32,29 @@ void Hl1VertexArray::LoadVertices(const std::vector<hl1::tVertex>& vertices)
         if (this->_vbo == 0)
             glGenBuffers(1, &this->_vbo);
         glBindBuffer(GL_ARRAY_BUFFER, this->_vbo);
-        glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(hl1::tVertex), 0, GL_STATIC_DRAW);
-        glBufferSubData(GL_ARRAY_BUFFER, 0, vertices.size() * sizeof(hl1::tVertex), (GLvoid*)&vertices[0]);
+        glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(tVertex), 0, GL_STATIC_DRAW);
+        glBufferSubData(GL_ARRAY_BUFFER, 0, vertices.size() * sizeof(tVertex), (GLvoid*)&vertices[0]);
 
-        glVertexAttribPointer((GLuint)hl1::ShaderAttributeLocations::Vertex, 3, GL_FLOAT, GL_FALSE, sizeof(hl1::tVertex), 0);
+        glVertexAttribPointer((GLuint)hl1::ShaderAttributeLocations::Vertex, 3, GL_FLOAT, GL_FALSE, sizeof(tVertex), 0);
         glEnableVertexAttribArray((GLuint)hl1::ShaderAttributeLocations::Vertex);
 
-        glVertexAttribPointer((GLuint)hl1::ShaderAttributeLocations::TexCoord, 2, GL_FLOAT, GL_FALSE, sizeof(hl1::tVertex), (GLvoid*)(sizeof(float) * 3));
+        glVertexAttribPointer((GLuint)hl1::ShaderAttributeLocations::TexCoord, 2, GL_FLOAT, GL_FALSE, sizeof(tVertex), (GLvoid*)(sizeof(float) * 3));
         glEnableVertexAttribArray((GLuint)hl1::ShaderAttributeLocations::TexCoord);
 
-        glVertexAttribPointer((GLuint)hl1::ShaderAttributeLocations::LightCoord, 2, GL_FLOAT, GL_FALSE, sizeof(hl1::tVertex), (GLvoid*)(sizeof(float) * 5));
+        glVertexAttribPointer((GLuint)hl1::ShaderAttributeLocations::LightCoord, 2, GL_FLOAT, GL_FALSE, sizeof(tVertex), (GLvoid*)(sizeof(float) * 5));
         glEnableVertexAttribArray((GLuint)hl1::ShaderAttributeLocations::LightCoord);
 
-        glVertexAttribPointer((GLuint)hl1::ShaderAttributeLocations::Normal, 3, GL_FLOAT, GL_FALSE, sizeof(hl1::tVertex), (GLvoid*)(sizeof(float) * 7));
+        glVertexAttribPointer((GLuint)hl1::ShaderAttributeLocations::Normal, 3, GL_FLOAT, GL_FALSE, sizeof(tVertex), (GLvoid*)(sizeof(float) * 7));
         glEnableVertexAttribArray((GLuint)hl1::ShaderAttributeLocations::Normal);
 
-        glVertexAttribPointer((GLuint)hl1::ShaderAttributeLocations::Bone, 1, GL_FLOAT, GL_FALSE, sizeof(hl1::tVertex), (GLvoid*)(sizeof(float) * 10));
+        glVertexAttribPointer((GLuint)hl1::ShaderAttributeLocations::Bone, 1, GL_FLOAT, GL_FALSE, sizeof(tVertex), (GLvoid*)(sizeof(float) * 10));
         glEnableVertexAttribArray((GLuint)hl1::ShaderAttributeLocations::Bone);
 
         glBindVertexArray(0);
     }
 }
 
-void Hl1VertexArray::RenderFaces(const std::set<unsigned short>& visibleFaces, GLenum mode)
+void VertexArray::RenderFaces(const std::set<unsigned short>& visibleFaces, GLenum mode)
 {
     Bind();
 
@@ -74,12 +74,12 @@ void Hl1VertexArray::RenderFaces(const std::set<unsigned short>& visibleFaces, G
     Unbind();
 }
 
-void Hl1VertexArray::Bind()
+void VertexArray::Bind()
 {
     glBindVertexArray(this->_vao);
 }
 
-void Hl1VertexArray::Unbind()
+void VertexArray::Unbind()
 {
     glBindVertexArray(0);
 }

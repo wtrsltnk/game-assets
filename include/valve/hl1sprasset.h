@@ -11,7 +11,7 @@ namespace valve
 namespace hl1
 {
 
-class SprAsset : public Hl1Asset
+class SprAsset : public Asset
 {
 public:
     SprAsset(DataFileLocator& locator, DataFileLoader& loader);

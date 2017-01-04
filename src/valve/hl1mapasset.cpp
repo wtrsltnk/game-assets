@@ -6,7 +6,7 @@
 using namespace valve::hl1;
 
 MapAsset::MapAsset(DataFileLocator& locator, DataFileLoader& loader)
-    : Hl1Asset(locator, loader)
+    : Asset(locator, loader)
 { }
 
 MapAsset::~MapAsset()
@@ -16,7 +16,7 @@ bool MapAsset::Load(const std::string& filename)
 {
     Array<byte>& data = this->_loader(filename);
 
-    HlTokenizer tok((char*)data.data, data.count);
+    Tokenizer tok((char*)data.data, data.count);
 
     while (tok.nextToken())
     {
@@ -39,7 +39,7 @@ bool MapAsset::Load(const std::string& filename)
     return true;
 }
 
-bool MapAsset::LoadEntity(HlTokenizer& tok)
+bool MapAsset::LoadEntity(Tokenizer& tok)
 {
     tEntity e;
 
@@ -70,7 +70,7 @@ bool MapAsset::LoadEntity(HlTokenizer& tok)
     return strcmp(tok.getToken(), "}") == 0;
 }
 
-bool MapAsset::LoadBrush(HlTokenizer& tok, tEntity& entity)
+bool MapAsset::LoadBrush(Tokenizer& tok, tEntity& entity)
 {
     tBrush b;
 
@@ -164,7 +164,7 @@ bool MapAsset::LoadTextures(const std::vector<WadAsset*>& wads)
 
     for (std::set<std::string>::iterator n = this->_textureNames.begin(); n != this->_textureNames.end(); ++n)
     {
-        HlTexture* texture = new HlTexture();
+        Texture* texture = new Texture();
         texture->SetName(*n);
         this->_textures.insert(std::make_pair(*n, texture));
 

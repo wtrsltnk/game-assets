@@ -7,7 +7,7 @@
 namespace valve
 {
 
-class HlTexture
+class Texture
 {
     std::string _name;
     int _width;
@@ -19,8 +19,8 @@ class HlTexture
     unsigned int _glIndex;
 
 public:
-    HlTexture();
-    virtual ~HlTexture();
+    Texture();
+    virtual ~Texture();
 
     const std::string& Name() const;
     int Width() const;
@@ -33,17 +33,17 @@ public:
     unsigned int UploadToGl();
     void DeleteFromGl();
     
-    HlTexture* Copy() const;
-    void CopyFrom(const HlTexture& from);
+    Texture* Copy() const;
+    void CopyFrom(const Texture& from);
     void DefaultTexture();
 
     glm::vec4 PixelAt(int x, int y) const;
     void SetPixelAt(const glm::vec4& pixel, int x, int y);
 
     void Fill(const glm::vec4& color);
-    void Fill(const HlTexture& from);
+    void Fill(const Texture& from);
     // expandBorder is used to puts a 1-pixel border around the copied texture so no neightbour leaking is occuring on an atlas
-    void FillAtPosition(const HlTexture& from, const glm::vec2& pos, bool expandBorder = false);
+    void FillAtPosition(const Texture& from, const glm::vec2& pos, bool expandBorder = false);
 
     void SetData(int w, int h, int bpp, unsigned char* data, bool repeat = true);
     void SetName(const std::string& _name);

@@ -16,7 +16,7 @@ namespace valve
 namespace hl1
 {
 
-class MapAsset : public Hl1Asset
+class MapAsset : public Asset
 {
 public:
     typedef struct sBrushFaceTextureDefinition_v100
@@ -75,12 +75,12 @@ public:
 
     std::vector<tEntity> _entities;
     std::set<std::string> _textureNames;
-    std::map<std::string, HlTexture*> _textures;
+    std::map<std::string, Texture*> _textures;
 
 private:
     int _mapVersion;
-    bool LoadEntity(HlTokenizer& tok);
-    bool LoadBrush(HlTokenizer& tok, tEntity& entity);
+    bool LoadEntity(Tokenizer& tok);
+    bool LoadBrush(Tokenizer& tok, tEntity& entity);
     static tBrushFace CreateFace(const glm::vec3& v1, const glm::vec3& v2, const glm::vec3& v3);
     bool LoadTextures(const std::vector<WadAsset*>& wads);
 

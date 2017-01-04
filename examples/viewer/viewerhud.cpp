@@ -77,7 +77,7 @@ void ViewerHud::KeyAction(int key, int action)
         this->_hud->KeyAction(key, action);
 }
 
-void ViewerHud::InitHud(const std::string& filename, valve::Hl1Instance* instance)
+void ViewerHud::InitHud(const std::string& filename, valve::AssetInstance* instance)
 {
     this->Fonts.Regular.InitializeFont("c:\\windows\\fonts\\verdana.ttf");
     this->Fonts.Info.InitializeFont("c:\\windows\\fonts\\cour.ttf", 18.0f);

@@ -12,31 +12,6 @@
 namespace valve
 {
 
-namespace hl1
-{
-typedef struct sVertex
-{
-    glm::vec3 position;
-    glm::vec2 texcoords[2];
-    glm::vec3 normal;
-    int bone;
-
-} tVertex;
-
-typedef struct sFace
-{
-    int firstVertex;
-    int vertexCount;
-    unsigned int lightmap;
-    unsigned int texture;
-
-    int flags;
-    glm::vec4 plane;
-
-} tFace;
-
-}
-
 typedef std::map<std::string, std::string> KeyValueList;
 
 typedef unsigned char byte;
@@ -121,55 +96,76 @@ public:
     }
 };
 
-class Hl1VertexArray
+typedef struct sVertex
+{
+    glm::vec3 position;
+    glm::vec2 texcoords[2];
+    glm::vec3 normal;
+    int bone;
+
+} tVertex;
+
+typedef struct sFace
+{
+    int firstVertex;
+    int vertexCount;
+    unsigned int lightmap;
+    unsigned int texture;
+
+    int flags;
+    glm::vec4 plane;
+
+} tFace;
+
+class VertexArray
 {
 private:
     GLuint _vbo;
     GLuint _vao;
-    std::vector<hl1::tFace> _faces;
-    std::vector<HlTexture*> _textures;
-    std::vector<HlTexture*> _lightmaps;
+    std::vector<tFace> _faces;
+    std::vector<Texture*> _textures;
+    std::vector<Texture*> _lightmaps;
 
 public:
-    Hl1VertexArray();
-    virtual ~Hl1VertexArray();
+    VertexArray();
+    virtual ~VertexArray();
 
-    void LoadVertices(const std::vector<hl1::tVertex>& vertices);
+    void LoadVertices(const std::vector<tVertex>& vertices);
     void RenderFaces(const std::set<unsigned short>& visibleFaces, GLenum mode = GL_TRIANGLE_FAN);
 
-    std::vector<hl1::tFace>& Faces() { return this->_faces; }
-    std::vector<HlTexture*>& Textures() { return this->_textures; }
-    std::vector<HlTexture*>& Lightmaps() { return this->_lightmaps; }
+    std::vector<tFace>& Faces() { return this->_faces; }
+    std::vector<Texture*>& Textures() { return this->_textures; }
+    std::vector<Texture*>& Lightmaps() { return this->_lightmaps; }
 
     void Bind();
     void Unbind();
 };
 
-class Hl1Instance
-{
-public:
-    virtual ~Hl1Instance() { }
-
-    virtual void Update(float dt) = 0;
-    virtual void Render(const glm::mat4& proj, const glm::mat4& view) = 0;
-
-};
-
 typedef std::string (DataFileLocator)(const std::string& relativeFilename);
 typedef Array<byte>& (DataFileLoader)(const std::string& filename);
 
-class Hl1Asset
+class Asset
 {
 protected:
     DataFileLocator& _locator;
     DataFileLoader& _loader;
-    Hl1VertexArray _va;
+    VertexArray _va;
 
 public:
-    Hl1Asset(DataFileLocator& locator, DataFileLoader& loader) : _locator(locator), _loader(loader) { }
-    virtual ~Hl1Asset() { }
+    Asset(DataFileLocator& locator, DataFileLoader& loader) : _locator(locator), _loader(loader) { }
+    virtual ~Asset() { }
 
     virtual bool Load(const std::string& filename) = 0;
+};
+
+class AssetInstance
+{
+public:
+    virtual ~AssetInstance() { }
+
+    virtual void Update(float dt) = 0;
+    virtual void Render(const glm::mat4& proj, const glm::mat4& view) = 0;
+
 };
 
 }

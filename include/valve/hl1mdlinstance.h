@@ -15,7 +15,7 @@ namespace valve
 namespace hl1
 {
 
-class MdlInstance : public Hl1Instance
+class MdlInstance : public AssetInstance
 {
 public:
     MdlInstance(MdlAsset* asset);

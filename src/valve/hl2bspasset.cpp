@@ -11,7 +11,7 @@
 using namespace valve::hl2;
 
 BspAsset::BspAsset(DataFileLocator& locator, DataFileLoader& loader)
-    : Hl1Asset(locator, loader), _vao(0), _vbo(0)
+    : Asset(locator, loader), _vao(0), _vbo(0)
 { }
 
 BspAsset::~BspAsset()
@@ -45,7 +45,7 @@ bool BspAsset::Load(const std::string &filename)
     if (this->LoadLump(data, entityData, HL2_BSP_ENTITIES))
         this->_entities = BspAsset::LoadEntities(entityData);
 
-    std::vector<hl1::tVertex> vertices;
+    std::vector<tVertex> vertices;
     this->LoadFacesWithLightmaps(vertices);
     this->_va.LoadVertices(vertices);
 
@@ -55,10 +55,10 @@ bool BspAsset::Load(const std::string &filename)
     return true;
 }
 
-bool BspAsset::LoadFacesWithLightmaps(std::vector<hl1::tVertex>& vertices)
+bool BspAsset::LoadFacesWithLightmaps(std::vector<tVertex>& vertices)
 {
     // Temporary lightmap array for each face, these will be packed into an atlas later
-    Array<HlTexture> lightMaps;
+    Array<Texture> lightMaps;
 
     // Allocate the arrays for faces and lightmaps
     lightMaps.Allocate(this->_faceData.count);
@@ -67,7 +67,7 @@ bool BspAsset::LoadFacesWithLightmaps(std::vector<hl1::tVertex>& vertices)
     for (int f = 0; f < this->_faceData.count; f++)
     {
         tBSPFace& in = this->_faceData[f];
-        hl1::tFace out;
+        tFace out;
 
         out.firstVertex = vertices.size();
         out.vertexCount = in.edgeCount;
@@ -103,7 +103,7 @@ bool BspAsset::LoadFacesWithLightmaps(std::vector<hl1::tVertex>& vertices)
         // Create a vertex list for this face
         for (int e = 0; e < in.edgeCount; e++)
         {
-            hl1::tVertex v;
+            tVertex v;
 
             // Get the edge index
             int ei = this->_surfedgeData[in.firstEdge + e];
@@ -138,7 +138,7 @@ bool BspAsset::LoadFacesWithLightmaps(std::vector<hl1::tVertex>& vertices)
     while (rects.size() > 0)
     {
         // Setup one atlas texture (for now)
-        HlTexture* atlas = new HlTexture();
+        Texture* atlas = new Texture();
         atlas->SetDimentions(512, 512, 3);
         atlas->Fill(glm::vec4(0.0f, 0.0f, 0.0f, 0.0f));
 
@@ -152,7 +152,7 @@ bool BspAsset::LoadFacesWithLightmaps(std::vector<hl1::tVertex>& vertices)
         for (auto rect = rects.begin(); rect != rects.end(); rect++)
         {
             // a reference to the loaded lightmapfrom the rect
-            HlTexture& lm = lightMaps[(*rect).id];
+            Texture& lm = lightMaps[(*rect).id];
             if ((*rect).was_packed)
             {
                 // Copy the lightmap texture into the atlas
@@ -192,7 +192,7 @@ bool BspAsset::LoadTextures(const std::vector<hl1::WadAsset*>& wads)
     glActiveTexture(GL_TEXTURE0);
     glEnable(GL_TEXTURE_2D);
 
-    HlTexture* lm = new HlTexture();
+    Texture* lm = new Texture();
     lm->SetDimentions(32, 32, 3);
     lm->Fill(glm::vec4(255, 255, 255, 255));
     lm->UploadToGl();
@@ -253,14 +253,14 @@ tBSPEntity* BspAsset::FindEntityByClassname(const std::string& classname)
 
 #define LIGHTMAP_GAMMA 2.2f
 
-bool BspAsset::LoadLightmap(const tBSPFace& in, HlTexture& out)
+bool BspAsset::LoadLightmap(const tBSPFace& in, Texture& out)
 {
     if (in.lightOffset < 0)
         return false;
 
     float gamma = 1.0f / 2.0f;
     int luxelCount = (in.LightmapTextureSizeInLuxels[0] + 1) * (in.LightmapTextureSizeInLuxels[1] + 1);
-    ::tBSPColorRGBExp32* pLightmap = (::tBSPColorRGBExp32*) (this->_lightingData.data + in.lightOffset);
+    tBSPColorRGBExp32* pLightmap = (tBSPColorRGBExp32*) (this->_lightingData.data + in.lightOffset);
 
     Array<byte> data(luxelCount * 3);
     for (int i = 0; i < luxelCount; i++)

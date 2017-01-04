@@ -4,12 +4,12 @@
 namespace valve
 {
 
-class HlTokenizer
+class Tokenizer
 {
 public:
-    HlTokenizer(const char* data, int size);
-    HlTokenizer(const HlTokenizer& orig);
-    virtual ~HlTokenizer();
+    Tokenizer(const char* data, int size);
+    Tokenizer(const Tokenizer& orig);
+    virtual ~Tokenizer();
 
     const char* getToken();
     const char* getNextToken();

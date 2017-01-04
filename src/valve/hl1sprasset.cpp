@@ -4,7 +4,7 @@
 using namespace valve::hl1;
 
 SprAsset::SprAsset(DataFileLocator& locator, DataFileLoader& loader)
-    : Hl1Asset(locator, loader)
+    : Asset(locator, loader)
 { }
 
 SprAsset::~SprAsset()
@@ -12,7 +12,7 @@ SprAsset::~SprAsset()
 
 bool SprAsset::Load(const std::string &filename)
 {
-    HlTexture* lm = new HlTexture();
+    Texture* lm = new Texture();
     lm->SetDimentions(32, 32, 3);
     lm->Fill(glm::vec4(255, 255, 255, 255));
     lm->UploadToGl();
@@ -70,7 +70,7 @@ bool SprAsset::Load(const std::string &filename)
                     textureData[item * 3 + 2] = palette[index * 3 + 2];
                 }
             }
-            auto tex = new HlTexture();
+            auto tex = new Texture();
             tex->SetData(frame->width, frame->height, 3, textureData);
             this->_frames[f] = tex->UploadToGl();
             this->_va.Textures().push_back(tex);

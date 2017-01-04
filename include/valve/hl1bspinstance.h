@@ -24,7 +24,7 @@ namespace valve
 namespace hl1
 {
 
-class BspInstance : public Hl1Instance
+class BspInstance : public AssetInstance
 {
 public:
     BspInstance(BspAsset* asset);

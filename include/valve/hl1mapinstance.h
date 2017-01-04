@@ -15,7 +15,7 @@ namespace valve
 namespace hl1
 {
 
-class MapInstance : public Hl1Instance
+class MapInstance : public AssetInstance
 {
 public:
     typedef struct sVertex

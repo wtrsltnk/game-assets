@@ -13,7 +13,7 @@ namespace valve
 namespace hl2
 {
 
-class BspAsset : public Hl1Asset
+class BspAsset : public Asset
 {
 public:
     BspAsset(DataFileLocator& locator, DataFileLoader& loader);
@@ -68,9 +68,9 @@ private:
         return lump.count > 0;
     }
 
-    bool LoadLightmap(const tBSPFace& in, HlTexture& out);
+    bool LoadLightmap(const tBSPFace& in, Texture& out);
 
-    bool LoadFacesWithLightmaps(std::vector<hl1::tVertex>& vertices);
+    bool LoadFacesWithLightmaps(std::vector<tVertex>& vertices);
     bool LoadTextures(const std::vector<hl1::WadAsset*>& wads);
 
     static std::vector<tBSPEntity> LoadEntities(const Array<byte>& entityData);

@@ -4,16 +4,16 @@
 
 using namespace valve;
 
-HlTexture::HlTexture()
+Texture::Texture()
     : _name(""), _width(0), _height(0), _bpp(0), _format(-1), _repeat(true), _data(0), _glIndex(0)
 { }
 
-HlTexture::~HlTexture()
+Texture::~Texture()
 {
     if (this->_data != 0) delete []this->_data;
 }
 
-unsigned int HlTexture::UploadToGl()
+unsigned int Texture::UploadToGl()
 {
     if (this->_glIndex > 0)
         return this->_glIndex;
@@ -46,14 +46,14 @@ unsigned int HlTexture::UploadToGl()
     return this->_glIndex;
 }
 
-void HlTexture::DeleteFromGl()
+void Texture::DeleteFromGl()
 {
     glDeleteTextures(1, &this->_glIndex);
 }
 
-HlTexture* HlTexture::Copy() const
+Texture* Texture::Copy() const
 {
-    HlTexture* result = new HlTexture();
+    Texture* result = new Texture();
 
     result->_name = std::string(this->_name);
 
@@ -78,7 +78,7 @@ HlTexture* HlTexture::Copy() const
     return result;
 }
 
-void HlTexture::CopyFrom(const HlTexture& from)
+void Texture::CopyFrom(const Texture& from)
 {
     if (this->_data != nullptr)
     {
@@ -102,7 +102,7 @@ void HlTexture::CopyFrom(const HlTexture& from)
     }
 }
 
-void HlTexture::DefaultTexture()
+void Texture::DefaultTexture()
 {
     int value;
     for (int row = 0; row < this->_width; row++) {
@@ -114,7 +114,7 @@ void HlTexture::DefaultTexture()
     }
 }
 
-glm::vec4 HlTexture::PixelAt(int x, int y) const
+glm::vec4 Texture::PixelAt(int x, int y) const
 {
     glm::vec4 r(1.0f, 1.0f, 1.0f, 1.0f);
     int p = x + (y*_width);
@@ -123,14 +123,14 @@ glm::vec4 HlTexture::PixelAt(int x, int y) const
     return r;
 }
 
-void HlTexture::SetPixelAt(const glm::vec4& pixel, int x, int y)
+void Texture::SetPixelAt(const glm::vec4& pixel, int x, int y)
 {
     int p = x + (y*_width);
     for (int i = 0 ; i < this->_bpp; i++)
         _data[(p * _bpp) + i] = pixel[i];
 }
 
-void HlTexture::Fill(const glm::vec4& color)
+void Texture::Fill(const glm::vec4& color)
 {
     for (int y = 0; y < _height; y++)
     {
@@ -141,7 +141,7 @@ void HlTexture::Fill(const glm::vec4& color)
     }
 }
 
-void HlTexture::Fill(const HlTexture& from)
+void Texture::Fill(const Texture& from)
 {
     int x = 0, y = 0;
     while (x < this->Width())
@@ -155,7 +155,7 @@ void HlTexture::Fill(const HlTexture& from)
     }
 }
 
-void HlTexture::FillAtPosition(const HlTexture& from, const glm::vec2& pos, bool expandBorder)
+void Texture::FillAtPosition(const Texture& from, const glm::vec2& pos, bool expandBorder)
 {
     if (pos.x > this->Width() || pos.y > this->Height()) return;
 
@@ -190,7 +190,7 @@ void HlTexture::FillAtPosition(const HlTexture& from, const glm::vec2& pos, bool
     }
 }
 
-void HlTexture::SetData(int w, int h, int bpp, unsigned char* data, bool repeat)
+void Texture::SetData(int w, int h, int bpp, unsigned char* data, bool repeat)
 {
     int dataSize = w * h * bpp;
 
@@ -213,12 +213,12 @@ void HlTexture::SetData(int w, int h, int bpp, unsigned char* data, bool repeat)
     }
 }
 
-void HlTexture::SetName(const std::string& name)
+void Texture::SetName(const std::string& name)
 {
     this->_name = name;
 }
 
-void HlTexture::SetDimentions(int width, int height, int bpp, unsigned int format)
+void Texture::SetDimentions(int width, int height, int bpp, unsigned int format)
 {
     if (this->_glIndex != 0)
         return;
@@ -238,7 +238,7 @@ void HlTexture::SetDimentions(int width, int height, int bpp, unsigned int forma
         this->_data = new unsigned char[dataSize];
 }
 
-void HlTexture::CorrectGamma(float gamma)
+void Texture::CorrectGamma(float gamma)
 {
     // Only images with rgb colors
     if (this->_bpp < 3)
@@ -275,37 +275,37 @@ void HlTexture::CorrectGamma(float gamma)
     }
 }
 
-const std::string& HlTexture::Name() const
+const std::string& Texture::Name() const
 {
     return this->_name;
 }
 
-int HlTexture::Width() const
+int Texture::Width() const
 {
     return this->_width;
 }
 
-int HlTexture::Height() const
+int Texture::Height() const
 {
     return this->_height;
 }
 
-int HlTexture::Bpp() const
+int Texture::Bpp() const
 {
     return this->_bpp;
 }
 
-int HlTexture::DataSize() const
+int Texture::DataSize() const
 {
     return this->_width * this->_height * this->_bpp;
 }
 
-unsigned char* HlTexture::Data()
+unsigned char* Texture::Data()
 {
     return this->_data;
 }
 
-unsigned int HlTexture::GlIndex() const
+unsigned int Texture::GlIndex() const
 {
     return this->_glIndex;
 }

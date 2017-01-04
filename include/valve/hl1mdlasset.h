@@ -13,14 +13,14 @@ namespace valve
 namespace hl1
 {
 
-class MdlAsset : public Hl1Asset
+class MdlAsset : public Asset
 {
 public:
     typedef struct sModel
     {
         int firstFace;
         int faceCount;
-        Array<hl1::tFace> faces;
+        Array<tFace> faces;
 
     } tModel;
 
@@ -41,29 +41,29 @@ public:
     int SequenceCount() const;
     int BodypartCount() const;
 
-    hl1::tMDLAnimation* GetAnimation(hl1::tMDLSequenceDescription *pseqdesc);
+    tMDLAnimation* GetAnimation(tMDLSequenceDescription *pseqdesc);
 
     // File format headers
-    hl1::tMDLHeader* _header;
-    hl1::tMDLHeader* _textureHeader;
-    hl1::tMDLSequenceHeader* _animationHeaders[32];
+    tMDLHeader* _header;
+    tMDLHeader* _textureHeader;
+    tMDLSequenceHeader* _animationHeaders[32];
 
     // These are mapped from file data
-    Array<hl1::tMDLBodyParts> _bodyPartData;
-    Array<hl1::tMDLTexture> _textureData;
+    Array<tMDLBodyParts> _bodyPartData;
+    Array<tMDLTexture> _textureData;
     Array<short> _skinRefData;
     Array<short> _skinFamilyData;   // not sure this contains the right data and size
-    Array<hl1::tMDLSequenceGroup> _sequenceGroupData;
-    Array<hl1::tMDLSequenceDescription> _sequenceData;
-    Array<hl1::tMDLBoneController> _boneControllerData;
-    Array<hl1::tMDLBone> _boneData;
+    Array<tMDLSequenceGroup> _sequenceGroupData;
+    Array<tMDLSequenceDescription> _sequenceData;
+    Array<tMDLBoneController> _boneControllerData;
+    Array<tMDLBone> _boneData;
 
     // These are parsed from the mapped data
     Array<tBodypart> _bodyparts;
 
 private:
-    void LoadTextures(std::vector<HlTexture*>& textures);
-    void LoadBodyParts(std::vector<hl1::tFace>& faces, std::vector<HlTexture*>& lightmaps, std::vector<hl1::tVertex>& vertices);
+    void LoadTextures(std::vector<Texture*>& textures);
+    void LoadBodyParts(std::vector<tFace>& faces, std::vector<Texture*>& lightmaps, std::vector<tVertex>& vertices);
 
 };
 

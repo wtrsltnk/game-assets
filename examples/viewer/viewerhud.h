@@ -38,7 +38,7 @@ public:
     void Resize(int w, int h);
     virtual void KeyAction(int key, int action);
 
-    void InitHud(const std::string& filename, valve::Hl1Instance* instance);
+    void InitHud(const std::string& filename, valve::AssetInstance* instance);
     void Render();
 
     const glm::vec2& Size() const { return this->_size; }

@@ -10,7 +10,7 @@ namespace valve
 namespace hl1
 {
 
-class SprInstance : public Hl1Instance
+class SprInstance : public AssetInstance
 {
 public:
     SprInstance(SprAsset* asset);

@@ -10,8 +10,8 @@
 class AssetViewer : public Application
 {
     System* _sys;
-    valve::Hl1Asset* _asset;
-    valve::Hl1Instance* _instance;
+    valve::Asset* _asset;
+    valve::AssetInstance* _instance;
     glm::mat4 _proj;
     int _lastX, _lastY;
     bool _pan;
