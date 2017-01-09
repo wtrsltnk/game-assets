@@ -2,7 +2,7 @@
 #define _HL2BSPINSTANCE_H_
 
 #include "hl2bspasset.h"
-#include "hl1shader.h"
+#include "hltypes.h"
 
 #include <set>
 #include <string>
@@ -26,7 +26,7 @@ public:
 
 private:
     BspAsset* _asset;
-    hl1::Shader* _shader;
+    Shader* _shader;
     std::set<unsigned short> _visibleFaces;
 
 };

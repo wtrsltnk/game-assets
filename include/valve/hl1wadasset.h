@@ -1,7 +1,7 @@
 #ifndef _HL1WADASSET_H_
 #define _HL1WADASSET_H_
 
-#include "hl1types.h"
+#include "hltypes.h"
 #include "hl1bsptypes.h"
 
 #include <string>

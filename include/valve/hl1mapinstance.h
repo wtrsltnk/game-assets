@@ -1,7 +1,7 @@
 #ifndef _HL1MAPINSTANCE_H_
 #define _HL1MAPINSTANCE_H_
 
-#include "hl1types.h"
+#include "hltypes.h"
 #include "hl1mapasset.h"
 #include "hl1mapshader.h"
 

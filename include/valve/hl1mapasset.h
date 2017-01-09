@@ -1,7 +1,7 @@
 #ifndef _HL1MAPDOCUMENT_H_
 #define _HL1MAPDOCUMENT_H_
 
-#include "hl1types.h"
+#include "hltypes.h"
 #include "hl1wadasset.h"
 #include "hltokenizer.h"
 

@@ -2,7 +2,7 @@
 #define VIEWERHUD_H
 
 #include "common/font.h"
-#include <valve/hl1types.h>
+#include <valve/hltypes.h>
 #include <valve/hl1bspinstance.h>
 #include <valve/hl1mdlinstance.h>
 #include <valve/hl1sprinstance.h>

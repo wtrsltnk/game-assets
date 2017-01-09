@@ -1,6 +1,5 @@
 #include "valve/hl1mdlinstance.h"
 #include "valve/hl1mdlasset.h"
-#include "valve/hl1shader.h"
 
 #include <GL/glextl.h>
 #include <glm/gtc/matrix_transform.hpp>

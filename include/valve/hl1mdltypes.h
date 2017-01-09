@@ -1,7 +1,7 @@
 #ifndef _HLMDLTYPES_H_
 #define _HLMDLTYPES_H_
 
-#include "hl1types.h"
+#include "hltypes.h"
 
 /*
 ==============================================================================

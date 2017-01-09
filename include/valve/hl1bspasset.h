@@ -3,7 +3,6 @@
 
 #include "hl1bsptypes.h"
 #include "hl1wadasset.h"
-#include "hl1shader.h"
 
 #include <string>
 #include <set>

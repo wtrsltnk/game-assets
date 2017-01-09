@@ -9,7 +9,7 @@ using namespace valve::hl2;
 BspInstance::BspInstance(BspAsset* asset)
     : _asset(asset), _shader(nullptr)
 {
-    this->_shader = new hl1::Shader();
+    this->_shader = new Shader();
     this->_shader->BuildProgram();
 
     for (int f = 0; f < this->_asset->_modelData[0].faceCount; f++)

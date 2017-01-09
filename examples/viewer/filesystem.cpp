@@ -8,7 +8,7 @@ std::string FileSystem::LocateDataFile(const std::string& filename)
     return filename;
 }
 
-valve::Array<valve::byte>& FileSystem::LoadFileData(const std::string& filename)
+valve::Array<byte>& FileSystem::LoadFileData(const std::string& filename)
 {
     if (FileSystem::_loadedFiles.find(filename) == FileSystem::_loadedFiles.end())
     {
@@ -34,7 +34,7 @@ valve::Array<valve::byte>& FileSystem::LoadFileData(const std::string& filename)
     return FileSystem::_loadedFiles[filename];
 }
 
-valve::Array<valve::byte> FileSystem::LoadPartialFileData(const std::string& filename, int count)
+valve::Array<byte> FileSystem::LoadPartialFileData(const std::string& filename, int count)
 {
     FileData data;
     std::ifstream file(filename, std::ios::in | std::ios::binary | std::ios::ate);

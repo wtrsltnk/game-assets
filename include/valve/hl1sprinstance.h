@@ -2,7 +2,6 @@
 #define _HL1SPRINSTANCE_H_
 
 #include "hl1sprasset.h"
-#include "hl1shader.h"
 
 namespace valve
 {

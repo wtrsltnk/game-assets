@@ -2,7 +2,6 @@
 #define	_HL1BSPINSTANCE_H_
 
 #include "hl1bspasset.h"
-#include "hl1shader.h"
 
 #include <set>
 #include <string>

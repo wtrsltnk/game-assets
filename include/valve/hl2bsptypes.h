@@ -1,7 +1,7 @@
 #ifndef _HL2BSPTYPES_H_
 #define _HL2BSPTYPES_H_
 
-#include "hl1types.h"
+#include "hltypes.h"
 
 #define HL2_BSP_SIGNATURE (('P'<<24)+('S'<<16)+('B'<<8)+'V')
 #define HL2_BSP_LUMPCOUNT 64

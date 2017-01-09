@@ -1,7 +1,7 @@
 #ifndef _HL1SPRTYPES_H_
 #define	_HL1SPRTYPES_H_
 
-#include "hl1types.h"
+#include "hltypes.h"
 
 #define HL1_SPR_SIGNATURE "IDSP"
 

@@ -2,7 +2,6 @@
 #define _HL1MDLINSTANCE_H_
 
 #include "hl1mdlasset.h"
-#include "hl1shader.h"
 
 #include <string>
 #include <glm/glm.hpp>

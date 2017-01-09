@@ -1,5 +1,6 @@
 #include "valve/hl1mapshader.h"
 
+using namespace valve;
 using namespace valve::hl1;
 
 const std::map<ShaderAttributeLocations, std::string> MapShader::AttribLocations()

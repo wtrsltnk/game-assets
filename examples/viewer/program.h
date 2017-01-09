@@ -4,7 +4,7 @@
 #include "viewerhud.h"
 #include "common/application.h"
 #include "common/camera.h"
-#include <valve/hl1types.h>
+#include <valve/hltypes.h>
 #include <glm/glm.hpp>
 
 class AssetViewer : public Application

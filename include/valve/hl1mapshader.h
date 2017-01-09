@@ -1,7 +1,7 @@
 #ifndef _HL1MAPSHADER_H_
 #define _HL1MAPSHADER_H_
 
-#include "hl1shader.h"
+#include "hltypes.h"
 
 namespace valve
 {
