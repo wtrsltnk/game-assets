@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 2.8)
 
 project(game-assets)
 
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
+
 set(WIN_CPP_PREFIX_PATH $ENV{WIN_CPP_PREFIX_PATH})
 if (NOT WIN_CPP_PREFIX_PATH)
     message("Cannot find WIN_CPP_PREFIX_PATH. Add it to your environment variables")
@@ -14,19 +16,7 @@ else()
     set(ZLIB_ROOT ${WIN_CPP_PREFIX_PATH})
 endif()
 
-option(BUILD_EXAMPLES "Enable building examples" ON)
 option(BUILD_TESTS "Enabled building tests" OFF)
-
-if(CMAKE_COMPILER_IS_GNUCXX)
-   SET(ENABLE_CXX11 "-std=c++11")
-
-   EXECUTE_PROCESS(COMMAND "${CMAKE_CXX_COMPILER} -dumpversion" OUTPUT_VARIABLE GCC_VERSION)
-   if (GCC_VERSION VERSION_LESS 4.7)
-      SET(ENABLE_CXX11 "-std=c++0x")
-   endif()
-
-   SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${ENABLE_CXX11}")
-endif()
 
 set(CMAKE_MODULE_PATH
     ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/../cmake-modules/"
@@ -38,9 +28,8 @@ include_directories(${GLM_INCLUDE_DIR})
 include_directories("${CMAKE_SOURCE_DIR}/include")
 
 set(HDR_APP
-    include/valve/hl1types.h
+    include/valve/hltypes.h
     include/valve/hl1worldsize.h
-    include/valve/hl1shader.h
 
     include/valve/hl1bsptypes.h
     include/valve/hl1bspasset.h
@@ -69,8 +58,7 @@ set(HDR_APP
     )
 
 set(SRC_APP
-    src/valve/hl1shader.cpp
-    src/valve/hl1types.cpp
+    src/valve/hltypes.cpp
 
     src/valve/hl1bspasset.cpp
     src/valve/hl1bspinstance.cpp
@@ -94,10 +82,6 @@ set(SRC_APP
 )
 
 add_library(game-assets STATIC ${SRC_APP} ${HDR_APP})
-
-if(BUILD_EXAMPLES)
-    add_subdirectory(examples/viewer)
-endif(BUILD_EXAMPLES)
 
 if(BUILD_TESTS)
     enable_testing()
