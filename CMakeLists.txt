@@ -2,16 +2,20 @@ cmake_minimum_required(VERSION 2.8)
 
 project(game-assets)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
-
 option(BUILD_TESTS "Enabled building tests" OFF)
 
+
+# Only "modern" compailers please
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
+
+# Make sure the include directory is included
+include_directories("${CMAKE_SOURCE_DIR}/include")
+
+# The only dependancy: GLM
 find_package(GLM REQUIRED)
 include_directories(${GLM_INCLUDE_DIR})
 
-include_directories("${CMAKE_SOURCE_DIR}/include")
-
-set(HDR_APP
+set(HDR_LIBRARY
     include/valve/hltypes.h
     include/valve/hl1worldsize.h
 
@@ -38,10 +42,11 @@ set(HDR_APP
 
     include/valve/hltexture.h
     include/valve/hltokenizer.h
-    include/stb_rect_pack.h
+
+    include/stb/stb_rect_pack.h
     )
 
-set(SRC_APP
+set(SRC_LIBRARY
     src/valve/hltypes.cpp
 
     src/valve/hl1bspasset.cpp
@@ -65,9 +70,9 @@ set(SRC_APP
     src/valve/hltokenizer.cpp
 )
 
-add_library(game-assets STATIC ${SRC_APP} ${HDR_APP})
+add_library(game-assets STATIC ${SRC_LIBRARY} ${HDR_LIBRARY})
 
 if(BUILD_TESTS)
     enable_testing()
     add_subdirectory(tests)
-Endif(BUILD_TESTS)
+endif(BUILD_TESTS)

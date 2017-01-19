@@ -3,7 +3,7 @@
 
 // Implementation is already don in hl1bsp
 //#define STB_RECT_PACK_IMPLEMENTATION
-#include "stb_rect_pack.h"
+#include "stb/stb_rect_pack.h"
 
 #include <iostream>
 #include <glm/gtc/type_ptr.hpp>

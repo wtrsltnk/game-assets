@@ -1,7 +1,7 @@
 #include "valve/hl1bspasset.h"
 #include "valve/hl1bspinstance.h"
 #define STB_RECT_PACK_IMPLEMENTATION
-#include "stb_rect_pack.h"
+#include "stb/stb_rect_pack.h"
 
 #include <iostream>
 #include <sstream>
