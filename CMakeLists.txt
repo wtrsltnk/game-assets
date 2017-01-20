@@ -4,16 +4,8 @@ project(game-assets)
 
 option(BUILD_TESTS "Enabled building tests" OFF)
 
-
-# Only "modern" compailers please
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
-
-# Make sure the include directory is included
-include_directories("${CMAKE_SOURCE_DIR}/include")
-
 # The only dependancy: GLM
 find_package(GLM REQUIRED)
-include_directories(${GLM_INCLUDE_DIR})
 
 set(HDR_LIBRARY
     include/valve/hltypes.h
@@ -71,6 +63,17 @@ set(SRC_LIBRARY
 )
 
 add_library(game-assets STATIC ${SRC_LIBRARY} ${HDR_LIBRARY})
+
+target_include_directories(game-assets
+	PUBLIC "${CMAKE_SOURCE_DIR}/include"
+	PRIVATE ${GLM_INCLUDE_DIR}
+	)
+
+target_compile_features(game-assets
+	PRIVATE cxx_auto_type
+	PRIVATE cxx_nullptr
+	PRIVATE cxx_range_for
+	)
 
 if(BUILD_TESTS)
     enable_testing()
