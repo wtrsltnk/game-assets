@@ -112,133 +112,256 @@ int BspInstance::TracePointInLeaf(const glm::vec3& point, int nodenum)
     return -nodenum - 1;
 }
 
-void BspInstance::BotmanTraceLine (glm::vec3 start, glm::vec3 end, botman_trace_t *tr)
+void BspInstance::BotmanTraceLine(glm::vec3 start, glm::vec3 end, botman_trace_t *tr)
 {
-    hl1::tBSPLeaf  *startleaf, *endleaf;
+    tBSPLeaf  *startleaf, *endleaf;
     int      numsteps, totalsteps;
     glm::vec3   move, step, position;
     float    dist, trace_dist;
 
-    memset(tr, 0, sizeof(botman_trace_t));
+   memset(tr, 0, sizeof(botman_trace_t));
 
-    if ((start[0] < -4095) || (start[0] > 4095) ||
-            (start[1] < -4095) || (start[1] > 4095) ||
-            (start[2] < -4095) || (start[2] > 4095))
-    {
-        // start beyond edge of world is INVALID!!!
-        fprintf(stderr,"TraceLine: start point beyond edge of world!\n");
-    }
+   if ((start.x < -4095) || (start.x > 4095) ||
+       (start.y < -4095) || (start.y > 4095) ||
+       (start.z < -4095) || (start.z > 4095))
+   {
+      // start beyond edge of world is INVALID!!!
+      fprintf(stderr,"TraceLine: start point beyond edge of world!\n");
+   }
 
-    if (end[0] > 4095.0f)
-    {
-        float percent = 4095.0f / end[0];
-        end[1] = end[1] * percent;
-        end[2] = end[2] * percent;
-        end[0] = 4095.0f;
-    }
+   if (end.x > 4095.0f)
+   {
+      float percent = 4095.0f / end.x;
+      end.y = end.y * percent;
+      end.z = end.z * percent;
+      end.x = 4095.0f;
+   }
 
-    if (end[1] > 4095.0f)
-    {
-        float percent = 4095.0f / end[1];
-        end[0] = end[0] * percent;
-        end[2] = end[2] * percent;
-        end[1] = 4095.0f;
-    }
+   if (end.y > 4095.0f)
+   {
+      float percent = 4095.0f / end.y;
+      end.x = end.x * percent;
+      end.z = end.z * percent;
+      end.y = 4095.0f;
+   }
 
-    if (end[2] > 4095.0f)
-    {
-        float percent = 4095.0f / end[2];
-        end[0] = end[0] * percent;
-        end[1] = end[1] * percent;
-        end[2] = 4095.0f;
-    }
+   if (end.z > 4095.0f)
+   {
+      float percent = 4095.0f / end.z;
+      end.x = end.x * percent;
+      end.y = end.y * percent;
+      end.z = 4095.0f;
+   }
 
-    if (end[0] < -4095.0f)
-    {
-        float percent = 4095.0f / end[0];
-        end[1] = end[1] * percent;
-        end[2] = end[2] * percent;
-        end[0] = -4095.0f;
-    }
+   if (end.x < -4095.0f)
+   {
+      float percent = 4095.0f / end.x;
+      end.y = end.y * percent;
+      end.z = end.z * percent;
+      end.x = -4095.0f;
+   }
 
-    if (end[1] < -4095.0f)
-    {
-        float percent = 4095.0f / end[1];
-        end[0] = end[0] * percent;
-        end[2] = end[2] * percent;
-        end[1] = -4095.0f;
-    }
+   if (end.y < -4095.0f)
+   {
+      float percent = 4095.0f / end.y;
+      end.x = end.x * percent;
+      end.z = end.z * percent;
+      end.y = -4095.0f;
+   }
 
-    if (end[2] < -4095.0f)
-    {
-        float percent = 4095.0f / end[2];
-        end[0] = end[0] * percent;
-        end[1] = end[1] * percent;
-        end[2] = -4095.0f;
-    }
+   if (end.z < -4095.0f)
+   {
+      float percent = 4095.0f / end.z;
+      end.x = end.x * percent;
+      end.y = end.y * percent;
+      end.z = -4095.0f;
+   }
 
-    // find the starting and ending leafs...
-    startleaf = &this->_asset->_leafData[TracePointInLeaf(start, 0)];
-    endleaf = &this->_asset->_leafData[TracePointInLeaf(end, 0)];
+   // find the starting and ending leafs...
+   startleaf = &this->_asset->_leafData[TracePointInLeaf(start, 0)];
+   endleaf = &this->_asset->_leafData[TracePointInLeaf(end, 0)];
 
-    // set endpos, fraction and contents to the default (trace completed)
-    tr->endpos = end;
-    tr->fraction = 1.0f;
-    tr->contents = endleaf->contents;
+   // set endpos, fraction and contents to the default (trace completed)
+   tr->endpos = end;
+   tr->fraction = 1.0f;
+   tr->contents = endleaf->contents;
 
-    if (startleaf->contents == CONTENTS_SOLID)
-        tr->startsolid = TRUE;
+   if (startleaf->contents == CONTENTS_SOLID)
+      tr->startsolid = TRUE;
 
-    // is start and end leaf the same (couldn't possibly hit the world)...
-    if (startleaf == endleaf) {
-        if (startleaf->contents == CONTENTS_SOLID)
-            tr->allsolid = TRUE;
-        return;
-    }
+   // is start and end leaf the same (couldn't possibly hit the world)...
+   if (startleaf == endleaf) {
+      if (startleaf->contents == CONTENTS_SOLID)
+         tr->allsolid = TRUE;
+      return;
+   }
 
-    // get the length of each interation of the loop...
-    move = end - start;
-    dist = glm::length(move);
+   // get the length of each interation of the loop...
+   move = end - start;
+   dist = glm::length(move);
 
-    // determine the number of steps from start to end...
-    if (dist > 1.0f)
-        numsteps = totalsteps = (int)dist + 1;
-    else
-        numsteps = totalsteps = 1;
+   // determine the number of steps from start to end...
+   if (dist > 1.0f)
+      numsteps = totalsteps = (int)dist + 1;
+   else
+      numsteps = totalsteps = 1;
 
-    // calculate the length of the step vector...
-    step = move * float(2/numsteps);
+   // calculate the length of the step vector...
+   step = move * float(2.0f / numsteps);
 
-    position = start;
+   position = start;
 
-    while (numsteps)
-    {
-        position = position + step;
+   while (numsteps)
+   {
+      position = position + step;
 
-        endleaf = &this->_asset->_leafData[TracePointInLeaf(position, 0)];
+      endleaf = &this->_asset->_leafData[TracePointInLeaf(position, 0)];
 
-        if ((endleaf->contents == CONTENTS_SOLID) ||  // we hit something solid...
-                (endleaf->contents == CONTENTS_SKY))      // we hit the sky
-        {
-            glm::vec3 hitpos = position;
+      if ((endleaf->contents == CONTENTS_SOLID) ||  // we hit something solid...
+          (endleaf->contents == CONTENTS_SKY))      // we hit the sky
+      {
+         glm::vec3 hitpos;
 
-            // store the hit position
-            tr->hitpos = position;
+         hitpos = position;
 
-            // back off one step before solid
-            position = position - step;
+         // store the hit position
+         tr->hitpos = position;
 
-            // store the end position and end position contents
-            tr->endpos = position;
-            tr->contents = endleaf->contents;
+         // back off one step before solid
+         position = position - step;
 
-            move = position - start;
-            trace_dist = glm::length(move);
-            tr->fraction = trace_dist / dist;
+         // store the end position and end position contents
+         tr->endpos = position;
+         tr->contents = endleaf->contents;
 
-            break;  // break out of while loop
-        }
+         move = position - start;
+         trace_dist = glm::length(move);
+         tr->fraction = trace_dist / dist;
 
-        numsteps--;
-    }
+         break;  // break out of while loop
+      }
+
+      numsteps--;
+   }
+}
+
+// WARNING!!! the "vector" parameter should be NORMALIZED!!!
+float DistanceToIntersection(const glm::vec3 origin, const glm::vec3 vector,
+                             const glm::vec3 plane_origin, const glm::vec3 plane_normal)
+{
+   float d = -(glm::dot(plane_normal, plane_origin));
+
+   float numerator = glm::dot(plane_normal, origin) + d;
+   float denominator = glm::dot(plane_normal, vector);
+
+   if (fabs(denominator) < 0.00001)
+      return (-1.0f);  // normal is orthogonal to vector, no intersection
+
+   return -(numerator/denominator);
+}
+
+
+#define TWO_PI 6.2831853f
+#define DELTA 0.001f
+
+// find the face where the traceline hit...
+tBSPFace *BspInstance::TraceLineFindFace(glm::vec3 start, botman_trace_t *tr)
+{
+   glm::vec3 v_intersect, v_normalized, v_temp;
+   tBSPFace *return_face = NULL;
+   float min_diff = 9999.9f;
+
+   v_normalized = glm::normalize(tr->endpos - start);
+
+   tBSPLeaf *endleaf = &this->_asset->_leafData[TracePointInLeaf(tr->endpos, 0)];
+
+   unsigned short *p = this->_asset->_marksurfaceData + endleaf->firstMarkSurface;
+
+   // find a plane with endpos on one side and hitpos on the other side...
+   for (int i = 0; i < endleaf->markSurfacesCount; i++)
+   {
+      int face_idx = *p++;
+
+      tBSPFace *face = &this->_asset->_faceData[face_idx];
+
+      tBSPPlane *plane = &this->_asset->_planeData[face->planeIndex];
+
+      float d1 = glm::dot(tr->endpos, plane->normal) - plane->distance;
+      float d2 = glm::dot(tr->hitpos, plane->normal) - plane->distance;
+
+      if ((d1 > 0 && d2 <= 0)||(d1 <= 0 && d2 > 0))
+      {
+         // found a plane, find the intersection point in the plane...
+
+         glm::vec3 plane_origin, v_angle1, v_angle2;
+
+         plane_origin = (plane->normal * plane->distance);
+
+         float dist = DistanceToIntersection(start, v_normalized, plane_origin, plane->normal);
+
+         if (dist < 0)
+            return NULL;  // can't find intersection
+
+         v_temp = (v_normalized * dist);
+         v_intersect = (start + v_temp);
+
+         // loop through all of the vertexes of all the edges of this face and
+         // find the angle between vertex-n, v_intersect and vertex-n+1, then add
+         // all these angles together.  if the sum of these angles is 360 degrees
+         // (or 2 PI radians), then the intersect point lies within that polygon.
+
+         float angle_sum = 0.0f;
+
+         // loop though all of the edges, getting the vertexes...
+         for (int edge_index = 0; edge_index < face->edgeCount; edge_index++)
+         {
+             glm::vec3 vertex1, vertex2;
+
+            // get the coordinates of the vertex of this edge...
+            int edge = this->_asset->_surfedgeData[face->firstEdge + edge_index];
+
+            if (edge < 0)
+            {
+               edge = -edge;
+               tBSPEdge* e = &this->_asset->_edgeData[edge];
+               vertex1 = this->_asset->_verticesData[e->vertex[1]].point;
+               vertex2 = this->_asset->_verticesData[e->vertex[0]].point;
+            }
+            else
+            {
+               tBSPEdge* e = &this->_asset->_edgeData[edge];
+               vertex1 = this->_asset->_verticesData[e->vertex[0]].point;
+               vertex2 = this->_asset->_verticesData[e->vertex[1]].point;
+            }
+
+            // now create vectors from the vertexes to the plane intersect point...
+            v_angle1 = glm::normalize(vertex1 - v_intersect);
+            v_angle2 = glm::normalize(vertex2 - v_intersect);
+
+            // find the angle between these vectors...
+            float angle = glm::dot(v_angle1, v_angle2);
+
+            angle = (float)acos(angle);
+
+            angle_sum += angle;
+
+            edge++;
+         }
+
+         // is the sum of the angles 360 degrees (2 PI)?...
+         if ((angle_sum >= (TWO_PI - DELTA)) && (angle_sum <= (TWO_PI + DELTA)))
+         {
+            // find the difference between the sum and 2 PI...
+            float diff = (float)fabs(angle_sum - TWO_PI);
+
+            if (diff < min_diff)  // is this the BEST so far?...
+            {
+               min_diff = diff;
+               return_face = face;
+            }
+         }
+      }
+   }
+
+   return return_face;
 }

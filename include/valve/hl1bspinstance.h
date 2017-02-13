@@ -15,6 +15,7 @@ typedef struct
    glm::vec3 hitpos;     /* surface hit position (in solid) */
    glm::vec3 endpos;     /* final position (not in solid) */
    int       contents;   /* contents of endpos */
+   int       planeindex;
 } botman_trace_t;
 
 namespace valve
@@ -33,6 +34,8 @@ public:
     virtual void Render(const glm::mat4& proj, const glm::mat4& view);
     void Unload();
 
+    void BotmanTraceLine (glm::vec3 start, glm::vec3 end, botman_trace_t *trace);
+    tBSPFace *TraceLineFindFace(glm::vec3 start, botman_trace_t *tr);
 private:
     BspAsset* _asset;
     Shader* _shader;
@@ -40,7 +43,6 @@ private:
 
     std::set<unsigned short> FindVisibleFaces(const glm::vec3& pos, int headNode);
     int TracePointInLeaf(const glm::vec3& point, int startNode);
-    void BotmanTraceLine (glm::vec3 start, glm::vec3 end, botman_trace_t *trace);
 };
 
 }
