@@ -1,4 +1,4 @@
-#include "valve/hl1wadasset.h"
+#include "../../include/valve/hl1wadasset.h"
 
 #include <algorithm>
 #include <cctype>

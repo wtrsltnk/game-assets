@@ -1,5 +1,5 @@
-#include "valve/hl1mapasset.h"
-#include "valve/hl1mapinstance.h"
+#include "../../include/valve/hl1mapasset.h"
+#include "../../include/valve/hl1mapinstance.h"
 
 #include <iostream>
 

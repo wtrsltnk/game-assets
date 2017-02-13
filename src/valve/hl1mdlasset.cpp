@@ -1,5 +1,5 @@
-#include "valve/hl1mdlasset.h"
-#include "valve/hl1mdlinstance.h"
+#include "../../include/valve/hl1mdlasset.h"
+#include "../../include/valve/hl1mdlinstance.h"
 
 #include <sstream>
 #include <iomanip>

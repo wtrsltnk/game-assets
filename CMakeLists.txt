@@ -65,7 +65,7 @@ set(SRC_LIBRARY
 add_library(game-assets STATIC ${SRC_LIBRARY} ${HDR_LIBRARY})
 
 target_include_directories(game-assets
-	PUBLIC "${CMAKE_SOURCE_DIR}/include"
+    PRIVATE "${CMAKE_SOURCE_DIR}/include"
 	PRIVATE ${GLM_INCLUDE_DIR}
 	)
 

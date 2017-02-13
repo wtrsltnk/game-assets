@@ -1,5 +1,5 @@
-#include "valve/hl1sprasset.h"
-#include "valve/hl1sprinstance.h"
+#include "../../include/valve/hl1sprasset.h"
+#include "../../include/valve/hl1sprinstance.h"
 
 using namespace valve::hl1;
 

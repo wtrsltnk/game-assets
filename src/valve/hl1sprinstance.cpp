@@ -1,4 +1,4 @@
-#include "valve/hl1sprinstance.h"
+#include "../../include/valve/hl1sprinstance.h"
 
 using namespace valve::hl1;
 

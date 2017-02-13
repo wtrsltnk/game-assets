@@ -1,9 +1,9 @@
-#include "valve/hl2bspasset.h"
-#include "valve/hl2bspinstance.h"
+#include "../../include/valve/hl2bspasset.h"
+#include "../../include/valve/hl2bspinstance.h"
 
 // Implementation is already don in hl1bsp
 //#define STB_RECT_PACK_IMPLEMENTATION
-#include "stb/stb_rect_pack.h"
+#include "../../include/stb/stb_rect_pack.h"
 
 #include <iostream>
 #include <glm/gtc/type_ptr.hpp>

@@ -1,4 +1,4 @@
-#include "valve/hltexture.h"
+#include "../../include/valve/hltexture.h"
 
 #include <GL/glextl.h>
 

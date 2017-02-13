@@ -28,7 +28,7 @@ catch (std::regex_error& err)
 }
 */
 
-#include "valve/hltokenizer.h"
+#include "../../include/valve/hltokenizer.h"
 
 #include <stdlib.h>
 #include <string.h>

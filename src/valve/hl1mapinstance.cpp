@@ -1,5 +1,5 @@
-#include "valve/hl1mapinstance.h"
-#include "valve/hl1worldsize.h"
+#include "../../include/valve/hl1mapinstance.h"
+#include "../../include/valve/hl1worldsize.h"
 
 #include <GL/glextl.h>
 

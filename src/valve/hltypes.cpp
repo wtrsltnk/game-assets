@@ -1,4 +1,4 @@
-#include "valve/hltypes.h"
+#include "../../include/valve/hltypes.h"
 
 #include <glm/gtc/type_ptr.hpp>
 #include <GL/glextl.h>

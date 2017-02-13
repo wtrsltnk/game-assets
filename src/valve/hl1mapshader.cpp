@@ -1,4 +1,4 @@
-#include "valve/hl1mapshader.h"
+#include "../../include/valve/hl1mapshader.h"
 
 using namespace valve;
 using namespace valve::hl1;

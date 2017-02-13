@@ -1,4 +1,4 @@
-#include "valve/hl1bspinstance.h"
+#include "../../include/valve/hl1bspinstance.h"
 
 #include <glm/glm.hpp>
 #include <set>

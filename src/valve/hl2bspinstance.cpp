@@ -1,4 +1,4 @@
-#include "valve/hl2bspinstance.h"
+#include "../../include/valve/hl2bspinstance.h"
 
 #include <iostream>
 #include <GL/glextl.h>
