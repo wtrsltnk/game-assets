@@ -22,7 +22,7 @@ void BspInstance::Render(const glm::mat4& proj, const glm::mat4& view)
 {
     glm::mat3 rotMat(view);
     glm::vec3 pos = -glm::vec3(view[3]) * rotMat;
-    std::set<unsigned short> visibleFaces/*;visibleFaces.insert(320);//*/ = this->FindVisibleFaces(pos, this->_asset->_modelData[0].headnode[0]);
+    std::set<unsigned short> visibleFaces = this->FindVisibleFaces(pos, this->_asset->_modelData[0].headnode[0]);
     if (visibleFaces.size() > 0)
         this->_visibleFaces = visibleFaces;
 
