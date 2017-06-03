@@ -15,6 +15,7 @@ namespace valve
 typedef std::map<std::string, std::string> KeyValueList;
 
 typedef unsigned char byte;
+typedef byte* byteptr;
 
 template<typename T> class Array
 {

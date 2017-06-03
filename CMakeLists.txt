@@ -10,6 +10,7 @@ find_package(GLM REQUIRED)
 set(HDR_LIBRARY
     include/valve/hltypes.h
     include/valve/hl1worldsize.h
+    include/valve/filesystem.h
 
     include/valve/hl1bsptypes.h
     include/valve/hl1bspasset.h
@@ -40,6 +41,7 @@ set(HDR_LIBRARY
 
 set(SRC_LIBRARY
     src/valve/hltypes.cpp
+    src/valve/filesystem.cpp
 
     src/valve/hl1bspasset.cpp
     src/valve/hl1bspinstance.cpp

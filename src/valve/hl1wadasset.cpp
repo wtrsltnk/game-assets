@@ -3,11 +3,16 @@
 #include <algorithm>
 #include <cctype>
 #include <sstream>
+#include <iostream>
 
 using namespace valve::hl1;
 
 WadAsset::WadAsset(const std::string& filename)
 {
+    this->_header.lumpsCount = 0;
+    this->_header.lumpsOffset = 0;
+    this->_header.signature[0] = '\0';
+
     this->_file.open(filename, std::ios::in | std::ios::binary | std::ios::ate);
     if (this->_file.is_open() && this->_file.tellg() > 0)
     {
@@ -20,7 +25,7 @@ WadAsset::WadAsset(const std::string& filename)
             this->_file.seekg(this->_header.lumpsOffset, std::ios::beg);
             this->_file.read((char*)this->_lumps, this->_header.lumpsCount * sizeof(tWADLump));
 
-            this->_loadedLumps.Allocate(this->_header.lumpsCount);
+            this->_loadedLumps = new byteptr[this->_header.lumpsCount];
             for (int i = 0; i < this->_header.lumpsCount; i++)
                 this->_loadedLumps[i] = nullptr;
         }
@@ -32,9 +37,13 @@ WadAsset::WadAsset(const std::string& filename)
 WadAsset::~WadAsset()
 {
     for (int i = 0; i < this->_header.lumpsCount; i++)
+    {
         if (this->_loadedLumps[i] != nullptr)
-            delete []this->_loadedLumps[i];
-    this->_loadedLumps.Delete();
+        {
+            delete [](this->_loadedLumps[i]);
+            this->_loadedLumps[i] = nullptr;
+        }
+    }
 
     if (this->_file.is_open())
         this->_file.close();
@@ -62,14 +71,15 @@ int WadAsset::IndexOf(const std::string& name) const
     return -1;
 }
 
-const byte* WadAsset::LumpData(int index)
+const valve::byteptr WadAsset::LumpData(int index)
 {
     if (index >= this->_header.lumpsCount || index < 0)
         return nullptr;
 
     if (this->_loadedLumps[index] == nullptr)
     {
-        this->_loadedLumps[index] = new unsigned char[this->_lumps[index].size];
+        std::cout << "loading " << index << std::endl;
+        this->_loadedLumps[index] = new byte[this->_lumps[index].size];
         this->_file.seekg(this->_lumps[index].offset, std::ios::beg);
         this->_file.read((char*)this->_loadedLumps[index], this->_lumps[index].size);
     }

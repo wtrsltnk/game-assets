@@ -19,7 +19,7 @@ class WadAsset
     std::ifstream _file;
     tWADHeader _header;
     tWADLump* _lumps;
-    Array<byte*> _loadedLumps;
+    byteptr* _loadedLumps;
 
 public:
     WadAsset(const std::string& filename);
@@ -27,7 +27,7 @@ public:
 
     bool IsLoaded() const;
     int IndexOf(const std::string& name) const;
-    const byte* LumpData(int index);
+    const byteptr LumpData(int index);
 
     static std::string FindWad(const std::string& wad, const std::vector<std::string>& hints);
     static std::vector<WadAsset*> LoadWads(const std::string& wads, const std::string& bspLocation);
