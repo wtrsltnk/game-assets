@@ -1,7 +1,7 @@
 #include "../../include/valve/hl2bspinstance.h"
 
 #include <iostream>
-#include <GL/glextl.h>
+#include <glad/glad.h>
 #include <glm/gtc/type_ptr.hpp>
 
 using namespace valve::hl2;

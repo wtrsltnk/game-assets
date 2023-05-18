@@ -5,7 +5,7 @@
 
 #include <string>
 #include <vector>
-#include <GL/glextl.h>
+#include <glad/glad.h>
 
 namespace valve
 {

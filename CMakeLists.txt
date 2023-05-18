@@ -4,9 +4,6 @@ project(game-assets)
 
 option(BUILD_TESTS "Enabled building tests" OFF)
 
-# The only dependancy: GLM
-find_package(GLM REQUIRED)
-
 set(HDR_LIBRARY
     include/valve/hltypes.h
     include/valve/hl1worldsize.h
@@ -62,20 +59,25 @@ set(SRC_LIBRARY
 
     src/valve/hltexture.cpp
     src/valve/hltokenizer.cpp
+
+    src/glad.c
 )
 
 add_library(game-assets STATIC ${SRC_LIBRARY} ${HDR_LIBRARY})
 
 target_include_directories(game-assets
-    PRIVATE "${CMAKE_SOURCE_DIR}/include"
-	PRIVATE ${GLM_INCLUDE_DIR}
-	)
+    PUBLIC include
+)
+
+target_link_libraries(game-assets
+    PUBLIC glm
+)
 
 target_compile_features(game-assets
-	PRIVATE cxx_auto_type
-	PRIVATE cxx_nullptr
-	PRIVATE cxx_range_for
-	)
+    PRIVATE cxx_auto_type
+    PRIVATE cxx_nullptr
+    PRIVATE cxx_range_for
+)
 
 if(BUILD_TESTS)
     enable_testing()

@@ -1,7 +1,7 @@
 #include "../../include/valve/hltypes.h"
 
 #include <glm/gtc/type_ptr.hpp>
-#include <GL/glextl.h>
+#include <glad/glad.h>
 #include <iostream>
 
 using namespace valve;

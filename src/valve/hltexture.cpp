@@ -1,6 +1,6 @@
 #include "../../include/valve/hltexture.h"
 
-#include <GL/glextl.h>
+#include <glad/glad.h>
 
 using namespace valve;
 

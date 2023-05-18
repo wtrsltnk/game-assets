@@ -5,7 +5,7 @@
 
 #include <iostream>
 #include <sstream>
-#include <GL/glextl.h>
+#include <glad/glad.h>
 #include <glm/gtc/type_ptr.hpp>
 
 using namespace valve::hl1;

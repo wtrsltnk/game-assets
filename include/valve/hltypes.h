@@ -6,7 +6,7 @@
 #include <vector>
 #include <set>
 #include <glm/glm.hpp>
-#include <GL/glextl.h>
+#include <glad/glad.h>
 #include "hltexture.h"
 
 namespace valve

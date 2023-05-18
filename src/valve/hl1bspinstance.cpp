@@ -187,12 +187,12 @@ void BspInstance::BotmanTraceLine(glm::vec3 start, glm::vec3 end, botman_trace_t
    tr->contents = endleaf->contents;
 
    if (startleaf->contents == CONTENTS_SOLID)
-      tr->startsolid = TRUE;
+      tr->startsolid = 1;//TRUE;
 
    // is start and end leaf the same (couldn't possibly hit the world)...
    if (startleaf == endleaf) {
       if (startleaf->contents == CONTENTS_SOLID)
-         tr->allsolid = TRUE;
+         tr->allsolid = 1;//TRUE;
       return;
    }
 

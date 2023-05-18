@@ -1,7 +1,7 @@
 #include "../../include/valve/hl1mapinstance.h"
 #include "../../include/valve/hl1worldsize.h"
 
-#include <GL/glextl.h>
+#include <glad/glad.h>
 
 using namespace valve::hl1;
 

@@ -1,7 +1,7 @@
 #include "../../include/valve/hl1mdlinstance.h"
 #include "../../include/valve/hl1mdlasset.h"
 
-#include <GL/glextl.h>
+#include <glad/glad.h>
 #include <glm/gtc/matrix_transform.hpp>
 
 using namespace valve::hl1;
